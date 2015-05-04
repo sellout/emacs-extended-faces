@@ -144,6 +144,10 @@
   "Highest urgency."
   :group 'extended-faces)
 
+(defface input ()
+  "For input entered by the user."
+  :group 'extended-faces)
+
 (defface prompt ()
   "A face used for any kind of shell-like input prompt."
   :group 'extended-faces)
