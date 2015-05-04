@@ -233,7 +233,7 @@
                '(lua2-reference-global-variable (sem-hi-reference sem-hi-scope-global font-lock-variable-name-face))
                '(lua2-assign-global-variable    (sem-hi-mutable sem-hi-scope-global font-lock-variable-name-face)))
 
-(package-faces 'markdown
+(package-faces 'markdown-mode
                '(markdown-bold-face             bold)
                '(markdown-comment-face          font-lock-comment)
                '(markdown-header-delimiter-face shadow)
