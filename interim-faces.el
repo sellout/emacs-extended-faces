@@ -2,8 +2,7 @@
 
 (defun package-faces (package &rest faces)
   (eval-after-load package
-    (lambda ()
-      (mapcar (lambda (face) (apply #'set-face-inheritance face)) faces))))
+    `(mapcar (lambda (face) (apply #'set-face-inheritance face)) ',faces)))
 
 ;;; built-in
 (package-faces 'ansi-term
@@ -17,6 +16,7 @@
                '(term-color-white   white))
 
 (package-faces 'comint
+               '(comint-highlight-input  input)
                '(comint-highlight-prompt prompt))
 
 (package-faces 'compilation
@@ -163,6 +163,11 @@
             (object       . ensime-sem-high-object)
             (package      . ensime-sem-high-package)))))
 
+;; (package-faces 'guide-key
+;;                '(guide-key/prefix-command-face    )
+;;                '(guide-key/highlight-command-face )
+;;                '(guide-key/key-face               ))
+
 (package-faces 'helm
                '(helm-bookmark-directory    helm-ff-directory)
                '(helm-bookmark-file         helm-ff-file)
@@ -180,6 +185,14 @@
                '(helm-source-header         helm-header)
                '(helm-w3m-bookmarks         helm-bookmark-w3m))
 
+(package-faces 'hydra
+               ;; TODO: These faces shouldn’t be named by color
+               '(hydra-face-red      red)
+               '(hydra-face-blue     blue)
+               '(hydra-face-amaranth orange)
+               '(hydra-face-pink     magenta)
+               '(hydra-face-teal     teal))
+
 (package-faces 'idris-mode
                '(idris-active-term-face       isearch)
                '(idris-colon-face             font-lock-builtin-face)
@@ -189,7 +202,7 @@
                '(idris-ipkg-keyword-face      font-lock-keyword-face)
                '(idris-ipkg-package-face      font-lock-module-face)
                '(idris-keyword-face           font-lock-keyword-face)
-               ;; '(idris-loaded-region-face     font-lock-keyword)
+               '(idris-loaded-region-face     highlight)
                '(idris-log-level-1-face       urgency-urgent)
                '(idris-log-level-2-face       urgency-high)
                '(idris-log-level-3-face       urgency-moderate)
@@ -200,8 +213,11 @@
                '(idris-module-face            font-lock-module-face)
                '(idris-operator-face          font-lock-operator-face)
                '(idris-parameter-face         font-lock-variable-name-face)
+               '(idris-repl-input-face        input)
+               '(idris-repl-output-face       default)
+               '(idris-repl-prompt-face       prompt)
                ;; '(idris-semantic-bound-face    font-lock-operator-face)
-               ;; '(idris-semantic-data-face     font-lock-operator-face)
+               '(idris-semantic-data-face     font-lock-literal-face)
                '(idris-semantic-function-face font-lock-function-name-face)
                ;; '(idris-semantic-implicit-face font-lock-operator-face)
                '(idris-semantic-type-face     font-lock-type-face)
@@ -278,4 +294,4 @@
                '(slime-note-face    success)
                '(slime-warning-face warning))
 
-(provide 'extended-faces)
+(provide 'interim-faces)
