@@ -2,7 +2,7 @@
 
 # Extended Faces for Emacs
 
-This is an overhaul of Emacs faces designed to give package creators maximum flexibility, while making it easy for theme creators to support many packages without a bunch of custom faces and minimizing and minimizing the need for users to override specific faces.s
+This is an overhaul of Emacs faces designed to give package creators maximum flexibility, while making it easy for theme creators to support many packages without a bunch of custom faces and minimizing and minimizing the need for users to override specific faces.
 
 ## some goals of this package:
 
