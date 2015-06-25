@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/sellout/emacs-extended-faces.png?label=ready&title=Ready)](https://waffle.io/sellout/emacs-extended-faces)
 **NB**: This set of faces is necessarily very subjective. It is not defined in isolation, but with input from various packages and the kinds of content they want to be able to distinguish.
 
 # Extended Faces for Emacs
