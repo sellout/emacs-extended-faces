@@ -21,8 +21,10 @@ So, a big part of this project is identifying that intent, and trying to make a 
 
 * don’t use faces from Emacs or other packages directly – define your own version (usually just by prefixing your package name) and then inherit from the upstream face. This gives users the maximum ability to customize with the minimum need to do so.
 * in general, try to refer to each of your faces approximately once in your code, and liberally create “unused” faces simply for inheritance.
+* If you’re making a major mode (or a minor mode that draws something like a rectangular region (e.g., popup-mode), you should create a face named something like `my-mode-default` that inherits from `default` (or can inherit from `variable-pitch`, `fixed-pitch`, `font-lock`, etc. if there is a reason for the buffer to require one of those), which all of your other faces that draw in the buffer area can have in their inheritance. This face should also be used for `buffer-face-set`.
 * don’t have variables containing face mappings (EG, `ensime-sem-high-faces`), but define distinct faces and use them directly.
-* if you feel like there is a particular set of colors/properties that work for your package, provide a single variable to disable them [ed: it would be great to come up with a de facto name for this variable to make it easy to find] so users can easily turn them off if they clash with the user’s theme
+* if you feel like there is a particular set of colors/properties that work for your package, provide a single variable to disable them [ed: it would be great to come up with a de facto name for this variable to make it easy to find] so users can easily turn them off if they clash with the user’s theme.
+* font families should not be mentioned outside of a user’s own settings.
 
 ## General approach for creating faces
 

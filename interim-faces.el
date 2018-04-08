@@ -5,23 +5,75 @@
     `(mapcar (lambda (face) (apply #'set-face-inheritance face)) ',faces)))
 
 ;;; built-in
-(package-faces 'ansi-term
-               '(term-color-black   black)
-               '(term-color-red     red)
-               '(term-color-green   green)
-               '(term-color-yellow  yellow)
-               '(term-color-blue    blue)
-               '(term-color-magenta magenta)
-               '(term-color-cyan    cyan)
-               '(term-color-white   white))
+(package-faces 'apropos
+               '(apropos-keybinding         ())
+               '(apropos-misc-button        ())
+               '(apropos-property           ())
+               '(apropos-symbol             ())
+               '(apropos-user-option-button ()))
+
+(package-faces 'calendar
+               '(calendar-month-header   text-heading)
+               '(calendar-today          secondary-selection)
+               '(calendar-weekday-header text-heading)
+               '(calendar-weekend-header text-heading)
+               '(holiday                 highlight))
+
+(package-faces 'css-mode
+               '(css-proprietary-property css-property))
 
 (package-faces 'comint
                '(comint-highlight-input  input)
                '(comint-highlight-prompt prompt))
 
+(package-faces 'custom
+               '(custom-button                  button)
+               '(custom-button-pressed-unraised (custom-button-pressed custom-button-unraised))
+               '(custom-button-mouse            (custom-button button-mouseover))
+               '(custom-button-pressed          (custom-button button-pressed))
+               '(custom-button-unraised         custom-button)
+               '(custom-comment                 font-lock-comment-face)
+               '(custom-invalid                 warning)
+               '(custom-link                    link)
+               '(custom-variable-button         custom-button))
+
 (package-faces 'compilation
                '(compilation-info    success)
                '(compilation-warning warning))
+
+(package-faces 'diary-lib
+               '(diary-button        button))
+
+(package-faces 'diff-mode
+               '(diff-added          diff-changed)
+               '(diff-removed        diff-changed)
+               '(diff-refine-change  diff-changed)
+               '(diff-refine-removed (diff-refine-change diff-removed))
+               '(diff-header         text-heading)
+               '(diff-file-header    diff-header))
+
+(package-faces 'dired
+               '(dired-directory  fs-directory)
+               '(dired-perm-write ()) ; NB: This is just to delete the default
+               '(dired-symlink    fs-symlink))
+
+(package-faces 'ediff
+               '(ediff-current-diff-a        (diff-removed highlight))
+               '(ediff-current-diff-ancestor highlight)
+               '(ediff-current-diff-b        (diff-added highlight))
+               '(ediff-current-diff-c        (diff-changed highlight))
+               '(ediff-even-diff-a           (diff-removed secondary-selection))
+               '(ediff-even-diff-ancestor    secondary-selection)
+               '(ediff-even-diff-b           (diff-added secondary-selection))
+               '(ediff-even-diff-c           (diff-changed secondary-selection))
+               '(ediff-fine-diff-a           (diff-refine-removed highlight))
+               '(ediff-fine-diff-ancestor    highlight)
+               '(ediff-fine-diff-b           (diff-refine-added highlight))
+               '(ediff-fine-diff-c           (diff-refine-change highlight))
+               '(ediff-odd-diff-a            (diff-removed shadow))
+               '(ediff-odd-diff-ancestor     shadow)
+               '(ediff-odd-diff-b            (diff-added shadow))
+               '(ediff-odd-diff-c            (diff-changed shadow)))
 
 (package-faces 'eshell
                ;; '(eshell-ls-archive (,@fg-magenta))
@@ -33,9 +85,9 @@
                ;; '(eshell-ls-product (,@fg-yellow))
                ;; '(eshell-ls-readonly (,@fg-base1))
                ;; '(eshell-ls-special (,@fg-violet))
-               '(eshell-ls-symlink    symlink)
+               '(eshell-ls-symlink    fs-symlink)
                ;; '(eshell-ls-unreadable (,@fg-base00))
-               '(eshell-prompt prompt))
+               '(eshell-prompt        prompt))
 
 (package-faces 'gnus
                '(gnus-cite-1  level-1)
@@ -56,20 +108,98 @@
                '(info-title-3      (level-3 text-heading))
                '(info-title-4      (level-4 text-heading))
                '(info-xref         link)
-               '(info-xref-visited link-visited))
+               '(info-xref-visited (link-visited info-xref)))
 
-(package-faces 'org-mode
-               '(org-default default)
-               '(org-level-1 level-1)
-               '(org-level-2 level-2)
-               '(org-level-3 level-3)
-               '(org-level-4 level-4)
-               '(org-level-5 level-5)
-               '(org-level-6 level-6)
-               '(org-level-7 level-7)
-               '(org-level-8 level-8)
-               '(org-link    link)
-               '(org-warning warning))
+(package-faces 'magit
+               '(magit-diff-file-contents           fixed-pitch)
+               '(magit-diff-diffstat-added          (magit-diff-file-contents diff-added fringe))
+               '(magit-diff-diffstat-removed        (magit-diff-file-contents diff-removed fringe))
+               '(magit-diff-added                   (magit-diff-file-contents diff-added))
+               '(magit-diff-added-highlight         (magit-diff-file-contents diff-added highlight))
+               '(magit-diff-context                 magit-diff-file-contents)
+               '(magit-diff-context-highlight       magit-diff-file-contents)
+               '(magit-diff-hunk-heading            magit-diff-file-contents)
+               '(magit-diff-hunk-heading-highlight  magit-diff-file-contents)
+               '(magit-diff-hunk-heading-selection  magit-diff-file-contents)
+               '(magit-diff-removed                 (magit-diff-file-contents diff-removed))
+               '(magit-diff-removed-highlight       (magit-diff-file-contents diff-removed highlight))
+               '(magit-key-mode-button-face         button)
+               '(magit-key-mode-header-face         text-heading)
+               '(magit-log-graph                    fixed-pitch)
+               '(magit-log-reflog-label-checkout    magit-log-reflog-label-other)
+               '(magit-log-reflog-label-cherry-pick magit-log-reflog-label-other)
+               '(magit-log-reflog-label-commit      magit-log-reflog-label-other)
+               '(magit-log-reflog-label-reset       magit-log-reflog-label-other)
+               '(magit-log-reflog-label-rebase      magit-log-reflog-label-other)
+               '(magit-log-reflog-label-remote      magit-log-reflog-label-other)
+               '(magit-process-ng                   (error magit-section-title))
+               '(magit-process-ok                   (success magit-section-title)))
+
+(eval-after-load 'magit
+  '(progn
+     (default-mode-face 'fixed-pitch
+       '(magit-log-mode ; uses columns, but not enough
+         magit-popup-mode
+         magit-refs-mode))
+     ;; (default-mode-face 'magit-diff '(magit-diff-mode))
+     ))
+
+(package-faces 'message
+               '(message-header-to         message-header-other)
+               '(message-header-cc         message-header-other)
+               '(message-header-subject    message-header-other)
+               '(message-header-newsgroups message-header-other)
+               '(message-header-xheader    message-header-other))
+
+(package-faces 'nxml-mode
+               '(nxml-delimiter delimiter)
+               '(nxml-text      text))
+
+(package-faces 'nxml-outln
+               '(nxml-heading text-heading))
+
+(eval-after-load 'org
+  (lambda ()
+    (defeface org-agenda '((default :inherit org-default))
+      ""
+      :group 'org-faces)
+    (defeface org-agenda-calendar '((default :inherit org-agenda))
+      ""
+      :group 'org-faces)))
+
+(package-faces 'org
+               '(org-agenda-calendar-event   org-agenda-calendar)
+               '(org-agenda-calendar-sexp    org-agenda-calendar)
+               '(org-agenda-current-time     (org-time-grid org-agenda))
+               '(org-agenda-diary            org-agenda)
+               '(org-agenda-dimmed-todo-face (shadow org-agenda))
+               '(org-agenda-done             (org-done org-agenda))
+               '(org-agenda-restriction-lock org-agenda)
+               '(org-block                   (org-default font-lock))
+               '(org-block-background        (org-default font-lock))
+               '(org-checkbox                org-default)
+               '(org-code                    (org-default font-lock))
+               '(org-column-title            (text-heading org-default))
+               '(org-default                 default)
+               '(org-headline-done           org-done)
+               '(org-level-1                 (level-1 org-default))
+               '(org-level-2                 (level-2 org-default))
+               '(org-level-3                 (level-3 org-default))
+               '(org-level-4                 (level-4 org-default))
+               '(org-level-5                 (level-5 org-default))
+               '(org-level-6                 (level-6 org-default))
+               '(org-level-7                 (level-7 org-default))
+               '(org-level-8                 (level-8 org-default))
+               '(org-link                    (link org-default))
+               '(org-list-dt                 (text-definition-term org-default))
+               '(org-scheduled               org-default)
+               '(org-scheduled-previously    (urgency-urgent org-scheduled))
+               '(org-scheduled-today         (urgency-high org-scheduled))
+               '(org-table                   (fixed-pitch org-default))
+               '(org-time-grid               org-default)
+               '(org-upcoming-deadline       (urgency-moderate org-default))
+               '(org-verbatim                (text-verbatim org-default))
+               '(org-warning                 (warning org-default)))
 
 (package-faces 'outline
                '(outline-1 level-1)
@@ -97,10 +227,63 @@
                '(rcirc-track-nick                alert-moderate)
                '(rcirc-url                       link))
 
+(package-faces 'sh-script
+               '(sh-heredoc     font-lock-string-face)
+               '(sh-quoted-exec font-lock-string-face))
+
+(package-faces 'smerge-mode
+               '(smerge-base            diff-changed)
+               '(smerge-mine            diff-added)
+               '(smerge-other           diff-removed)
+               '(smerge-refined-added   diff-refine-added)
+               '(smerge-refined-change  diff-refine-change)
+               '(smerge-refined-removed diff-refine-removed))
+
 (package-faces 'speedbar
+               '(speedbar-button-face    button)
                '(speedbar-directory-face fs-directory)
                '(speedbar-file-face      fs-file)
                '(speedbar-highlight-face highlight))
+
+(package-faces 'term
+               '(term               fixed-pitch)
+               '(term-bold          bold)
+               '(term-color-black   black)
+               '(term-color-red     red)
+               '(term-color-green   green)
+               '(term-color-yellow  yellow)
+               '(term-color-blue    blue)
+               '(term-color-magenta magenta)
+               '(term-color-cyan    cyan)
+               '(term-color-white   white)
+               '(term-underline     underline))
+
+
+
+(eval-after-load 'whitespace
+  (lambda ()
+    (defeface whitespace-default '((default :inherit warning))
+      ""
+      :group 'whitespace)))
+
+(package-faces 'whitespace
+               '(whitespace-space            whitespace-default)
+               '(whitespace-hspace           whitespace-default)
+               '(whitespace-tab              whitespace-default)
+               '(whitespace-newline          whitespace-default)
+               '(whitespace-trailing         whitespace-default)
+               '(whitespace-line             whitespace-default)
+               '(whitespace-space-before-tab whitespace-default)
+               '(whitespace-indentation      whitespace-default)
+               '(whitespace-empty            whitespace-default)
+               '(whitespace-space-after-tab  whitespace-default)
+               '(whitespace-space            whitespace-default)
+               '(whitespace-space            whitespace-default))
+
+(package-faces 'widget
+               '(widget-button         button)
+               '(widget-mouse-face     (widget-button button-mouseover))
+               '(widget-button-pressed (widget-button button-pressed)))
 
 ;;; 3rd-party
 
@@ -112,43 +295,67 @@
                '(alert-low      urgency-low)
                '(alert-trivial  urgency-trivial))
 
+(package-faces 'darcsum
+               '(darcsum-header-face             diff-header)
+               '(darcsum-marked-face             diff-refine-change)
+               '(darcsum-need-action-face        warning)
+               '(darcsum-need-action-marked-face (darcsum-marked-face darcsum-need-action-face))
+               '(darcsum-filename-face           fs-file)
+               '(darcsum-change-line-face        diff-changed))
+
+(eval-after-load 'emacs-wiki-colors
+  (lambda ()
+    (defeface emacs-wiki-header '((default :inherit text-heading))
+      ""
+      :group 'emacs-wiki-highlight))) ;; FIXME: check if this group is right
+
+(package-faces 'emacs-wiki-colors
+               '(emacs-wiki-bad-link-face error)
+               '(emacs-wiki-header-1      (level-1 emacs-wiki-header))
+               '(emacs-wiki-header-2      (level-2 emacs-wiki-header))
+               '(emacs-wiki-header-3      (level-3 emacs-wiki-header))
+               '(emacs-wiki-header-4      (level-4 emacs-wiki-header))
+               '(emacs-wiki-header-5      (level-5 emacs-wiki-header))
+               '(emacs-wiki-link-face     link)
+               '(emacs-wiki-verbatim-face text-verbatim))
+
 ;;; Ensime is a little crazier, as it has a weird alist for semantic faces.
 (eval-after-load 'ensime
   (lambda ()
-    (defface ensime-sem-high-var '((default :inherit scala-font-lock:var-face))
+    (defeface ensime-sem-high-var '((default :inherit scala-font-lock:var-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-val '((default :inherit font-lock-constant-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-val '((default :inherit font-lock-constant-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-var-field '((default :inherit ensime-sem-high-var))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-var-field '((default :inherit ensime-sem-high-var))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-val-field '((default :inherit ensime-sem-high-val))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-val-field '((default :inherit ensime-sem-high-val))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-function-call
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-function-call
       '((default :inherit font-lock-function-name-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-operator '((default :inherit font-lock-keyword-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-operator '((default :inherit font-lock-keyword-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-param ()
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-param '((default :inherit ensime-sem-high-val))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-class '((default :inherit font-lock-type-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-class '((default :inherit font-lock-type-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-trait '((default :inherit font-lock-type-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-trait '((default :inherit font-lock-type-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-object '((default :inherit font-lock-module-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-object '((default :inherit font-lock-module-face))
       ""
-      :group 'extended-faces)
-    (defface ensime-sem-high-package '((default :inherit font-lock-module-face))
+      :group 'ensime-ui)
+    (defeface ensime-sem-high-package '((default :inherit font-lock-module-face))
       ""
-      :group 'extended-faces)
+      :group 'ensime-ui)
 
     (setq ensime-sem-high-faces
           '((var          . ensime-sem-high-var)
@@ -163,10 +370,36 @@
             (object       . ensime-sem-high-object)
             (package      . ensime-sem-high-package)))))
 
+(package-faces 'ensime
+               '(ensime-breakpoint-face         breakpoint-enabled)
+               '(ensime-implicit-highlight      font-lock-warning-face)
+               '(ensime-marker-face             hl-line)
+               '(ensime-pending-breakpoint-face breakpoint-disabled))
+
+(package-faces 'flycheck
+               '(flycheck-error   error)
+               '(flycheck-info    message)
+               '(flycheck-warning warning))
+
+(package-faces 'flymake
+               '(flymake-errline  error)
+               '(flymake-warnline warning))
+
+(package-faces 'flyspell
+               '(flyspell-duplicate warning)
+               '(flyspell-incorrect error))
+
 ;; (package-faces 'guide-key
 ;;                '(guide-key/prefix-command-face    )
 ;;                '(guide-key/highlight-command-face )
 ;;                '(guide-key/key-face               ))
+
+(package-faces 'haskell-mode
+               '(haskell-error-face    font-lock-warning-face)
+               '(haskell-operator-face font-lock-operator-face)
+               '(haskell-warning-face  font-lock-warning-face))
+;; FIXME doesn’t derive from prog-mode for some reason
+(default-mode-face 'font-lock '(haskell-cabal-mode))
 
 (package-faces 'helm
                '(helm-bookmark-directory    helm-ff-directory)
@@ -203,26 +436,35 @@
                '(idris-ipkg-package-face      font-lock-module-face)
                '(idris-keyword-face           font-lock-keyword-face)
                '(idris-loaded-region-face     highlight)
-               '(idris-log-level-1-face       urgency-urgent)
-               '(idris-log-level-2-face       urgency-high)
-               '(idris-log-level-3-face       urgency-moderate)
-               '(idris-log-level-4-face       urgency-normal)
-               '(idris-log-level-5-face       urgency-low)
-               '(idris-log-level-higher-face  urgency-trivial)
+               '(idris-log-level-1-face       (urgency-urgent idris-log-level-face))
+               '(idris-log-level-2-face       (urgency-high idris-log-level-face))
+               '(idris-log-level-3-face       (urgency-moderate idris-log-level-face))
+               '(idris-log-level-4-face       (urgency-normal idris-log-level-face))
+               '(idris-log-level-5-face       (urgency-low idris-log-level-face))
+               '(idris-log-level-higher-face  (urgency-trivial idris-log-level-face))
                '(idris-metavariable-face      font-lock-variable-name-face)
                '(idris-module-face            font-lock-module-face)
                '(idris-operator-face          font-lock-operator-face)
                '(idris-parameter-face         font-lock-variable-name-face)
                '(idris-repl-input-face        input)
-               '(idris-repl-output-face       default)
+               '(idris-repl-output-face       output)
                '(idris-repl-prompt-face       prompt)
-               ;; '(idris-semantic-bound-face    font-lock-operator-face)
+               '(idris-repl-result-face       result)
+               '(idris-semantic-bound-face    sem-hi-bound)
                '(idris-semantic-data-face     font-lock-literal-face)
                '(idris-semantic-function-face font-lock-function-name-face)
-               ;; '(idris-semantic-implicit-face font-lock-operator-face)
+               '(idris-semantic-implicit-face font-lock-variable-name-face)
                '(idris-semantic-type-face     font-lock-type-face)
                '(idris-unsafe-face            font-lock-warning-face)
                '(idris-warning-face           warning))
+
+(package-faces 'js2-mode
+               '(js2-external-variable-face        font-lock-warning-face)
+               '(js2-jsdoc-html-tag-delimiter-face delimiter)
+               '(js2-jsdoc-html-tag-name-face      font-lock-function-name-face)
+               '(js2-jsdoc-tag-face                text-definition-term)
+               '(js2-jsdoc-type-face               font-lock-type-face)
+               '(js2-jsdoc-value-face              text-definition-explanation))
 
 (package-faces 'lua2-mode
                '(lua2-error                     error)
@@ -235,8 +477,8 @@
 
 (package-faces 'markdown-mode
                '(markdown-bold-face             bold)
-               '(markdown-comment-face          font-lock-comment)
-               '(markdown-header-delimiter-face shadow)
+               '(markdown-comment-face          font-lock-comment-face)
+               '(markdown-header-delimiter-face delimiter)
                '(markdown-header-face           text-heading)
                '(markdown-header-face-1         (level-1 markdown-header-face))
                '(markdown-header-face-2         (level-2 markdown-header-face))
@@ -245,10 +487,19 @@
                '(markdown-header-face-5         (level-5 markdown-header-face))
                '(markdown-header-face-6         (level-6 markdown-header-face))
                '(markdown-header-rule-face      shadow)
+               '(markdown-inline-code-face      font-lock)
                '(markdown-italic-face           italic)
+               '(markdown-language-keyword-face font-lock-keyword-face)
                '(markdown-link-face             shadow)
                '(markdown-link-title-face       link)
+               '(markdown-metadata-key-face     text-definition-term)
+               '(markdown-metadata-value-face   text-definition-explanation)
+               '(markdown-pre-face              text-verbatim)
                '(markdown-url-face              link))
+
+(package-faces 'paradox
+               '(paradox-comment-face   font-lock-comment-face)
+               '(paradox-highlight-face highlight))
 
 (package-faces 'parenface
                '(parenface-bracket-face shadow)
@@ -257,6 +508,19 @@
 
 (package-faces 'paren-face
                '(parenthesis shadow))
+
+(package-faces 'popup
+               '(popup-face ())
+               '(popup-isearch-match              (match popup-face))
+               '(popup-scroll-bar-background-face (scroll-bar popup-face))
+               '(popup-scroll-bar-foreground-face (scroll-bar popup-face))
+               '(popup-summary-face               popup-face)
+               '(popup-tip-face                   popup-face))
+
+(package-faces 'psvn
+               '(svn-status-directory-face fs-directory)
+               '(svn-status-filename-face  fs-file)
+               '(svn-status-symlink-face   fs-symlink))
 
 (package-faces 'rainbow-delimiters
                '(rainbow-delimiters-depth-1-face level-1)
@@ -277,21 +541,81 @@
                '(rst-level-5 (level-5 text-heading))
                '(rst-level-6 (level-6 text-heading)))
 
+(eval-after-load 'scala-mode2
+  (lambda ()
+    (defeface scala-font-lock:keyword-face
+      '((default :inherit font-lock-keyword-face))
+      "Font Lock mode face used for keywords."
+      :group 'scala)))
+
 (package-faces 'scala-mode2
-               '(scala-font-lock:abstract-face    font-lock-keyword-face)
-               '(scala-font-lock:final-face       font-lock-keyword-face)
-               '(scala-font-lock:implicit-face    font-lock-keyword-face)
-               '(scala-font-lock:lazy-face        font-lock-keyword-face)
-               '(scala-font-lock:override-face    font-lock-keyword-face)
-               '(scala-font-lock:private-face     font-lock-keyword-face)
-               '(scala-font-lock:protected-face   font-lock-keyword-face)
-               '(scala-font-lock:sealed-face      font-lock-keyword-face)
-               '(scala-font-lock:var-face         font-lock-variable-face)
-               '(scala-font-lock:var-keyword-face font-lock-keyword-face))
+               '(scala-font-lock:abstract-face    scala-font-lock:keyword-face)
+               '(scala-font-lock:final-face       scala-font-lock:keyword-face)
+               '(scala-font-lock:implicit-face    scala-font-lock:keyword-face)
+               '(scala-font-lock:lazy-face        scala-font-lock:keyword-face)
+               '(scala-font-lock:override-face    scala-font-lock:keyword-face)
+               '(scala-font-lock:private-face     scala-font-lock:keyword-face)
+               '(scala-font-lock:protected-face   scala-font-lock:keyword-face)
+               '(scala-font-lock:sealed-face      scala-font-lock:keyword-face)
+               '(scala-font-lock:var-face         font-lock-variable-name-face)
+               '(scala-font-lock:var-keyword-face scala-font-lock:keyword-face))
+
+(eval-after-load 'slime
+  (lambda ()
+    (defeface sldb-default '((default :inherit slime-default))
+      ""
+      :group 'slime-debugger)
+    (defeface slime-default '() ;; NB: font-lock?
+      ""
+      :group 'slime) 
+    (defeface slime-apropos-default '((default :inherit slime-default))
+      ""
+      :group 'slime)
+    (defeface slime-inspector-default '((default :inherit slime-default))
+      ""
+      :group 'slime-inspector)
+    (defeface slime-topline '((default :inherit slime-default))
+      ""
+      :group 'slime)))
 
 (package-faces 'slime
-               '(slime-error-face   error)
-               '(slime-note-face    success)
-               '(slime-warning-face warning))
+               '(sldb-topline-face                    (slime-topline sldb-default))
+               '(sldb-condition-face                  sldb-default)
+               '(sldb-section-face                    sldb-default)
+               '(sldb-frame-label-face                sldb-default)
+               '(sldb-restart-face                    sldb-default)
+               '(sldb-restart-number-face             sldb-restart-face)
+               '(sldb-restart-type-face               sldb-restart-face)
+               '(sldb-frame-line-face                 sldb-default)
+               '(sldb-restartable-frame-line-face     sldb-frame-line-face)
+               '(sldb-non-restartable-frame-line-face sldb-frame-line-face)
+               '(sldb-detailed-frame-line-face        sldb-frame-line-face)
+               '(sldb-local-name-face                 sldb-default)
+               '(sldb-local-value-face                sldb-default)
+               '(sldb-catch-tag-face                  sldb-default)
+               '(slime-apropos-label                  slime-apropos-default)
+               '(slime-apropos-symbol                 slime-apropos-default)
+               '(slime-error-face                     (error slime-default))
+               '(slime-highlight-face                 (highlight slime-default))
+               '(slime-inspector-topline-face         (slime-topline slime-inspector-default))
+               '(slime-inspector-label-face           slime-inspector-default)
+               '(slime-inspector-value-face           slime-inspector-default)
+               '(slime-inspector-action-face          slime-inspector-default)
+               '(slime-inspector-type-face            slime-inspector-default)
+               '(slime-note-face                      (message slime-default))
+               '(slime-warning-face                   (warning slime-default))
+               '(slime-style-warning-face             slime-warning-face))
+
+(package-faces 'slime-repl
+               '(slime-repl-input-face          input)
+               '(slime-repl-inputed-output-face slime-repl-output-face)
+               '(slime-repl-output-face         output)
+               '(slime-repl-prompt-face         prompt)
+               '(slime-repl-result-face         result))
+
+(package-faces 'write-good
+               '(writegood-duplicates-face    warning)
+               '(writegood-passive-voice-face warning)
+               '(writegood-weasels-face       warning))
 
 (provide 'interim-faces)

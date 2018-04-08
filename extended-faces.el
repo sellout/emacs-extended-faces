@@ -1,7 +1,15 @@
+;; -*- lexical-binding: t; -*-
+
 ;;; Code:
 
 (defun set-face-inheritance (name spec)
   (face-spec-set name `((default :inherit ,spec)) 'face-defface-spec))
+
+(defmacro defeface (face spec doc &rest args)
+  `(defface ,face
+     ,spec
+     ,(concat doc " (Injected by extended-faces.)")
+     ,@args))
 
 ;;; THE MOST PRIMITIVE FACES
 
@@ -9,15 +17,18 @@
 
 ;;; bold            These have the attributes indicated by their names (e.g.,
 ;;; italic          bold has a bold :weight attribute), with all other
-;;; bold-italic     attributes unspecified (and so given by default).
-;;; underline
+;;; underline       attributes unspecified (and so given by default).
 ;;; fixed-pitch
 ;;; variable-pitch
+
+(set-face-inheritance 'bold-italic '(italic bold))
 
 ;;; shadow          For “dimmed out” text.
 
 ;;; link            For clickable text buttons that send the user to a different
-;;; link-visited    buffer or “location”.
+;;;                 buffer or “location”.
+
+(set-face-inheritance 'link-visited 'link)
 
 ;;; highlight       For stretches of text that should temporarily stand out.
 
@@ -30,51 +41,96 @@
 (set-face-inheritance 'warning 'message)
 (set-face-inheritance 'success 'message)
 
+(set-face-inheritance 'help-argument-name ())
+
+;;; UI
+
+(set-face-inheritance 'minibuffer-prompt 'prompt)
+
+(set-face-inheritance 'completions-annotations      '())
+(set-face-inheritance 'completions-first-difference '())
+
+;;; mode-line
+
+(set-face-inheritance 'mode-line-inactive  'mode-line)
+(set-face-inheritance 'mode-line-emphasis  'text-emphasis)
+(set-face-inheritance 'mode-line-highlight 'highlight)
+
+(defface delimiter '((default :inherit shadow))
+  "Delimiters between text."
+  :group 'extended-faces)
+
 ;;; FONT LOCK
 
-(defface font-lock-value-face ()
+(defeface font-lock '((default :inherit fixed-pitch))
+  "For any programming face"
+  :group 'font-lock)
+
+(defun default-mode-face (face modes)
+  (mapcar (lambda (mode)
+            ;; FIXME: How to do this without trampling on customizable variables?
+            (add-hook (intern (concat (symbol-name mode) "-hook"))
+                      (lambda () (buffer-face-set face))))
+          modes))
+
+;;; NB: It would be nice if comint had an output-specific face – I would
+;;;     probably leave the buffer `default`, set input to `font-lock` and output
+;;;     to `fixed-pitch`.
+(default-mode-face 'fixed-pitch '(comint-mode eshell-mode dired-mode ibuffer-mode tabulated-list-mode term-mode))
+(default-mode-face 'font-lock '(prog-mode))
+
+(defeface font-lock-value-face '((default :inherit font-lock))
   "For any value-level construct"
   :group 'font-lock)
 
-(defface font-lock-identifier-face '((default :inherit font-lock-value-face))
+(defeface font-lock-identifier-face '((default :inherit font-lock-value-face))
   "For any value-level construct"
   :group 'font-lock)
 
-(defface font-lock-literal-face '((default :inherit font-lock-value-face))
+(defeface font-lock-literal-face '((default :inherit font-lock-value-face))
   "For any value-level construct"
   :group 'font-lock)
 
-(defface font-lock-module-face '((default :inherit font-lock-value-face))
+(defeface font-lock-module-face '((default :inherit font-lock-value-face))
   "For any larger grouping construct – class, package, module, etc."
   :group 'font-lock)
 
-(defface font-lock-operator-face '((default :inherit font-lock-function-name-face))
+(defeface font-lock-operator-face
+  '((default :inherit font-lock-function-name-face))
   ""
   :group 'font-lock)
 
-(set-face-inheritance 'font-lock-builtin-face           'font-lock-function-name-face)
-(set-face-inheritance 'font-lock-comment-delimiter-face 'shadow)
-(set-face-inheritance 'font-lock-comment-face           'font-lock-doc-face)
-(set-face-inheritance 'font-lock-constant-face          'font-lock-value-face)
+(set-face-inheritance 'font-lock-builtin-face              'font-lock-function-name-face)
+(set-face-inheritance 'font-lock-comment-delimiter-face    '(delimiter font-lock-comment-face))
+(set-face-inheritance 'font-lock-comment-face              'font-lock-doc-face)
+(set-face-inheritance 'font-lock-constant-face             'font-lock-value-face)
 ;; doc
-(set-face-inheritance 'font-lock-function-name-face     'font-lock-identifier-face)
-;; keyword
+(set-face-inheritance 'font-lock-function-name-face        'font-lock-identifier-face)
+(set-face-inheritance 'font-lock-keyword-face              'font-lock)
 ;; negation-char
-;; preprocessor
-;; regexp-grouping-backslash
-;; regexp-grouping-construct
-(set-face-inheritance 'font-lock-string-face            'font-lock-literal-face)
-;; type
-(set-face-inheritance 'font-lock-variable-name-face     'font-lock-identifier-face)
-(set-face-inheritance 'font-lock-warning                'warning)
+(set-face-inheritance 'font-lock-preprocessor-face         'font-lock)
+(set-face-inheritance 'font-lock-regexp-grouping-backslash 'font-lock)
+(set-face-inheritance 'font-lock-regexp-grouping-construct 'font-lock)
+(set-face-inheritance 'font-lock-string-face               'font-lock-literal-face)
+(set-face-inheritance 'font-lock-type-face                 'font-lock-value-face)
+(set-face-inheritance 'font-lock-variable-name-face        'font-lock-identifier-face)
+(set-face-inheritance 'font-lock-warning                   '(warning font-lock))
+
+(set-face-inheritance 'show-paren-match    'success)
+(set-face-inheritance 'show-paren-mismatch 'warning)
 
 ;;; OTHER FACES INCLUDED WITH EMACS
+
+(set-face-inheritance 'window-divider-first-pixel 'window-divider)
+(set-face-inheritance 'window-divider-last-pixel  'window-divider)
 
 ;;; NEW FACES
 
 ;;; generic
 
 ;;; Define 11 levels only because that is the number Gnus goes up to.
+;;; TODO: Define a var that takes a list of specs (of length n) for assigning
+;;;       item m mod n to level-m.
 (defface level-1 ()
   "Accessory face for multi-level things, like outlines. Inherits from the
    previous level so you can customize levels 1–n, then n+1 on will match n."
@@ -144,12 +200,20 @@
   "Highest urgency."
   :group 'extended-faces)
 
-(defface input ()
+(defface input '((default :inherit font-lock))
   "For input entered by the user."
+  :group 'extended-faces)
+
+(defface output ()
+  "A face used for output from processes."
   :group 'extended-faces)
 
 (defface prompt ()
   "A face used for any kind of shell-like input prompt."
+  :group 'extended-faces)
+
+(defface result '((default :inherit output))
+  "A face used for the result from processes."
   :group 'extended-faces)
 
 ;;; explicit colors
@@ -188,7 +252,7 @@
   :group 'extended-faces)
 (defface fs-file () "Things that represent a file."
   :group 'extended-faces)
-(defface fs-broken-symlink '((default :inherit (warning symlink)))
+(defface fs-broken-symlink '((default :inherit (warning fs-symlink)))
   "Things that represent a broken symlink."
   :group 'extended-faces)
 (defface fs-symlink () "Things that represent a symlink."
@@ -206,12 +270,32 @@
    follow the level in the inheritance list (EG, '(level-2 text-header))."
   :group 'extended-faces)
 
+(defface text-definition-term ()
+  "For the term half of a definition in a definition list."
+  :group 'extended-faces)
+
+(defface text-definition-explanation ()
+  "For the explanatory half of a definition in a definition list."
+  :group 'extended-faces)
+
 (defface text-emphasis '((default :inherit italic))
   ""
   :group 'extended-faces)
 
 (defface text-emphasis-strong '((default :inherit bold))
   ""
+  :group 'extended-faces)
+
+(defface text-verbatim '((default :inherit fixed-pitch))
+  ""
+  :group 'extended-faces)
+
+(defface button-mouseover '((default :inherit button))
+  "Button with the mouse hovering over it."
+  :group 'extended-faces)
+
+(defface button-pressed '((default :inherit button))
+  "Button when pressed."
   :group 'extended-faces)
 
 ;;; standardizing semantic highlighting
@@ -241,6 +325,9 @@
 (defface sem-hi-scope-broken '((default :inherit warning))
   "this is for like JS, accessing a var in a situation where “intuitive” scope
    should have ended"
+  :group 'extended-faces)
+(defface sem-hi-bound ()
+  "A variable that appears to be bound."
   :group 'extended-faces)
 (defface sem-hi-unbound '((default :inherit error))
   "A variable that appears to not be bound. NB: Your mode should use this face
