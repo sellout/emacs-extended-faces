@@ -68,19 +68,16 @@
 
 (defun default-mode-face (face modes)
   (mapcar (lambda (mode)
+            ;; FIXME: How to do this without trampling on customizable variables?
             (add-hook (intern (concat (symbol-name mode) "-hook"))
                       (lambda () (buffer-face-set face))))
           modes))
 
-;;; ?: All of comint mode, or just specific bits that try to align things, like sbt?
-(default-mode-face 'fixed-pitch
-  '(comint-mode dired-mode eshell-mode ibuffer-mode magit-refs-mode tabulated-list-mode term-mode))
+;;; NB: It would be nice if comint had an output-specific face – I would
+;;;     probably leave the buffer `default`, set input to `font-lock` and output
+;;;     to `fixed-pitch`.
+(default-mode-face 'fixed-pitch '(comint-mode eshell-mode dired-mode ibuffer-mode tabulated-list-mode term-mode))
 (default-mode-face 'font-lock '(prog-mode))
-;; (add-hook 'eshell-mode-hook         (lambda () (buffer-face-set 'fixed-pitch)))
-;; (add-hook 'ibuffer-mode-hook        (lambda () (buffer-face-set 'fixed-pitch)))
-;; (add-hook 'prog-mode-hook           (lambda () (buffer-face-set 'font-lock)))
-;; (add-hook 'tabulated-list-mode-hook (lambda () (buffer-face-set 'fixed-pitch)))
-;; (add-hook 'term-mode-hook           (lambda () (buffer-face-set 'fixed-pitch)))
 
 (defeface font-lock-value-face '((default :inherit font-lock))
   "For any value-level construct"
@@ -203,7 +200,7 @@
   "Highest urgency."
   :group 'extended-faces)
 
-(defface input ()
+(defface input '((default :inherit font-lock))
   "For input entered by the user."
   :group 'extended-faces)
 

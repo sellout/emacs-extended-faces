@@ -87,7 +87,7 @@
                ;; '(eshell-ls-special (,@fg-violet))
                '(eshell-ls-symlink    fs-symlink)
                ;; '(eshell-ls-unreadable (,@fg-base00))
-               '(eshell-prompt prompt))
+               '(eshell-prompt        prompt))
 
 (package-faces 'gnus
                '(gnus-cite-1  level-1)
@@ -111,8 +111,21 @@
                '(info-xref-visited (link-visited info-xref)))
 
 (package-faces 'magit
+               '(magit-diff-file-contents           fixed-pitch)
+               '(magit-diff-diffstat-added          (magit-diff-file-contents diff-added fringe))
+               '(magit-diff-diffstat-removed        (magit-diff-file-contents diff-removed fringe))
+               '(magit-diff-added                   (magit-diff-file-contents diff-added))
+               '(magit-diff-added-highlight         (magit-diff-file-contents diff-added highlight))
+               '(magit-diff-context                 magit-diff-file-contents)
+               '(magit-diff-context-highlight       magit-diff-file-contents)
+               '(magit-diff-hunk-heading            magit-diff-file-contents)
+               '(magit-diff-hunk-heading-highlight  magit-diff-file-contents)
+               '(magit-diff-hunk-heading-selection  magit-diff-file-contents)
+               '(magit-diff-removed                 (magit-diff-file-contents diff-removed))
+               '(magit-diff-removed-highlight       (magit-diff-file-contents diff-removed highlight))
                '(magit-key-mode-button-face         button)
                '(magit-key-mode-header-face         text-heading)
+               '(magit-log-graph                    fixed-pitch)
                '(magit-log-reflog-label-checkout    magit-log-reflog-label-other)
                '(magit-log-reflog-label-cherry-pick magit-log-reflog-label-other)
                '(magit-log-reflog-label-commit      magit-log-reflog-label-other)
@@ -123,7 +136,13 @@
                '(magit-process-ok                   (success magit-section-title)))
 
 (eval-after-load 'magit
-  '(add-hook 'magit-diff-mode-hook (lambda () (buffer-face-set 'fixed-pitch))))
+  '(progn
+     (default-mode-face 'fixed-pitch
+       '(magit-log-mode ; uses columns, but not enough
+         magit-popup-mode
+         magit-refs-mode))
+     ;; (default-mode-face 'magit-diff '(magit-diff-mode))
+     ))
 
 (package-faces 'message
                '(message-header-to         message-header-other)
@@ -156,10 +175,10 @@
                '(org-agenda-dimmed-todo-face (shadow org-agenda))
                '(org-agenda-done             (org-done org-agenda))
                '(org-agenda-restriction-lock org-agenda)
-               '(org-block                   (font-lock org-default))
-               '(org-block-background        (font-lock org-default))
+               '(org-block                   (org-default font-lock))
+               '(org-block-background        (org-default font-lock))
                '(org-checkbox                org-default)
-               '(org-code                    (font-lock org-default))
+               '(org-code                    (org-default font-lock))
                '(org-column-title            (text-heading org-default))
                '(org-default                 default)
                '(org-headline-done           org-done)
@@ -379,6 +398,8 @@
                '(haskell-error-face    font-lock-warning-face)
                '(haskell-operator-face font-lock-operator-face)
                '(haskell-warning-face  font-lock-warning-face))
+;; FIXME doesn’t derive from prog-mode for some reason
+(default-mode-face 'font-lock '(haskell-cabal-mode))
 
 (package-faces 'helm
                '(helm-bookmark-directory    helm-ff-directory)
@@ -466,7 +487,7 @@
                '(markdown-header-face-5         (level-5 markdown-header-face))
                '(markdown-header-face-6         (level-6 markdown-header-face))
                '(markdown-header-rule-face      shadow)
-               '(markdown-inline-code-face      text-verbatim)
+               '(markdown-inline-code-face      font-lock)
                '(markdown-italic-face           italic)
                '(markdown-language-keyword-face font-lock-keyword-face)
                '(markdown-link-face             shadow)
@@ -544,7 +565,7 @@
     (defeface sldb-default '((default :inherit slime-default))
       ""
       :group 'slime-debugger)
-    (defeface slime-default '() ;; NB: fixed-pitch?
+    (defeface slime-default '() ;; NB: font-lock?
       ""
       :group 'slime) 
     (defeface slime-apropos-default '((default :inherit slime-default))
