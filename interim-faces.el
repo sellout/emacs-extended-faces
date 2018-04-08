@@ -175,8 +175,10 @@
                '(org-agenda-dimmed-todo-face (shadow org-agenda))
                '(org-agenda-done             (org-done org-agenda))
                '(org-agenda-restriction-lock org-agenda)
-               '(org-block                   (org-default font-lock))
-               '(org-block-background        (org-default font-lock))
+               '(org-block                   (org-default fixed-pitch))
+               '(org-block-background        (org-default
+                                              fixed-pitch
+                                              secondary-selection))
                '(org-checkbox                org-default)
                '(org-code                    (org-default font-lock))
                '(org-column-title            (text-heading org-default))
