@@ -205,7 +205,7 @@
   :group 'extended-faces)
 
 (defface output ()
-  "A face used for any kind of shell-like input prompt."
+  "A face used for output from processes."
   :group 'extended-faces)
 
 (defface prompt ()
@@ -213,7 +213,7 @@
   :group 'extended-faces)
 
 (defface result '((default :inherit output))
-  "A face used for any kind of shell-like input prompt."
+  "A face used for the result from processes."
   :group 'extended-faces)
 
 ;;; explicit colors
