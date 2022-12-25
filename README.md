@@ -44,3 +44,12 @@ Separating different aspects: binding/use, function/value/type, etc., expecting 
 
 Sets of faces that represent various concepts across different formats. EG, `text-heading` to be inherited by `markdown-header-face` as well as `info-title-*`; generalized levels for outlines and nested headers; urgency levels for alerts, logs, etc.; `filesystem-directory`, `-file`, `-symlink`, etc. for use by dired, speedbar, etc.
 
+## building
+
+### preferred
+
+Especially if you are unfamiliar with the Emacs ecosystem, there is a Nix build (both with and without a flake).
+
+### traditional
+
+This project is built with [Eldev](https://doublep.github.io/eldev/).
