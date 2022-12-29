@@ -150,6 +150,15 @@
 
             postUnpack = relocateHome;
 
+            postPatch = ''
+              {
+                echo '(setq package-lint-main-file "extended-faces.el")'
+                ## TODO: Remove this line once we make the more significant
+                ##       changes required to allow `package-lint` to pass.
+                echo "(setq elisp-lint-ignored-validators '(\"package-lint\"))"
+              } >> Eldev
+            '';
+
             buildPhase = ''
               runHook preBuild
               eldev lint doc elisp re

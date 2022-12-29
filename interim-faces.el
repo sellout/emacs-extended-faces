@@ -1,6 +1,22 @@
+;;; interim-faces.el --- Inject extended faces -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;; This module integrates `extended-faces' with many different packages, to
+;; provide more consistent theming across all of Emacs.
+;;
+;; Packages that are referenced here do not directly depend on extended-faces,
+;; but as they begin to, they should be removed from here.
+
+;;; Code:
+
 (require 'extended-faces)
 
 (defun package-faces (package &rest faces)
+  "Associates FACES with inheritance and the PACKAGE that they’re defined in.
+This is largely so we can defer the definitions until the package is loaded.
+Each element of FACES is a list containing the name of the face to modify
+followed by a list of the faces that it should inherit from."
   (eval-after-load package
     `(mapcar (lambda (face) (apply #'set-face-inheritance face)) ',faces)))
 
@@ -27,15 +43,16 @@
                '(comint-highlight-prompt prompt))
 
 (package-faces 'custom
-               '(custom-button                  button)
-               '(custom-button-pressed-unraised (custom-button-pressed custom-button-unraised))
-               '(custom-button-mouse            (custom-button button-mouseover))
-               '(custom-button-pressed          (custom-button button-pressed))
-               '(custom-button-unraised         custom-button)
-               '(custom-comment                 font-lock-comment-face)
-               '(custom-invalid                 warning)
-               '(custom-link                    link)
-               '(custom-variable-button         custom-button))
+               '(custom-button          button)
+               '(custom-button-pressed-unraised
+                 (custom-button-pressed custom-button-unraised))
+               '(custom-button-mouse    (custom-button button-mouseover))
+               '(custom-button-pressed  (custom-button button-pressed))
+               '(custom-button-unraised custom-button)
+               '(custom-comment         font-lock-comment-face)
+               '(custom-invalid         warning)
+               '(custom-link            link)
+               '(custom-variable-button custom-button))
 
 (package-faces 'compilation
                '(compilation-info    success)
@@ -112,28 +129,33 @@
 
 (package-faces 'magit
                '(magit-diff-file-contents           fixed-pitch)
-               '(magit-diff-diffstat-added          (magit-diff-file-contents diff-added fringe))
-               '(magit-diff-diffstat-removed        (magit-diff-file-contents diff-removed fringe))
-               '(magit-diff-added                   (magit-diff-file-contents diff-added))
-               '(magit-diff-added-highlight         (magit-diff-file-contents diff-added highlight))
+               '(magit-diff-diffstat-added
+                 (magit-diff-file-contents diff-added fringe))
+               '(magit-diff-diffstat-removed
+                 (magit-diff-file-contents diff-removed fringe))
+               '(magit-diff-added         (magit-diff-file-contents diff-added))
+               '(magit-diff-added-highlight
+                 (magit-diff-file-contents diff-added highlight))
                '(magit-diff-context                 magit-diff-file-contents)
                '(magit-diff-context-highlight       magit-diff-file-contents)
                '(magit-diff-hunk-heading            magit-diff-file-contents)
                '(magit-diff-hunk-heading-highlight  magit-diff-file-contents)
                '(magit-diff-hunk-heading-selection  magit-diff-file-contents)
-               '(magit-diff-removed                 (magit-diff-file-contents diff-removed))
-               '(magit-diff-removed-highlight       (magit-diff-file-contents diff-removed highlight))
+               '(magit-diff-removed     (magit-diff-file-contents diff-removed))
+               '(magit-diff-removed-highlight
+                 (magit-diff-file-contents diff-removed highlight))
                '(magit-key-mode-button-face         button)
                '(magit-key-mode-header-face         text-heading)
                '(magit-log-graph                    fixed-pitch)
-               '(magit-log-reflog-label-checkout    magit-log-reflog-label-other)
-               '(magit-log-reflog-label-cherry-pick magit-log-reflog-label-other)
-               '(magit-log-reflog-label-commit      magit-log-reflog-label-other)
-               '(magit-log-reflog-label-reset       magit-log-reflog-label-other)
-               '(magit-log-reflog-label-rebase      magit-log-reflog-label-other)
-               '(magit-log-reflog-label-remote      magit-log-reflog-label-other)
+               '(magit-log-reflog-label-checkout   magit-log-reflog-label-other)
+               '(magit-log-reflog-label-cherry-pick
+                 magit-log-reflog-label-other)
+               '(magit-log-reflog-label-commit     magit-log-reflog-label-other)
+               '(magit-log-reflog-label-reset      magit-log-reflog-label-other)
+               '(magit-log-reflog-label-rebase     magit-log-reflog-label-other)
+               '(magit-log-reflog-label-remote     magit-log-reflog-label-other)
                '(magit-process-ng                   (error magit-section-title))
-               '(magit-process-ok                   (success magit-section-title)))
+               '(magit-process-ok                (success magit-section-title)))
 
 (eval-after-load 'magit
   '(progn
@@ -295,12 +317,13 @@
                '(alert-trivial  urgency-trivial))
 
 (package-faces 'darcsum
-               '(darcsum-header-face             diff-header)
-               '(darcsum-marked-face             diff-refine-change)
-               '(darcsum-need-action-face        warning)
-               '(darcsum-need-action-marked-face (darcsum-marked-face darcsum-need-action-face))
-               '(darcsum-filename-face           fs-file)
-               '(darcsum-change-line-face        diff-changed))
+               '(darcsum-header-face      diff-header)
+               '(darcsum-marked-face      diff-refine-change)
+               '(darcsum-need-action-face warning)
+               '(darcsum-need-action-marked-face
+                 (darcsum-marked-face darcsum-need-action-face))
+               '(darcsum-filename-face    fs-file)
+               '(darcsum-change-line-face diff-changed))
 
 (eval-after-load 'emacs-wiki-colors
   '(defeface emacs-wiki-header '((default :inherit text-heading))
@@ -320,23 +343,27 @@
 ;;; Ensime is a little crazier, as it has a weird alist for semantic faces.
 (eval-after-load 'ensime
   '(progn
-     (defeface ensime-sem-high-var '((default :inherit scala-font-lock:var-face))
+     (defeface ensime-sem-high-var
+       '((default :inherit scala-font-lock:var-face))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-val '((default :inherit font-lock-constant-face))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-var-field '((default :inherit ensime-sem-high-var))
+     (defeface ensime-sem-high-var-field
+       '((default :inherit ensime-sem-high-var))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-val-field '((default :inherit ensime-sem-high-val))
+     (defeface ensime-sem-high-val-field
+       '((default :inherit ensime-sem-high-val))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-function-call
        '((default :inherit font-lock-function-name-face))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-operator '((default :inherit font-lock-keyword-face))
+     (defeface ensime-sem-high-operator
+       '((default :inherit font-lock-keyword-face))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-param '((default :inherit ensime-sem-high-val))
@@ -348,10 +375,12 @@
      (defeface ensime-sem-high-trait '((default :inherit font-lock-type-face))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-object '((default :inherit font-lock-module-face))
+     (defeface ensime-sem-high-object
+       '((default :inherit font-lock-module-face))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-package '((default :inherit font-lock-module-face))
+     (defeface ensime-sem-high-package
+       '((default :inherit font-lock-module-face))
        ""
        :group 'ensime-ui)
      ;; (setq ensime-sem-high-faces
@@ -427,19 +456,23 @@
 (package-faces 'idris-mode
                '(idris-active-term-face       isearch)
                '(idris-colon-face             font-lock-builtin-face)
-               '(idris-definition-face        (sem-hi-binding sem-hi-scope-global font-lock-function-name-face))
+               '(idris-definition-face
+                 (sem-hi-binding
+                  sem-hi-scope-global
+                  font-lock-function-name-face))
                '(idris-equals-face            font-lock-builtin-face)
                '(idris-identifier-face        font-lock-identifier-face)
                '(idris-ipkg-keyword-face      font-lock-keyword-face)
                '(idris-ipkg-package-face      font-lock-module-face)
                '(idris-keyword-face           font-lock-keyword-face)
                '(idris-loaded-region-face     highlight)
-               '(idris-log-level-1-face       (urgency-urgent idris-log-level-face))
-               '(idris-log-level-2-face       (urgency-high idris-log-level-face))
-               '(idris-log-level-3-face       (urgency-moderate idris-log-level-face))
-               '(idris-log-level-4-face       (urgency-normal idris-log-level-face))
-               '(idris-log-level-5-face       (urgency-low idris-log-level-face))
-               '(idris-log-level-higher-face  (urgency-trivial idris-log-level-face))
+               '(idris-log-level-1-face   (urgency-urgent idris-log-level-face))
+               '(idris-log-level-2-face     (urgency-high idris-log-level-face))
+               '(idris-log-level-3-face (urgency-moderate idris-log-level-face))
+               '(idris-log-level-4-face   (urgency-normal idris-log-level-face))
+               '(idris-log-level-5-face      (urgency-low idris-log-level-face))
+               '(idris-log-level-higher-face
+                 (urgency-trivial idris-log-level-face))
                '(idris-metavariable-face      font-lock-variable-name-face)
                '(idris-module-face            font-lock-module-face)
                '(idris-operator-face          font-lock-operator-face)
@@ -465,13 +498,28 @@
                '(js2-jsdoc-value-face              text-definition-explanation))
 
 (package-faces 'lua2-mode
-               '(lua2-error                     error)
-               '(lua2-bind-variable             (sem-hi-binding sem-hi-scope-local font-lock-variable-name-face))
-               '(lua2-reference-variable        (sem-hi-reference sem-hi-scope-local font-lock-variable-name-face))
-               '(lua2-assign-variable           (sem-hi-mutable sem-hi-scope-local font-lock-variable-name-face))
+               '(lua2-error error)
+               '(lua2-bind-variable
+                 (sem-hi-binding
+                  sem-hi-scope-local
+                  font-lock-variable-name-face))
+               '(lua2-reference-variable
+                 (sem-hi-reference
+                  sem-hi-scope-local
+                  font-lock-variable-name-face))
+               '(lua2-assign-variable
+                 (sem-hi-mutable
+                  sem-hi-scope-local
+                  font-lock-variable-name-face))
                ;; NB: This one should probably use name hashing
-               '(lua2-reference-global-variable (sem-hi-reference sem-hi-scope-global font-lock-variable-name-face))
-               '(lua2-assign-global-variable    (sem-hi-mutable sem-hi-scope-global font-lock-variable-name-face)))
+               '(lua2-reference-global-variable
+                 (sem-hi-reference
+                  sem-hi-scope-global
+                  font-lock-variable-name-face))
+               '(lua2-assign-global-variable
+                 (sem-hi-mutable
+                  sem-hi-scope-global
+                  font-lock-variable-name-face)))
 
 (package-faces 'markdown-mode
                '(markdown-bold-face             bold)
@@ -576,7 +624,7 @@
        :group 'slime)))
 
 (package-faces 'slime
-               '(sldb-topline-face                    (slime-topline sldb-default))
+               '(sldb-topline-face                 (slime-topline sldb-default))
                '(sldb-condition-face                  sldb-default)
                '(sldb-section-face                    sldb-default)
                '(sldb-frame-label-face                sldb-default)
@@ -594,7 +642,8 @@
                '(slime-apropos-symbol                 slime-apropos-default)
                '(slime-error-face                     (error slime-default))
                '(slime-highlight-face                 (highlight slime-default))
-               '(slime-inspector-topline-face         (slime-topline slime-inspector-default))
+               '(slime-inspector-topline-face
+                 (slime-topline slime-inspector-default))
                '(slime-inspector-label-face           slime-inspector-default)
                '(slime-inspector-value-face           slime-inspector-default)
                '(slime-inspector-action-face          slime-inspector-default)
@@ -616,3 +665,4 @@
                '(writegood-weasels-face       warning))
 
 (provide 'interim-faces)
+;;; interim-faces.el ends here
