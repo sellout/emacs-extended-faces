@@ -159,13 +159,13 @@
                '(nxml-heading text-heading))
 
 (eval-after-load 'org
-  (lambda ()
-    (defeface org-agenda '((default :inherit org-default))
-      ""
-      :group 'org-faces)
-    (defeface org-agenda-calendar '((default :inherit org-agenda))
-      ""
-      :group 'org-faces)))
+  '(progn
+     (defeface org-agenda '((default :inherit org-default))
+       ""
+       :group 'org-faces)
+     (defeface org-agenda-calendar '((default :inherit org-agenda))
+       ""
+       :group 'org-faces)))
 
 (package-faces 'org
                '(org-agenda-calendar-event   org-agenda-calendar)
@@ -260,13 +260,10 @@
                '(term-color-white   white)
                '(term-underline     underline))
 
-
-
 (eval-after-load 'whitespace
-  (lambda ()
-    (defeface whitespace-default '((default :inherit warning))
-      ""
-      :group 'whitespace)))
+  '(defeface whitespace-default '((default :inherit warning))
+     ""
+     :group 'whitespace))
 
 (package-faces 'whitespace
                '(whitespace-space            whitespace-default)
@@ -306,10 +303,9 @@
                '(darcsum-change-line-face        diff-changed))
 
 (eval-after-load 'emacs-wiki-colors
-  (lambda ()
-    (defeface emacs-wiki-header '((default :inherit text-heading))
-      ""
-      :group 'emacs-wiki-highlight))) ;; FIXME: check if this group is right
+  '(defeface emacs-wiki-header '((default :inherit text-heading))
+     ""
+     :group 'emacs-wiki-highlight)) ;; FIXME: check if this group is right
 
 (package-faces 'emacs-wiki-colors
                '(emacs-wiki-bad-link-face error)
@@ -323,54 +319,54 @@
 
 ;;; Ensime is a little crazier, as it has a weird alist for semantic faces.
 (eval-after-load 'ensime
-  (lambda ()
-    (defeface ensime-sem-high-var '((default :inherit scala-font-lock:var-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-val '((default :inherit font-lock-constant-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-var-field '((default :inherit ensime-sem-high-var))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-val-field '((default :inherit ensime-sem-high-val))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-function-call
-      '((default :inherit font-lock-function-name-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-operator '((default :inherit font-lock-keyword-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-param '((default :inherit ensime-sem-high-val))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-class '((default :inherit font-lock-type-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-trait '((default :inherit font-lock-type-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-object '((default :inherit font-lock-module-face))
-      ""
-      :group 'ensime-ui)
-    (defeface ensime-sem-high-package '((default :inherit font-lock-module-face))
-      ""
-      :group 'ensime-ui)
-
-    (setq ensime-sem-high-faces
-          '((var          . ensime-sem-high-var)
-            (val          . ensime-sem-high-val)
-            (varField     . ensime-sem-high-var-field)
-            (valField     . ensime-sem-high-val-field)
-            (functionCall . ensime-sem-high-function-call)
-            (operator     . ensime-sem-high-operator)
-            (param        . ensime-sem-high-param)
-            (class        . ensime-sem-high-class)
-            (trait        . ensime-sem-high-trait)
-            (object       . ensime-sem-high-object)
-            (package      . ensime-sem-high-package)))))
+  '(progn
+     (defeface ensime-sem-high-var '((default :inherit scala-font-lock:var-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-val '((default :inherit font-lock-constant-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-var-field '((default :inherit ensime-sem-high-var))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-val-field '((default :inherit ensime-sem-high-val))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-function-call
+       '((default :inherit font-lock-function-name-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-operator '((default :inherit font-lock-keyword-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-param '((default :inherit ensime-sem-high-val))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-class '((default :inherit font-lock-type-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-trait '((default :inherit font-lock-type-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-object '((default :inherit font-lock-module-face))
+       ""
+       :group 'ensime-ui)
+     (defeface ensime-sem-high-package '((default :inherit font-lock-module-face))
+       ""
+       :group 'ensime-ui)
+     ;; (setq ensime-sem-high-faces
+     ;;       '((var          . ensime-sem-high-var)
+     ;;         (val          . ensime-sem-high-val)
+     ;;         (varField     . ensime-sem-high-var-field)
+     ;;         (valField     . ensime-sem-high-val-field)
+     ;;         (functionCall . ensime-sem-high-function-call)
+     ;;         (operator     . ensime-sem-high-operator)
+     ;;         (param        . ensime-sem-high-param)
+     ;;         (class        . ensime-sem-high-class)
+     ;;         (trait        . ensime-sem-high-trait)
+     ;;         (object       . ensime-sem-high-object)
+     ;;         (package      . ensime-sem-high-package)))
+     ))
 
 (package-faces 'ensime
                '(ensime-breakpoint-face         breakpoint-enabled)
@@ -544,11 +540,10 @@
                '(rst-level-6 (level-6 text-heading)))
 
 (eval-after-load 'scala-mode2
-  (lambda ()
-    (defeface scala-font-lock:keyword-face
-      '((default :inherit font-lock-keyword-face))
-      "Font Lock mode face used for keywords."
-      :group 'scala)))
+  '(defeface scala-font-lock:keyword-face
+     '((default :inherit font-lock-keyword-face))
+     "Font Lock mode face used for keywords."
+     :group 'scala))
 
 (package-faces 'scala-mode2
                '(scala-font-lock:abstract-face    scala-font-lock:keyword-face)
@@ -563,22 +558,22 @@
                '(scala-font-lock:var-keyword-face scala-font-lock:keyword-face))
 
 (eval-after-load 'slime
-  (lambda ()
-    (defeface sldb-default '((default :inherit slime-default))
-      ""
-      :group 'slime-debugger)
-    (defeface slime-default '() ;; NB: font-lock?
-      ""
-      :group 'slime) 
-    (defeface slime-apropos-default '((default :inherit slime-default))
-      ""
-      :group 'slime)
-    (defeface slime-inspector-default '((default :inherit slime-default))
-      ""
-      :group 'slime-inspector)
-    (defeface slime-topline '((default :inherit slime-default))
-      ""
-      :group 'slime)))
+  '(progn
+     (defeface sldb-default '((default :inherit slime-default))
+       ""
+       :group 'slime-debugger)
+     (defeface slime-default '() ;; NB: font-lock?
+       ""
+       :group 'slime)
+     (defeface slime-apropos-default '((default :inherit slime-default))
+       ""
+       :group 'slime)
+     (defeface slime-inspector-default '((default :inherit slime-default))
+       ""
+       :group 'slime-inspector)
+     (defeface slime-topline '((default :inherit slime-default))
+       ""
+       :group 'slime)))
 
 (package-faces 'slime
                '(sldb-topline-face                    (slime-topline sldb-default))

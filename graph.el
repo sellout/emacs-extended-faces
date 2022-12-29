@@ -2,11 +2,11 @@
 (defvar graph-font-system 'quartz)
 
 (defun name-in-font-system (font-system list)
-  (case font-system
-    (fontconfig (intercalate list ":"))
-    (pango      (intercalate list " "))
-    (quartz     (intercalate list "-"))
-    ((nil)      (car list))))
+  (pcase font-system
+    ('fontconfig (mapconcat 'identity list ":"))
+    ('pango      (mapconcat 'identity list " "))
+    ('quartz     (mapconcat 'identity list "-"))
+    (_           (car list))))
 
 (defun output-name (sym)
   (insert "\"" (symbol-name sym) "\""))
@@ -34,13 +34,16 @@
                                                                      (list (symbol-name s)))))) "\"")
             (insert ", fontsize = " (number-to-string (/ (face-attribute face :height nil 'default) 10)))
             (insert "]\n")
-            (typecase parents
-              (null   nil)
-              (symbol (unless (or  (eq parents 'default) (eq parents 'unspecified))
-                        (output-name face) (insert " -> ") (output-name parents) (insert "\n")))
-              (list   (output-name face) (insert " -> { ")
-                      (mapc (lambda (parent) (output-name parent) (insert " "))
-                            parents)
-                      (insert "}\n")))))
+            (pcase parents
+              ((cl-type null)   nil)
+              ((cl-type symbol)
+               (unless (or  (eq parents 'default) (eq parents 'unspecified))
+                 (output-name face) (insert " -> ") (output-name parents) (insert "\n")))
+              ((cl-type list)
+               (output-name face)
+               (insert " -> { ")
+               (mapc (lambda (parent) (output-name parent) (insert " "))
+                     parents)
+               (insert "}\n")))))
         (face-list))
   (insert "}\n"))
