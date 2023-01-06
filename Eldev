@@ -1,0 +1,9 @@
+;;; -*- lexical-scope: t -*-
+
+;; TODO: Remove this line once we make the more significant
+;;      changes required to allow `package-lint` to pass.
+(eval-after-load 'elisp-lint
+  '(setq elisp-lint-ignored-validators '("package-lint")))
+
+(eval-after-load 'package-lint
+  '(setq package-lint-main-file "extended-faces.el"))

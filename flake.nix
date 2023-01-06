@@ -21,14 +21,13 @@
         overlays = [(import ./nix/dependencies.nix)];
       };
 
+      emacsPath = package:
+        "${package}/share/emacs/site-lisp/elpa/${package.ename}-${package.version}";
+
       src = pkgs.lib.cleanSource ./.;
 
-      ## Eldev wants to use `HOME`, so we point it to a fake one within the
-      ## build.
-      relocateHome = ''
-        export HOME="$PWD/fake-home"
-        mkdir -p "$HOME"
-      '';
+      ## We need to tell Eldev where to find its Emacs package.
+      ELDEV_LOCAL = emacsPath pkgs.emacsPackages.eldev;
     in {
       packages.default =
         inputs.bash-strict-mode.lib.checkedDrv pkgs
@@ -37,15 +36,13 @@
           pname = "emacs-${ename}";
           version = "0.1.0";
         in {
-          inherit ename pname src version;
+          inherit ELDEV_LOCAL ename pname src version;
 
           nativeBuildInputs = [
             pkgs.emacs
             # Emacs-lisp build tool, https://doublep.github.io/eldev/
             pkgs.emacsPackages.eldev
           ];
-
-          postUnpack = relocateHome;
 
           buildPhase = ''
             runHook preBuild
@@ -104,7 +101,7 @@
         doctor =
           inputs.bash-strict-mode.lib.checkedDrv pkgs
           (pkgs.stdenv.mkDerivation {
-            inherit src;
+            inherit ELDEV_LOCAL src;
 
             name = "eldev-doctor";
 
@@ -113,8 +110,6 @@
               # Emacs-lisp build tool, https://doublep.github.io/eldev/
               pkgs.emacsPackages.eldev
             ];
-
-            postUnpack = relocateHome;
 
             buildPhase = ''
               runHook preBuild
@@ -135,33 +130,37 @@
           ##       variable with `-n` intead of `-v`.
           inputs.bash-strict-mode.lib.shellchecked pkgs
           (pkgs.stdenv.mkDerivation {
-            inherit src;
+            inherit ELDEV_LOCAL src;
 
             name = "eldev-lint";
 
             nativeBuildInputs = [
+              pkgs.emacs
               pkgs.emacsPackages.eldev
-              (pkgs.emacsWithPackages (epkgs: [
-                epkgs.eldev
-                epkgs.elisp-lint
-                epkgs.relint
-              ]))
             ];
-
-            postUnpack = relocateHome;
 
             postPatch = ''
               {
-                echo '(setq package-lint-main-file "extended-faces.el")'
-                ## TODO: Remove this line once we make the more significant
-                ##       changes required to allow `package-lint` to pass.
-                echo "(setq elisp-lint-ignored-validators '(\"package-lint\"))"
+                echo
+                echo "(mapcar"
+                echo " 'eldev-use-local-dependency"
+                echo " '(\"${emacsPath pkgs.emacsPackages.dash}\""
+                echo "   \"${emacsPath pkgs.emacsPackages.elisp-lint}\""
+                echo "   \"${emacsPath pkgs.emacsPackages.package-lint}\""
+                echo "   \"${emacsPath pkgs.emacsPackages.relint}\""
+                echo "   \"${emacsPath pkgs.emacsPackages.xr}\"))"
               } >> Eldev
             '';
 
             buildPhase = ''
               runHook preBuild
-              eldev lint doc elisp re
+              ## TODO: Currently needed to make a temp file in
+              ##      `eldev--create-internal-pseudoarchive-descriptor`.
+              export HOME="$PWD/fake-home"
+              mkdir -p "$HOME"
+              ## Need `--external` here so that we don’t try to download any
+              ## package archives (which would break the sandbox).
+              eldev --external lint doc elisp re
               runHook postBuild
             '';
 
