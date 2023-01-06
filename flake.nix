@@ -7,10 +7,10 @@
         default = final: prev: {
           emacsPackagesFor = emacs:
             (prev.emacsPackagesFor emacs).overrideScope'
-            inputs.self.overlays.emacs;
+            (inputs.self.overlays.emacs final prev);
         };
 
-        emacs = final: prev: {
+        emacs = final: prev: efinal: eprev: {
           extended-faces = inputs.self.packages.${final.system}.default;
         };
       };
