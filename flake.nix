@@ -1,6 +1,18 @@
 {
   description = "Additional generic faces for Emacs.";
 
+  nixConfig = {
+    ## https://github.com/NixOS/rfcs/blob/master/rfcs/0045-deprecate-url-syntax.md
+    extra-experimental-features = ["no-url-literals"];
+    extra-substituters = ["https://cache.garnix.io"];
+    extra-trusted-public-keys = [
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+    ];
+    ## Isolate the build.
+    registries = false;
+    sandbox = true;
+  };
+
   outputs = inputs:
     {
       overlays = {
@@ -11,9 +23,36 @@
         };
 
         emacs = final: prev: efinal: eprev: {
-          extended-faces = inputs.self.packages.${final.system}.default;
+          extended-faces =
+            inputs.self.packages.${final.system}.emacs-extended-faces;
         };
       };
+
+      homeConfigurations =
+        builtins.listToAttrs
+        (builtins.map
+          (system: {
+            name = "${system}-example";
+            value = inputs.home-manager.lib.homeManagerConfiguration {
+              pkgs = import inputs.nixpkgs {
+                inherit system;
+                overlays = [inputs.self.overlays.default];
+              };
+
+              modules = [
+                ./nix/home-manager-example.nix
+                {
+                  # These attributes are simply required by home-manager.
+                  home = {
+                    homeDirectory = /tmp/emacs-extended-faces-example;
+                    stateVersion = "22.11";
+                    username = "emacs-extended-faces-example-user";
+                  };
+                }
+              ];
+            };
+          })
+          inputs.flake-utils.lib.defaultSystems);
     }
     // inputs.flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import inputs.nixpkgs {
@@ -21,66 +60,59 @@
         overlays = [(import ./nix/dependencies.nix)];
       };
 
-      emacsPath = package:
-        "${package}/share/emacs/site-lisp/elpa/${package.ename}-${package.version}";
+      emacsPath = package: "${package}/share/emacs/site-lisp/elpa/${package.ename}-${package.version}";
+
+      ## Read version in format: ;; Version: xx.yy
+      readVersion = fp:
+        builtins.elemAt
+        (builtins.match
+          ".*(;; Version: ([[:digit:]]+\.[[:digit:]]+(\.[[:digit:]]+)?)).*"
+          (builtins.readFile fp))
+        1;
 
       src = pkgs.lib.cleanSource ./.;
 
       ## We need to tell Eldev where to find its Emacs package.
       ELDEV_LOCAL = emacsPath pkgs.emacsPackages.eldev;
     in {
-      packages.default =
-        inputs.bash-strict-mode.lib.checkedDrv pkgs
-        (pkgs.stdenv.mkDerivation (let
-          ename = "extended-faces";
-          pname = "emacs-${ename}";
-          version = "0.1.0";
-        in {
-          inherit ELDEV_LOCAL ename pname src version;
+      packages = {
+        default = inputs.self.packages.${system}.emacs-extended-faces;
 
-          nativeBuildInputs = [
-            pkgs.emacs
-            # Emacs-lisp build tool, https://doublep.github.io/eldev/
-            pkgs.emacsPackages.eldev
-          ];
+        emacs-extended-faces =
+          inputs.bash-strict-mode.lib.checkedDrv pkgs
+          (pkgs.emacsPackages.trivialBuild {
+            inherit ELDEV_LOCAL src;
 
-          buildPhase = ''
-            runHook preBuild
-            eldev compile --warnings-as-errors
-            runHook postBuild
-          '';
+            pname = "emacs-extended-faces";
+            version = readVersion ./extended-faces.el;
 
-          doCheck = true;
+            nativeBuildInputs = [
+              pkgs.emacs
+              # Emacs-lisp build tool, https://doublep.github.io/eldev/
+              pkgs.emacsPackages.eldev
+            ];
 
-          checkPhase = ''
-            runHook preCheck
-            eldev test
-            runHook postCheck
-          '';
+            doCheck = true;
 
-          installPhase = ''
-            runHook preInstall
-            eldev package
-            mkdir -p "$out/share/emacs/site-lisp/elpa"
-            tar --extract \
-                --file="dist/${ename}-${version}.tar" \
-                --directory "$out/share/emacs/site-lisp/elpa"
-            runHook postInstall
-          '';
+            checkPhase = ''
+              runHook preCheck
+              eldev test
+              runHook postCheck
+            '';
 
-          doInstallCheck = true;
+            doInstallCheck = true;
 
-          instalCheckPhase = ''
-            runHook preInstallCheck
-            eldev --packaged test
-            runHook postInstallCheck
-          '';
-        }));
+            instalCheckPhase = ''
+              runHook preInstallCheck
+              eldev --packaged test
+              runHook postInstallCheck
+            '';
+          });
+      };
 
       devShells.default =
         ## TODO: Use `inputs.bash-strict-mode.lib.checkedDrv` here after
-        ##       https://github.com/NixOS/nixpkgs/commit/58eb3d380601897c6ba9679eafc9c77305549b6f
-        ##       makes it into a release.
+        ##       NixOS/nixpkgs#204606 makes it into a release.
         inputs.bash-strict-mode.lib.drv pkgs
         (pkgs.mkShell {
           inputsFrom =
@@ -88,12 +120,12 @@
             ++ builtins.attrValues inputs.self.packages.${system};
 
           nativeBuildInputs = [
+            # Nix language server,
+            # https://github.com/oxalica/nil#readme
+            pkgs.nil
             # Bash language server,
             # https://github.com/bash-lsp/bash-language-server#readme
             pkgs.nodePackages.bash-language-server
-            # Nix language server,
-            # https://github.com/nix-community/rnix-lsp#readme
-            pkgs.rnix-lsp
           ];
         });
 
@@ -170,6 +202,26 @@
               runHook preInstall
             '';
           });
+
+        nix-fmt = inputs.bash-strict-mode.lib.checkedDrv pkgs (pkgs.stdenv.mkDerivation {
+          inherit src;
+
+          name = "nix fmt";
+
+          nativeBuildInputs = [inputs.self.formatter.${system}];
+
+          buildPhase = ''
+            runHook preBuild
+            alejandra --check .
+            runHook postBuild
+          '';
+
+          installPhase = ''
+            runHook preInstall
+            mkdir -p "$out"
+            runHook preInstall
+          '';
+        });
       };
 
       # Nix code formatter, https://github.com/kamadorueda/alejandra#readme
@@ -179,11 +231,16 @@
   inputs = {
     bash-strict-mode = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = github:sellout/bash-strict-mode;
+      url = "github:sellout/bash-strict-mode";
     };
 
-    flake-utils.url = github:numtide/flake-utils;
+    flake-utils.url = "github:numtide/flake-utils";
 
-    nixpkgs.url = github:NixOS/nixpkgs/release-22.11;
+    home-manager = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-22.11";
+    };
+
+    nixpkgs.url = "github:NixOS/nixpkgs/release-22.11";
   };
 }
