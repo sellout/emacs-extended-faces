@@ -13,7 +13,10 @@
     sandbox = true;
   };
 
-  outputs = inputs:
+  outputs = inputs: let
+    pname = "extended-faces";
+    ename = "emacs-${pname}";
+  in
     {
       overlays = {
         default = final: prev: {
@@ -23,8 +26,7 @@
         };
 
         emacs = final: prev: efinal: eprev: {
-          extended-faces =
-            inputs.self.packages.${final.system}.emacs-extended-faces;
+          "${pname}" = inputs.self.packages.${final.system}.${ename};
         };
       };
 
@@ -44,9 +46,9 @@
                 {
                   # These attributes are simply required by home-manager.
                   home = {
-                    homeDirectory = /tmp/emacs-extended-faces-example;
+                    homeDirectory = /tmp/${ename}-example;
                     stateVersion = "22.11";
-                    username = "emacs-extended-faces-example-user";
+                    username = "${ename}-example-user";
                   };
                 }
               ];
@@ -60,7 +62,7 @@
         overlays = [(import ./nix/dependencies.nix)];
       };
 
-      emacsPath = package: "${package}/share/emacs/site-lisp/elpa/${package.ename}-${package.version}";
+      emacsPath = package: "${package}/share/emacs/site-lisp/elpa/${package.pname}-${package.version}";
 
       ## Read version in format: ;; Version: xx.yy
       readVersion = fp:
@@ -76,15 +78,14 @@
       ELDEV_LOCAL = emacsPath pkgs.emacsPackages.eldev;
     in {
       packages = {
-        default = inputs.self.packages.${system}.emacs-extended-faces;
+        default = inputs.self.packages.${system}.${ename};
 
-        emacs-extended-faces =
+        "${ename}" =
           inputs.bash-strict-mode.lib.checkedDrv pkgs
           (pkgs.emacsPackages.trivialBuild {
-            inherit ELDEV_LOCAL src;
+            inherit ELDEV_LOCAL pname src;
 
-            pname = "emacs-extended-faces";
-            version = readVersion ./extended-faces.el;
+            version = readVersion ./${pname}.el;
 
             nativeBuildInputs = [
               pkgs.emacs
@@ -203,25 +204,27 @@
             '';
           });
 
-        nix-fmt = inputs.bash-strict-mode.lib.checkedDrv pkgs (pkgs.stdenv.mkDerivation {
-          inherit src;
+        nix-fmt =
+          inputs.bash-strict-mode.lib.checkedDrv pkgs
+          (pkgs.stdenv.mkDerivation {
+            inherit src;
 
-          name = "nix fmt";
+            name = "nix fmt";
 
-          nativeBuildInputs = [inputs.self.formatter.${system}];
+            nativeBuildInputs = [inputs.self.formatter.${system}];
 
-          buildPhase = ''
-            runHook preBuild
-            alejandra --check .
-            runHook postBuild
-          '';
+            buildPhase = ''
+              runHook preBuild
+              alejandra --check .
+              runHook postBuild
+            '';
 
-          installPhase = ''
-            runHook preInstall
-            mkdir -p "$out"
-            runHook preInstall
-          '';
-        });
+            installPhase = ''
+              runHook preInstall
+              mkdir -p "$out"
+              runHook preInstall
+            '';
+          });
       };
 
       # Nix code formatter, https://github.com/kamadorueda/alejandra#readme

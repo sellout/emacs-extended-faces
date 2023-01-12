@@ -8,6 +8,8 @@
 
 ;;; Code:
 
+(require 'pcase)
+
 (defvar graph-font-system 'quartz
   "Can be 'quartz, 'pango, 'fontconfig, or nil.")
 
