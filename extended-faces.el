@@ -33,21 +33,26 @@
 
 (defmacro defeface (face spec doc &rest args)
   "Define a FACE with the given SPEC, DOC, and other ARGS.
-Mostly a synonym for `defface', but indicates in the comment that it was defined
-in this package."
+Mostly a synonym for ‘defface’, but when this face is injected into a different
+group, it indicates in the comment that it was defined in this package."
+  (declare (doc-string 3))
   `(defface ,face
      ,spec
-     ,(concat doc " (Injected by extended-faces.)")
+     ,(if (eq (plist-get args :group) 'extended-faces)
+          doc
+        (concat doc " (Injected by extended-faces.)"))
      ,@args))
 
 ;;; THE MOST PRIMITIVE FACES
 
-;;; default         The default face, whose attributes are all specified.
+;;; default            The default face, whose attributes are all specified.
 
-;;; bold            These have the attributes indicated by their names (e.g.,
-;;; italic          bold has a bold :weight attribute), with all other
-;;; underline       attributes unspecified (and so given by default).
-;;; fixed-pitch
+;;; bold               These have the attributes indicated by their names (e.g.,
+;;; italic             bold has a bold :weight attribute), with all other
+;;; underline          attributes unspecified (and so given by default).
+
+;;; fixed-pitch        These should have their ‘family’ explicitly set by the
+;;; fixed-pitch-serif  user.
 ;;; variable-pitch
 
 (set-face-inheritance 'bold-italic '(italic bold))
@@ -63,7 +68,7 @@ in this package."
 
 ;;; match           For text matching a search command.
 
-(defface message ()
+(defeface message ()
   "Extended face that covers all messages – errors, warnings, and successes."
   :group 'extended-faces)
 (set-face-inheritance 'error   'message)
@@ -85,8 +90,24 @@ in this package."
 (set-face-inheritance 'mode-line-emphasis  'text-emphasis)
 (set-face-inheritance 'mode-line-highlight 'highlight)
 
-(defface delimiter '((default :inherit shadow))
+(defeface delimiter '((default :inherit shadow))
   "Delimiters between text."
+  :group 'extended-faces)
+
+(defeface pseudo-column '((default :inherit fixed-pitch))
+  "An indicator that ‘fixed-pitch’ is being used to emulate a columnar layout.
+This is distinct from using ‘fixed-pitch’ in, say, ‘compilation-mode’ where
+there may occassionally be tables or other output that requires ‘fixed-pitch’
+alignment.
+
+There are situations in Emacs where you can better approximate actual columns.
+E.g., Info node ‘(elisp)Display Margins’ will allow you to have up to three
+columns, as long as the middle column is the only one that needs to be
+interactive."
+  :group 'extended-faces)
+
+(defeface table '((default :inherit pseudo-column))
+  "Text-based tables within a buffer."
   :group 'extended-faces)
 
 ;;; FONT LOCK
@@ -95,8 +116,10 @@ in this package."
   "For any programming face"
   :group 'font-lock)
 
+;; TODO: Add something similar for buffers with specific names (e.g.,
+;;      ‘which-key-buffer-name’).
 (defun default-mode-face (face modes)
-  "Set the FACE to treat as `default' for the provided MODES."
+  "Set the FACE to treat as ‘default’ for the provided MODES."
   (mapcar (lambda (mode)
             ;; FIXME: How to do this without trampling on customizable
             ;;        variables?
@@ -105,15 +128,26 @@ in this package."
           modes))
 
 ;;; NB: It would be nice if comint had an output-specific face – I would
-;;;     probably leave the buffer `default`, set input to `font-lock` and output
-;;;     to `fixed-pitch`.
+;;;     probably leave the buffer ‘default’, set input to ‘font-lock’ and output
+;;;     to ‘fixed-pitch’.
 (default-mode-face 'fixed-pitch
   '(comint-mode
+    compilation-mode
     eshell-mode
-    dired-mode
+    special-mode))
+
+(set-face-inheritance 'eshell-prompt '())
+(set-face-inheritance 'term 'fixed-pitch)
+
+(default-mode-face 'pseudo-column
+  '(dired-mode
     ibuffer-mode
-    tabulated-list-mode
-    term-mode))
+    tabulated-list-mode))
+
+;; Alignment is still important in most programming languages.
+;;
+;; TODO: Maybe set this back to ‘default’ for languages that have less-aligny
+;;       formatting styles?
 (default-mode-face 'font-lock '(prog-mode))
 
 (defeface font-lock-value-face '((default :inherit font-lock))
@@ -169,57 +203,57 @@ in this package."
 ;;; Define 11 levels only because that is the number Gnus goes up to.
 ;;; TODO: Define a var that takes a list of specs (of length n) for assigning
 ;;;       item m mod n to level-m.
-(defface level-1 ()
+(defeface level-1 ()
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-2 '((default :inherit level-1))
+(defeface level-2 '((default :inherit level-1))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-3 '((default :inherit level-2))
+(defeface level-3 '((default :inherit level-2))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-4 '((default :inherit level-3))
+(defeface level-4 '((default :inherit level-3))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-5 '((default :inherit level-4))
+(defeface level-5 '((default :inherit level-4))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-6 '((default :inherit level-5))
+(defeface level-6 '((default :inherit level-5))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-7 '((default :inherit level-6))
+(defeface level-7 '((default :inherit level-6))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-8 '((default :inherit level-7))
+(defeface level-8 '((default :inherit level-7))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-9 '((default :inherit level-8))
+(defeface level-9 '((default :inherit level-8))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-10 '((default :inherit level-9))
+(defeface level-10 '((default :inherit level-9))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
   :group 'extended-faces)
-(defface level-11 '((default :inherit level-10))
+(defeface level-11 '((default :inherit level-10))
   "Accessory face for multi-level things, like outlines.
 Inherits from the previous level so you can customize levels 1–n, then n+1 on
 will match n."
@@ -230,129 +264,157 @@ will match n."
 ;;;     levels in your mode, perhaps choose moderate/normal/low so that truly
 ;;;     urgent things in the system can be given more prevalence
 
-(defface urgency-urgent ()
+(defeface urgency-urgent ()
   "Highest urgency."
   :group 'extended-faces)
-(defface urgency-high '((default :inherit urgency-urgent))
+(defeface urgency-high '((default :inherit urgency-urgent))
   "2nd-highest urgency."
   :group 'extended-faces)
-(defface urgency-moderate '((default :inherit urgency-high))
+(defeface urgency-moderate '((default :inherit urgency-high))
   "3rd-highest urgency."
   :group 'extended-faces)
-(defface urgency-normal '((default :inherit urgency-moderate))
+(defeface urgency-normal '((default :inherit urgency-moderate))
   "3rd-lowest (4th-highest) urgency."
   :group 'extended-faces)
-(defface urgency-low '((default :inherit urgency-normal))
+(defeface urgency-low '((default :inherit urgency-normal))
   "2nd-lowest urgency."
   :group 'extended-faces)
-(defface urgency-trivial '((default :inherit urgency-low))
+(defeface urgency-trivial '((default :inherit urgency-low))
   "Lowest urgency."
   :group 'extended-faces)
 
-(defface input '((default :inherit font-lock))
+(defeface input '((default :inherit font-lock))
   "For input entered by the user."
   :group 'extended-faces)
 
-(defface output ()
+(defeface output ()
   "A face used for output from processes."
   :group 'extended-faces)
 
-(defface prompt ()
+(defeface prompt ()
   "A face used for any kind of shell-like input prompt."
   :group 'extended-faces)
 
-(defface result '((default :inherit output))
+(defeface result '((default :inherit output))
   "A face used for the result from processes."
   :group 'extended-faces)
 
 ;;; explicit colors
 
-(defface black '((default :foreground "black"))
-  "Things that are explicitly black.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface red '((default :foreground "red"))
-  "Things that are explicitly red.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface green '((default :foreground "green"))
-  "Things that are explicitly green.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface yellow '((default :foreground "yellow"))
-  "Things that are explicitly yellow.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface blue '((default :foreground "blue"))
-  "Things that are explicitly blue.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface magenta '((default :foreground "magenta"))
-  "Things that are explicitly magenta.
-Should be used rarely, but useful for term colors, etc."
-  :group 'extended-faces)
-(defface cyan '((default :foreground "cyan"))
+;; These should be inherited from fairly rarely. This is not about “I want this
+;; to be green.” That is a theme decision. This is for integration with things
+;; where there is no meaning beyond the color. E.g., ANSI terminals want these
+;; colors, but you have no idea what they will be used for.
+
+(defeface cyan '((default :foreground "cyan"))
   "Things that are explicitly cyan.
 Should be used rarely, but useful for term colors, etc."
   :group 'extended-faces)
-(defface white '((default :foreground "white"))
+(defeface blue '((default :foreground "blue"))
+  "Things that are explicitly blue.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface magenta '((default :foreground "magenta"))
+  "Things that are explicitly magenta.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface red '((default :foreground "red"))
+  "Things that are explicitly red.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface yellow '((default :foreground "yellow"))
+  "Things that are explicitly yellow.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface green '((default :foreground "green"))
+  "Things that are explicitly green.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface black '((default :foreground "black"))
+  "Things that are explicitly black.
+Should be used rarely, but useful for term colors, etc."
+  :group 'extended-faces)
+(defeface white '((default :foreground "white"))
   "Things that are explicitly white.
 Should be used rarely, but useful for term colors, etc."
   :group 'extended-faces)
 
+;; TODO: This probably also need inverse-video set, but I’m not certain. The
+;;       default settings set both foreground and background to the same color,
+;;       so it might be more of a pain.
+(set-face-inheritance 'ansi-color-black 'black)
+(set-face-inheritance 'ansi-color-blue 'blue)
+(set-face-inheritance 'ansi-color-bold 'bold)
+(set-face-inheritance 'ansi-color-cyan 'cyan)
+(set-face-inheritance 'ansi-color-green 'green)
+(set-face-inheritance 'ansi-color-italic 'italic)
+(set-face-inheritance 'ansi-color-magenta 'magenta)
+(set-face-inheritance 'ansi-color-red 'red)
+(set-face-inheritance 'ansi-color-underline 'underline)
+(set-face-inheritance 'ansi-color-white 'white)
+(set-face-inheritance 'ansi-color-yellow 'yellow)
+
 ;;; filesystem
 
-(defface fs-directory () "Things that represent a directory."
+(defeface fs-directory () "Things that represent a directory."
   :group 'extended-faces)
-(defface fs-executable '((default :inherit file))
+(defeface fs-executable '((default :inherit file))
   "Things that represent an executable."
   :group 'extended-faces)
-(defface fs-file () "Things that represent a file."
+(defeface fs-file () "Things that represent a file."
   :group 'extended-faces)
-(defface fs-broken-symlink '((default :inherit (warning fs-symlink)))
+(defeface fs-broken-symlink '((default :inherit (warning fs-symlink)))
   "Things that represent a broken symlink."
   :group 'extended-faces)
-(defface fs-symlink () "Things that represent a symlink."
+(defeface fs-symlink () "Things that represent a symlink."
   :group 'extended-faces)
 
 ;;; text formatting
 
-(defface text ()
+(defeface text ()
   "A face that all text-specific faces inherit from.
 This makes it easy to use a different font for text modes vs programming modes."
   :group 'extended-faces)
 
-(defface text-heading '((default :inherit text))
+(defeface text-heading '((default :inherit text))
   "A heading.
-This is often combined with the `level` faces, and should usually follow the
-level in the inheritance list (e.g., `'(level-2 text-header)`)."
+This is often combined with the ‘level’ faces, and should usually follow the
+level in the inheritance list (e.g., '(level-2 text-header))."
   :group 'extended-faces)
 
-(defface text-definition-term ()
+(defeface text-definition-term '((default :inherit text))
   "For the term half of a definition in a definition list."
   :group 'extended-faces)
 
-(defface text-definition-explanation ()
+(defeface text-definition-explanation '((default :inherit text))
   "For the explanatory half of a definition in a definition list."
   :group 'extended-faces)
 
-(defface text-emphasis '((default :inherit italic))
-  "The face to use for emphasized text (defaults to `italic')."
+(defeface text-emphasis '((default :inherit (italic text)))
+  "The face to use for emphasized text (defaults to ‘italic’)."
   :group 'extended-faces)
 
-(defface text-emphasis-strong '((default :inherit bold))
-  "The face to use for strongly-emphasized text (defaults to `bold')."
+(defeface text-emphasis-strong '((default :inherit (bold text)))
+  "The face to use for strongly-emphasized text (defaults to ‘bold’)."
   :group 'extended-faces)
 
-(defface text-verbatim '((default :inherit fixed-pitch))
+(defeface text-title '((default :inherit text))
+  "Document titles in various formats.
+Some formats distinguish between titles and header levels (e.g., ‘org-mode’)
+while others don’t (‘markdown-mode’). In the latter, this _may_ be used for the
+top level, shifting ‘level-1’ to be used for the second-level headers in those
+modes."
+  :group 'extended-faces)
+
+(defeface text-verbatim '((default :inherit (fixed-pitch text)))
   "The face to use for text that should be treated literally."
   :group 'extended-faces)
 
-(defface button-mouseover '((default :inherit button))
+(defeface button-mouseover '((default :inherit button))
   "Button with the mouse hovering over it."
   :group 'extended-faces)
 
-(defface button-pressed '((default :inherit button))
+(defeface button-pressed '((default :inherit button))
   "Button when pressed."
   :group 'extended-faces)
 
@@ -375,43 +437,43 @@ level in the inheritance list (e.g., `'(level-2 text-header)`)."
 ;;; - in some envs, you can’t use [refl|introsp]ection to see what globals might
 ;;;   exist (cf. Lua), so hashing non-local-var names is a reasonable fallback
 ;;;   in this case (maybe ignore themes and just pick colors that have enough
-;;;   contrast vs the `sem-hi-global-scope` background color) but probably still
+;;;   contrast vs the ‘sem-hi-global-scope’ background color) but probably still
 ;;;   want to annotate with global indicator.
 
-(defface sem-hi-scope-global ()
+(defeface sem-hi-scope-global ()
   "A variable with global scope.
 NB: Your mode should use this face only when it can statically guarantee the
 name is in scope. Otherwise, it should cycle, using name hashes."
   :group 'extended-faces)
-(defface sem-hi-scope-file ()
+(defeface sem-hi-scope-file ()
   "A variable with file scope."
   :group 'extended-faces) ;;; do we want to be explicit about file scope??
-(defface sem-hi-scope-local ()
+(defeface sem-hi-scope-local ()
   "A variable with local (lexical) scope."
   :group 'extended-faces) ;;; other locals inherit from this by default
-(defface sem-hi-scope-broken '((default :inherit warning))
+(defeface sem-hi-scope-broken '((default :inherit warning))
   "A variable accessed beyond its scope.
 This is for like JS, accessing a var in a situation where “intuitive” scope
 should have ended."
   :group 'extended-faces)
-(defface sem-hi-bound ()
+(defeface sem-hi-bound ()
   "A variable that appears to be bound."
   :group 'extended-faces)
-(defface sem-hi-unbound '((default :inherit error))
+(defeface sem-hi-unbound '((default :inherit error))
   "A variable that appears to not be bound.
 NB: Your mode should use this face only when it can statically guarantee the
 name is not in scope. Otherwise, it should cycle (like sem-hi-scope-global),
 using name hashes."
   :group 'extended-faces)
 
-(defface sem-hi-mutable '((default :inherit font-lock-variable-name-face))
+(defeface sem-hi-mutable '((default :inherit font-lock-variable-name-face))
   "A variable that is mutable (or refers to a mutable value)."
   :group 'extended-faces)
-(defface sem-hi-constant '((default :inherit font-lock-constant-face))
+(defeface sem-hi-constant '((default :inherit font-lock-constant-face))
   "A constant."
   :group 'extended-faces)
 
-(defface sem-hi-binding '((default :inherit font-lock-variable-name-face))
+(defeface sem-hi-binding '((default :inherit font-lock-variable-name-face))
   "A binding site."
   :group 'extended-faces)
 

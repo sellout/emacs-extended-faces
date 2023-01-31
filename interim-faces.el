@@ -61,13 +61,46 @@ followed by a list of the faces that it should inherit from."
 (package-faces 'diary-lib
                '(diary-button        button))
 
+;; There are a few different diff libraries. We try to cover the various bits of
+;; all of them. Here is a rough equivalence table:
+;;
+"|      Diff       |   EDiff   |       Magit       |       SMerge (VC)        |
+ +-----------------+-----------+-------------------+--------------------------+
+ | -added          | -B        | -added, -their    | -upper, -other (-added)  |
+ | -changed        | -Ancestor | -base             | -base (-changed)         |
+ | -removed        | -A        | -removed, -our    | -lower, -mine (-removed) |
+ | -changed-unspec | -C        | -lines            |                          |
+ | -context        |           | -context          |                          |
+ +-----------------+-----------+-------------------+--------------------------+
+ |                 | -current- | -highlight        |                          |
+ | -indicator-     |           | -diffstat-        |                          |
+ | -refine-        | -fine-    |                   | -refined-                |
+ |                 | -even-    |                   |                          |
+ |                 | -odd-     |                   |                          |
+ +-----------------+-----------+-------------------+--------------------------+
+ | -file-header    |           | -file-heading     |                          |
+ | -hunk-header    |           | -hunk-heading     |                          |
+ |                 |           | -conflict-heading | -markers                 |
+ +-----------------+-----------+-------------------+--------------------------+"
+
 (package-faces 'diff-mode
-               '(diff-added          diff-changed)
-               '(diff-removed        diff-changed)
-               '(diff-refine-change  diff-changed)
-               '(diff-refine-removed (diff-refine-change diff-removed))
-               '(diff-header         text-heading)
-               '(diff-file-header    diff-header))
+               '(diff-added             ())
+               '(diff-changed           ())
+               '(diff-context           ())
+               '(diff-error             error)
+               '(diff-file-header       (diff-header level-2))
+               '(diff-function          font-lock-function-name-face)
+               '(diff-header            text-heading)
+               '(diff-hunk-header       (diff-header level-3))
+               '(diff-index             diff-header)
+               '(diff-indicator-added   diff-added)
+               '(diff-indicator-changed diff-changed)
+               '(diff-indicator-removed diff-removed)
+               '(diff-nonexistent       diff-removed)
+               '(diff-refine-added      diff-added)
+               '(diff-refine-changed    diff-changed)
+               '(diff-refine-removed    diff-removed)
+               '(diff-removed           ()))
 
 (package-faces 'dired
                '(dired-directory  fs-directory)
@@ -75,22 +108,26 @@ followed by a list of the faces that it should inherit from."
                '(dired-symlink    fs-symlink))
 
 (package-faces 'ediff
-               '(ediff-current-diff-a        (diff-removed highlight))
-               '(ediff-current-diff-ancestor highlight)
-               '(ediff-current-diff-b        (diff-added highlight))
-               '(ediff-current-diff-c        (diff-changed highlight))
-               '(ediff-even-diff-a           (diff-removed secondary-selection))
-               '(ediff-even-diff-ancestor    secondary-selection)
-               '(ediff-even-diff-b           (diff-added secondary-selection))
-               '(ediff-even-diff-c           (diff-changed secondary-selection))
-               '(ediff-fine-diff-a           (diff-refine-removed highlight))
-               '(ediff-fine-diff-ancestor    highlight)
-               '(ediff-fine-diff-b           (diff-refine-added highlight))
-               '(ediff-fine-diff-c           (diff-refine-change highlight))
-               '(ediff-odd-diff-a            (diff-removed shadow))
-               '(ediff-odd-diff-ancestor     shadow)
-               '(ediff-odd-diff-b            (diff-added shadow))
-               '(ediff-odd-diff-c            (diff-changed shadow)))
+               '(ediff-current-diff-A        (diff-removed highlight))
+               '(ediff-current-diff-Ancestor (diff-changed highlight))
+               '(ediff-current-diff-B        (diff-added highlight))
+               '(ediff-current-diff-C      (diff-changed-unspecified highlight))
+               '(ediff-even-diff-A           (diff-removed secondary-selection))
+               '(ediff-even-diff-Ancestor    (diff-changed secondary-selection))
+               '(ediff-even-diff-B           (diff-added secondary-selection))
+               '(ediff-even-diff-C
+                 (diff-changed-unspecified secondary-selection))
+               '(ediff-fine-diff-A           diff-refine-removed)
+               '(ediff-fine-diff-Ancestor    diff-refine-changed)
+               '(ediff-fine-diff-B           diff-refine-added)
+               '(ediff-fine-diff-C           diff-changed-unspecified)
+               '(ediff-odd-diff-A            (diff-removed shadow))
+               '(ediff-odd-diff-Ancestor     (diff-changed shadow))
+               '(ediff-odd-diff-B            (diff-added shadow))
+               '(ediff-odd-diff-C            (diff-changed-unspecified shadow)))
+
+(eval-after-load 'ediff
+  '(default-mode-face 'fixed-pitch '(ediff-mode)))
 
 (package-faces 'eshell
                ;; '(eshell-ls-archive (,@fg-magenta))
@@ -128,22 +165,30 @@ followed by a list of the faces that it should inherit from."
                '(info-xref-visited (link-visited info-xref)))
 
 (package-faces 'magit
-               '(magit-diff-file-contents           fixed-pitch)
-               '(magit-diff-diffstat-added
-                 (magit-diff-file-contents diff-added fringe))
-               '(magit-diff-diffstat-removed
-                 (magit-diff-file-contents diff-removed fringe))
                '(magit-diff-added         (magit-diff-file-contents diff-added))
-               '(magit-diff-added-highlight
-                 (magit-diff-file-contents diff-added highlight))
-               '(magit-diff-context                 magit-diff-file-contents)
-               '(magit-diff-context-highlight       magit-diff-file-contents)
-               '(magit-diff-hunk-heading            magit-diff-file-contents)
-               '(magit-diff-hunk-heading-highlight  magit-diff-file-contents)
-               '(magit-diff-hunk-heading-selection  magit-diff-file-contents)
+               '(magit-diff-added-highlight        (magit-diff-added highlight))
+               '(magit-diff-base        (magit-diff-file-contents diff-changed))
+               '(magit-diff-base-highlight          (magit-diff-base highlight))
+               '(magit-diff-conflict-heading        smerge-markers)
+               '(magit-diff-context     (magit-diff-file-contents diff-context))
+               '(magit-diff-context-highlight    (magit-diff-context highlight))
+               '(magit-diff-diffstat-added          diff-indicator-added)
+               '(magit-diff-diffstat-removed        diff-indicator-removed)
+               ;; NB: Ensure ‘magit-diff-file-contents’ is ‘fixed-pitch’ because
+               ;;     having columns align is generally useful in a diff,
+               ;;     regardless of the type of content.
+               '(magit-diff-file-contents           fixed-pitch)
+               '(magit-diff-file-heading            diff-file-header)
+               '(magit-diff-hunk-heading            diff-hunk-header)
+               '(magit-diff-hunk-heading-highlight
+                 (magit-diff-hunk-heading magit-section-highlight))
+               '(magit-diff-hunk-heading-selection
+                 (magit-diff-hunk-heading selection))
                '(magit-diff-removed     (magit-diff-file-contents diff-removed))
-               '(magit-diff-removed-highlight
-                 (magit-diff-file-contents diff-removed highlight))
+               '(magit-diff-removed-highlight    (magit-diff-removed highlight))
+               '(magit-diff-revision-summary        text-title)
+               '(magit-diff-revision-highlight
+                 (magit-diff-revision-summary magit-section-highlight))
                '(magit-key-mode-button-face         button)
                '(magit-key-mode-header-face         text-heading)
                '(magit-log-graph                    fixed-pitch)
@@ -155,14 +200,17 @@ followed by a list of the faces that it should inherit from."
                '(magit-log-reflog-label-rebase     magit-log-reflog-label-other)
                '(magit-log-reflog-label-remote     magit-log-reflog-label-other)
                '(magit-process-ng                   (error magit-section-title))
-               '(magit-process-ok                (success magit-section-title)))
+               '(magit-process-ok                (success magit-section-title))
+               '(magit-section-heading              level-1)
+               '(magit-section-highlight            highlight))
 
 (eval-after-load 'magit
   '(progn
      (default-mode-face 'fixed-pitch
        '(magit-log-mode ; uses columns, but not enough
          magit-popup-mode
-         magit-refs-mode))
+         magit-refs-mode
+         magit-revision-mode))
      ;; (default-mode-face 'magit-diff '(magit-diff-mode))
      ))
 
@@ -172,6 +220,14 @@ followed by a list of the faces that it should inherit from."
                '(message-header-subject    message-header-other)
                '(message-header-newsgroups message-header-other)
                '(message-header-xheader    message-header-other))
+
+(package-faces 'minimap
+               '(minimap-font-face font-lock) ; also set :height 30
+               '(minimap-current-line-face highlight)
+               '(minimap-active-region-background region)
+               '(minimap-semantic-function-face font-lock-function-name-face)
+               '(minimap-semantic-variable-face font-lock-variable-name-face)
+               '(minimap-semantic-type-face font-lock-type-face))
 
 (package-faces 'nxml-mode
                '(nxml-delimiter delimiter)
@@ -197,23 +253,24 @@ followed by a list of the faces that it should inherit from."
                '(org-agenda-dimmed-todo-face (shadow org-agenda))
                '(org-agenda-done             (org-done org-agenda))
                '(org-agenda-restriction-lock org-agenda)
-               '(org-block                   (org-default fixed-pitch))
+               '(org-block                   (fixed-pitch org-default))
                '(org-block-background        (org-default
                                               fixed-pitch
                                               secondary-selection))
                '(org-checkbox                org-default)
                '(org-code                    (org-default font-lock))
                '(org-column-title            (text-heading org-default))
-               '(org-default                 default)
+               '(org-default                 text)
+               '(org-document-title          text-title)
                '(org-headline-done           org-done)
-               '(org-level-1                 (level-1 org-default))
-               '(org-level-2                 (level-2 org-default))
-               '(org-level-3                 (level-3 org-default))
-               '(org-level-4                 (level-4 org-default))
-               '(org-level-5                 (level-5 org-default))
-               '(org-level-6                 (level-6 org-default))
-               '(org-level-7                 (level-7 org-default))
-               '(org-level-8                 (level-8 org-default))
+               '(org-level-1                 (outline-1 org-default))
+               '(org-level-2                 (outline-2 org-default))
+               '(org-level-3                 (outline-3 org-default))
+               '(org-level-4                 (outline-4 org-default))
+               '(org-level-5                 (outline-5 org-default))
+               '(org-level-6                 (outline-6 org-default))
+               '(org-level-7                 (outline-7 org-default))
+               '(org-level-8                 (outline-8 org-default))
                '(org-link                    (link org-default))
                '(org-list-dt                 (text-definition-term org-default))
                '(org-scheduled               org-default)
@@ -257,11 +314,12 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'smerge-mode
                '(smerge-base            diff-changed)
-               '(smerge-mine            diff-added)
-               '(smerge-other           diff-removed)
+               '(smerge-lower           diff-added)
+               ;; '(smerge-markers         )
                '(smerge-refined-added   diff-refine-added)
-               '(smerge-refined-change  diff-refine-change)
-               '(smerge-refined-removed diff-refine-removed))
+               '(smerge-refined-changed diff-refine-changed)
+               '(smerge-refined-removed diff-refine-removed)
+               '(smerge-upper           diff-removed))
 
 (package-faces 'speedbar
                '(speedbar-button-face    button)
@@ -282,6 +340,35 @@ followed by a list of the faces that it should inherit from."
                '(term-color-white   white)
                '(term-underline     underline))
 
+(package-faces 'transient
+               ;; '(transient-active-infix      ())
+               '(transient-amaranth          magenta)
+               ;; '(transient-argument          ())
+               '(transient-blue              blue)
+               ;; '(transient-disabled-suffix   ())
+               ;; '(transient-enabled-suffix    ())
+               ;; '(transient-heading           ())
+               ;; '(transient-higher-level      ())
+               ;; '(transient-inactive-argument) ; Already correct
+               ;; '(transient-inactive-value) ; Already correct
+               ;; '(transient-inapt-suffix      ())
+               ;; See ‘transient-align-variable-pitch’
+               '(transient-key             (font-lock-builtin-face fixed-pitch))
+               ;; These two are documented to inherit from ‘transient-key’,
+               ;; but they don’t actually.
+               '(transient-mismatched-key    (warning transient-key))
+               '(transient-nonstandard-key   (warning transient-key))
+               '(transient-pink              orange)
+               '(transient-purple            violet)
+               '(transient-red               red)
+               '(transient-separator         mode-line)
+               '(transient-teal              cyan)
+               ;; '(transient-unreachable) ; Already correct
+               '(transient-unreachable-key
+                 (transient-unreachable transient-key))
+               ;; '(transient-value             ())
+               )
+
 (eval-after-load 'whitespace
   '(defeface whitespace-default '((default :inherit warning))
      ""
@@ -297,9 +384,8 @@ followed by a list of the faces that it should inherit from."
                '(whitespace-space-before-tab whitespace-default)
                '(whitespace-indentation      whitespace-default)
                '(whitespace-empty            whitespace-default)
-               '(whitespace-space-after-tab  whitespace-default)
                '(whitespace-space            whitespace-default)
-               '(whitespace-space            whitespace-default))
+               '(whitespace-space-after-tab  whitespace-default))
 
 (package-faces 'widget
                '(widget-button         button)
@@ -318,7 +404,7 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'darcsum
                '(darcsum-header-face      diff-header)
-               '(darcsum-marked-face      diff-refine-change)
+               '(darcsum-marked-face      diff-refine-changed)
                '(darcsum-need-action-face warning)
                '(darcsum-need-action-marked-face
                  (darcsum-marked-face darcsum-need-action-face))
@@ -437,6 +523,7 @@ followed by a list of the faces that it should inherit from."
                '(helm-ff-file               fs-file)
                '(helm-ff-invalid-symlink    fs-broken-symlink)
                '(helm-ff-symlink            fs-symlink)
+               ;; '(helm-header) ; Already correct
                '(helm-match                 match)
                '(helm-gentoo-match          helm-match)
                '(helm-grep-match            helm-match)
@@ -444,6 +531,8 @@ followed by a list of the faces that it should inherit from."
                '(helm-selection-line        secondary-selection)
                '(helm-source-header         helm-header)
                '(helm-w3m-bookmarks         helm-bookmark-w3m))
+
+(default-mode-face 'pseudo-column '(helm-major-mode))
 
 (package-faces 'hydra
                ;; TODO: These faces shouldn’t be named by color
