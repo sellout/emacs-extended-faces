@@ -306,53 +306,76 @@ will match n."
 ;; where there is no meaning beyond the color. E.g., ANSI terminals want these
 ;; colors, but you have no idea what they will be used for.
 
+;; Guidelines for mapping faces named after colors
+;;
+;; 1. find the CMYK value for each “requested” color name,
+;; 2. order them based on their clockwise position on the CMYK color wheel
+;;   (generally cyan first, but if there is a significant gap in their
+;;    positions, split it there),
+;; 3. do a best-fit from the primary & secondary colors below to the color
+;;    requested by the face (in general, err toward distinct faces rather than
+;;    closest approximation – see ‘hydra’ and ‘transient’ for examples),
+;; 4. suggest to the upstream package maintainers that they use semantic faces
+;;    instead of color faces.
+;;
+;; If there are more than 6–8 colors (depending on whether there are reasonable
+;; mappings for ‘black’ and ‘white’) you will need to duplicate some of them.
+
 (defeface cyan '((default :foreground "cyan"))
   "Things that are explicitly cyan.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(f000). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface blue '((default :foreground "blue"))
   "Things that are explicitly blue.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(ff00). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface magenta '((default :foreground "magenta"))
   "Things that are explicitly magenta.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(0f00). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface red '((default :foreground "red"))
   "Things that are explicitly red.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(0ff0). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface yellow '((default :foreground "yellow"))
   "Things that are explicitly yellow.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(00f0). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface green '((default :foreground "green"))
   "Things that are explicitly green.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(f0f0). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface black '((default :foreground "black"))
   "Things that are explicitly black.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(000f). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 (defeface white '((default :foreground "white"))
   "Things that are explicitly white.
-Should be used rarely, but useful for term colors, etc."
+Approximately cmyk(0000). Should be used rarely, but useful for term colors,
+etc."
   :group 'extended-faces)
 
 ;; TODO: This probably also need inverse-video set, but I’m not certain. The
 ;;       default settings set both foreground and background to the same color,
 ;;       so it might be more of a pain.
-(set-face-inheritance 'ansi-color-black 'black)
-(set-face-inheritance 'ansi-color-blue 'blue)
-(set-face-inheritance 'ansi-color-bold 'bold)
 (set-face-inheritance 'ansi-color-cyan 'cyan)
-(set-face-inheritance 'ansi-color-green 'green)
-(set-face-inheritance 'ansi-color-italic 'italic)
+(set-face-inheritance 'ansi-color-blue 'blue)
 (set-face-inheritance 'ansi-color-magenta 'magenta)
 (set-face-inheritance 'ansi-color-red 'red)
-(set-face-inheritance 'ansi-color-underline 'underline)
-(set-face-inheritance 'ansi-color-white 'white)
 (set-face-inheritance 'ansi-color-yellow 'yellow)
+(set-face-inheritance 'ansi-color-green 'green)
+(set-face-inheritance 'ansi-color-black 'black)
+(set-face-inheritance 'ansi-color-white 'white)
+(set-face-inheritance 'ansi-color-bold 'bold)
+(set-face-inheritance 'ansi-color-italic 'italic)
+(set-face-inheritance 'ansi-color-underline 'underline)
 
 ;;; filesystem
 

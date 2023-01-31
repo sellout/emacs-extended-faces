@@ -329,22 +329,27 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'term
                '(term               fixed-pitch)
-               '(term-bold          bold)
-               '(term-color-black   black)
-               '(term-color-red     red)
-               '(term-color-green   green)
-               '(term-color-yellow  yellow)
-               '(term-color-blue    blue)
-               '(term-color-magenta magenta)
-               '(term-color-cyan    cyan)
-               '(term-color-white   white)
-               '(term-underline     underline))
+               '(term-bold          ansi-color-bold)
+               '(term-color-black   ansi-color-black)
+               '(term-color-red     ansi-color-red)
+               '(term-color-green   ansi-color-green)
+               '(term-color-yellow  ansi-color-yellow)
+               '(term-color-blue    ansi-color-blue)
+               '(term-color-magenta ansi-color-magenta)
+               '(term-color-cyan    ansi-color-cyan)
+               '(term-color-white   ansi-color-white)
+               '(term-underline     ansi-color-underline))
 
 (package-faces 'transient
+               ;; colors first
+               '(transient-teal              green) ; Approximately cmyk(f007)
+               '(transient-blue              cyan) ; Approximately cmyk(ff00)
+               '(transient-purple            blue) ; Approximately cmyk(0f07)
+               '(transient-pink              magenta) ; Approximately cmyk(0302)
+               '(transient-amaranth          red) ; Approximately cmyk(0 12 9 1)
+               '(transient-red               yellow) ; Approximately cmyk(0ff0)
                ;; '(transient-active-infix      ())
-               '(transient-amaranth          magenta)
                ;; '(transient-argument          ())
-               '(transient-blue              blue)
                ;; '(transient-disabled-suffix   ())
                ;; '(transient-enabled-suffix    ())
                ;; '(transient-heading           ())
@@ -358,11 +363,7 @@ followed by a list of the faces that it should inherit from."
                ;; but they don’t actually.
                '(transient-mismatched-key    (warning transient-key))
                '(transient-nonstandard-key   (warning transient-key))
-               '(transient-pink              orange)
-               '(transient-purple            violet)
-               '(transient-red               red)
                '(transient-separator         mode-line)
-               '(transient-teal              cyan)
                ;; '(transient-unreachable) ; Already correct
                '(transient-unreachable-key
                  (transient-unreachable transient-key))
@@ -536,11 +537,11 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'hydra
                ;; TODO: These faces shouldn’t be named by color
-               '(hydra-face-red      red)
-               '(hydra-face-blue     blue)
-               '(hydra-face-amaranth orange)
-               '(hydra-face-pink     magenta)
-               '(hydra-face-teal     teal))
+               '(hydra-face-teal     green) ; Approximately cmyk(f007)
+               '(hydra-face-blue     cyan) ; Approximately cmyk(ff00)
+               '(hydra-face-pink     blue) ; Approximately cmyk(0302)
+               '(hydra-face-amaranth magenta) ; Approximately cmyk(0 12 9 1)
+               '(hydra-face-red      red)) ; Approximately cmyk(0ff0)
 
 (package-faces 'idris-mode
                '(idris-active-term-face       isearch)
