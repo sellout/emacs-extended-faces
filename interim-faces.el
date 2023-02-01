@@ -218,10 +218,7 @@ followed by a list of the faces that it should inherit from."
      (default-mode-face 'fixed-pitch
        '(magit-log-mode ; uses columns, but not enough
          magit-popup-mode
-         magit-refs-mode
-         magit-revision-mode))
-     ;; (default-mode-face 'magit-diff '(magit-diff-mode))
-     ))
+         magit-refs-mode))))
 
 (package-faces 'message
                '(message-header-to         message-header-other)

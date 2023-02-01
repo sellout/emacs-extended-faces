@@ -133,8 +133,7 @@ interactive."
 (default-mode-face 'fixed-pitch
   '(comint-mode
     compilation-mode
-    eshell-mode
-    special-mode))
+    eshell-mode))
 
 (set-face-inheritance 'eshell-prompt '())
 (set-face-inheritance 'term 'fixed-pitch)
