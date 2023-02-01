@@ -348,12 +348,12 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'transient
                ;; colors first
-               '(transient-teal              green) ; Approximately cmyk(f007)
-               '(transient-blue              cyan) ; Approximately cmyk(ff00)
-               '(transient-purple            blue) ; Approximately cmyk(0f07)
+               '(transient-teal              green)   ; Approximately cmyk(f007)
+               '(transient-blue              cyan)    ; Approximately cmyk(ff00)
+               '(transient-purple            blue)    ; Approximately cmyk(0f07)
                '(transient-pink              magenta) ; Approximately cmyk(0302)
-               '(transient-amaranth          red) ; Approximately cmyk(0 12 9 1)
-               '(transient-red               yellow) ; Approximately cmyk(0ff0)
+               '(transient-amaranth          red)     ; Approximately cmyk(0c91)
+               '(transient-red               yellow)  ; Approximately cmyk(0ff0)
                ;; '(transient-active-infix      ())
                ;; '(transient-argument          ())
                ;; '(transient-disabled-suffix   ())
@@ -541,13 +541,17 @@ followed by a list of the faces that it should inherit from."
 
 (default-mode-face 'pseudo-column '(helm-major-mode))
 
+(package-faces 'highlight-doxygen
+               '(highlight-doxygen-code-block font-lock)
+               '(highlight-doxygen-comment    highlight))
+
 (package-faces 'hydra
                ;; TODO: These faces shouldn’t be named by color
-               '(hydra-face-teal     green) ; Approximately cmyk(f007)
-               '(hydra-face-blue     cyan) ; Approximately cmyk(ff00)
-               '(hydra-face-pink     blue) ; Approximately cmyk(0302)
-               '(hydra-face-amaranth magenta) ; Approximately cmyk(0 12 9 1)
-               '(hydra-face-red      red)) ; Approximately cmyk(0ff0)
+               '(hydra-face-teal     green)   ; Approximately cmyk(f007)
+               '(hydra-face-blue     cyan)    ; Approximately cmyk(ff00)
+               '(hydra-face-pink     blue)    ; Approximately cmyk(0302)
+               '(hydra-face-amaranth magenta) ; Approximately cmyk(0c91)
+               '(hydra-face-red      red))    ; Approximately cmyk(0ff0)
 
 (package-faces 'idris-mode
                '(idris-active-term-face       isearch)
