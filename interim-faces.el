@@ -189,8 +189,12 @@ followed by a list of the faces that it should inherit from."
                '(magit-diff-revision-summary        text-title)
                '(magit-diff-revision-highlight
                  (magit-diff-revision-summary magit-section-highlight))
+               ;; NB: This often affects alignment of the ASCII graph
+               '(magit-hash                         pseudo-column)
                '(magit-key-mode-button-face         button)
                '(magit-key-mode-header-face         text-heading)
+               '(magit-log-author                   ())
+               ;; NB: This is drawn as ASCII art
                '(magit-log-graph                    fixed-pitch)
                '(magit-log-reflog-label-checkout   magit-log-reflog-label-other)
                '(magit-log-reflog-label-cherry-pick
@@ -202,7 +206,14 @@ followed by a list of the faces that it should inherit from."
                '(magit-process-ng                   (error magit-section-title))
                '(magit-process-ok                (success magit-section-title))
                '(magit-section-heading              level-1)
-               '(magit-section-highlight            highlight))
+               '(magit-section-highlight            highlight)
+               '(magit-signature-bad                (red magit-hash))
+               '(magit-signature-error              (yellow magit-hash))
+               '(magit-signature-expired            (cyan magit-hash))
+               '(magit-signature-expired-key        (cyan magit-hash))
+               '(magit-signature-good               (blue magit-hash))
+               '(magit-signature-revoked            (magenta magit-hash))
+               '(magit-signature-untrusted          (green magit-hash)))
 
 (eval-after-load 'magit
   '(progn
