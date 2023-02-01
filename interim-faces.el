@@ -180,15 +180,13 @@ followed by a list of the faces that it should inherit from."
                '(magit-diff-file-contents           fixed-pitch)
                '(magit-diff-file-heading            diff-file-header)
                '(magit-diff-hunk-heading            diff-hunk-header)
-               '(magit-diff-hunk-heading-highlight
-                 (magit-diff-hunk-heading magit-section-highlight))
-               '(magit-diff-hunk-heading-selection
-                 (magit-diff-hunk-heading selection))
+               '(magit-diff-hunk-heading-highlight  magit-section-highlight)
+               '(magit-diff-hunk-heading-selection  selection)
                '(magit-diff-removed     (magit-diff-file-contents diff-removed))
-               '(magit-diff-removed-highlight    (magit-diff-removed highlight))
+               '(magit-diff-removed-highlight
+                 (magit-diff-removed magit-section-highlight))
                '(magit-diff-revision-summary        text-title)
-               '(magit-diff-revision-highlight
-                 (magit-diff-revision-summary magit-section-highlight))
+               '(magit-diff-revision-highlight      magit-section-highlight)
                ;; NB: This often affects alignment of the ASCII graph
                '(magit-hash                         pseudo-column)
                '(magit-key-mode-button-face         button)
