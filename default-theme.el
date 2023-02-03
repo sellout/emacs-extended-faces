@@ -127,7 +127,7 @@
      ;; without any highlighting; this may be too confusing in general, although
      ;; it happens to look good with the only current use of header-lines, the
      ;; info browser. XXX
-     :inverse-video nil	       ;Override the value inherited from mode-line.
+     :inverse-video nil            ;Override the value inherited from mode-line.
      :underline t)
     (((class color grayscale) (background light))
      :background "grey90" :foreground "grey20"
@@ -240,6 +240,11 @@
  '(show-paren-mismatch
    ((((class color)) (:foreground "white" :background "purple"))
     (t (:inverse-video t)))))
+
+;;;###autoload
+(when load-file-name
+  (add-to-list 'custom-theme-load-path
+               (file-name-as-directory (file-name-directory load-file-name))))
 
 (provide-theme 'default)
 ;;; default-theme.el ends here
