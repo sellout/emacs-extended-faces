@@ -271,10 +271,10 @@
           (org-block                   (fixed-pitch org-default))
           (org-block-background   (org-default fixed-pitch secondary-selection))
           (org-checkbox                org-default)
-          (org-code                    (font-lock org-default))
+          (org-code                    (font-lock org-verbatim))
           (org-column-title            (text-heading org-default))
           (org-default                 (text))
-          (org-document-title          text-title)
+          (org-document-title          (text-title))
           (org-headline-done           org-done)
           (org-level-1                 (outline-1 org-default))
           (org-level-2                 (outline-2 org-default))
@@ -289,7 +289,7 @@
           (org-scheduled               org-default)
           (org-scheduled-previously    (urgency-urgent org-scheduled))
           (org-scheduled-today         (urgency-high org-scheduled))
-          (org-table                   (fixed-pitch org-default))
+          (org-table                   (table org-default))
           (org-time-grid               org-default)
           (org-upcoming-deadline       (urgency-moderate org-default))
           (org-verbatim                (text-verbatim org-default))
@@ -681,6 +681,7 @@
           (scala-font-lock:sealed-face      (scala-font-lock:keyword-face))
           (scala-font-lock:var-face         (font-lock-variable-name-face))
           (scala-font-lock:var-keyword-face scala-font-lock:keyword-face)
+
           ;; slime
           (sldb-topline-face                    (slime-topline sldb-default))
           (sldb-condition-face                  (sldb-default))
@@ -708,12 +709,16 @@
           (slime-note-face                      (message slime-default))
           (slime-warning-face                   (warning slime-default))
           (slime-style-warning-face             (slime-warning-face))
+
           ;; slime-repl
           (slime-repl-input-face          (input))
           (slime-repl-inputed-output-face (slime-repl-output-face))
           (slime-repl-output-face         (output))
           (slime-repl-prompt-face         (prompt))
           (slime-repl-result-face         (result))
+
+          ;; table
+          (table-cell (table))
 
           ;; transient
           ;; colors first
