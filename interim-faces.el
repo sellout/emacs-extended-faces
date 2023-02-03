@@ -45,7 +45,7 @@ followed by a list of the faces that it should inherit from."
 (package-faces 'custom
                '(custom-button          button)
                '(custom-button-pressed-unraised
-                 (custom-button-pressed custom-button-unraised))
+                 (custom-button-unraised custom-button-pressed))
                '(custom-button-mouse    (custom-button button-mouseover))
                '(custom-button-pressed  (custom-button button-pressed))
                '(custom-button-unraised custom-button)
@@ -81,6 +81,7 @@ followed by a list of the faces that it should inherit from."
  | -file-header    |           | -file-heading     |                          |
  | -hunk-header    |           | -hunk-heading     |                          |
  |                 |           | -conflict-heading | -markers                 |
+ | -index          |           |                   |                          |
  +-----------------+-----------+-------------------+--------------------------+"
 
 (package-faces 'diff-mode
@@ -164,62 +165,6 @@ followed by a list of the faces that it should inherit from."
                '(info-xref         link)
                '(info-xref-visited (link-visited info-xref)))
 
-(package-faces 'magit
-               '(magit-diff-added         (magit-diff-file-contents diff-added))
-               '(magit-diff-added-highlight        (magit-diff-added highlight))
-               '(magit-diff-base        (magit-diff-file-contents diff-changed))
-               '(magit-diff-base-highlight          (magit-diff-base highlight))
-               '(magit-diff-conflict-heading        smerge-markers)
-               '(magit-diff-context     (magit-diff-file-contents diff-context))
-               '(magit-diff-context-highlight    (magit-diff-context highlight))
-               '(magit-diff-diffstat-added          diff-indicator-added)
-               '(magit-diff-diffstat-removed        diff-indicator-removed)
-               ;; NB: Ensure ‘magit-diff-file-contents’ is ‘fixed-pitch’ because
-               ;;     having columns align is generally useful in a diff,
-               ;;     regardless of the type of content.
-               '(magit-diff-file-contents           fixed-pitch)
-               '(magit-diff-file-heading            diff-file-header)
-               '(magit-diff-hunk-heading            diff-hunk-header)
-               '(magit-diff-hunk-heading-highlight  magit-section-highlight)
-               '(magit-diff-hunk-heading-selection  selection)
-               '(magit-diff-removed     (magit-diff-file-contents diff-removed))
-               '(magit-diff-removed-highlight
-                 (magit-diff-removed magit-section-highlight))
-               '(magit-diff-revision-summary        text-title)
-               '(magit-diff-revision-highlight      magit-section-highlight)
-               ;; NB: This often affects alignment of the ASCII graph
-               '(magit-hash                         pseudo-column)
-               '(magit-key-mode-button-face         button)
-               '(magit-key-mode-header-face         text-heading)
-               '(magit-log-author                   ())
-               ;; NB: This is drawn as ASCII art
-               '(magit-log-graph                    fixed-pitch)
-               '(magit-log-reflog-label-checkout   magit-log-reflog-label-other)
-               '(magit-log-reflog-label-cherry-pick
-                 magit-log-reflog-label-other)
-               '(magit-log-reflog-label-commit     magit-log-reflog-label-other)
-               '(magit-log-reflog-label-reset      magit-log-reflog-label-other)
-               '(magit-log-reflog-label-rebase     magit-log-reflog-label-other)
-               '(magit-log-reflog-label-remote     magit-log-reflog-label-other)
-               '(magit-process-ng                   (error magit-section-title))
-               '(magit-process-ok                (success magit-section-title))
-               '(magit-section-heading              level-1)
-               '(magit-section-highlight            highlight)
-               '(magit-signature-bad                (red magit-hash))
-               '(magit-signature-error              (yellow magit-hash))
-               '(magit-signature-expired            (cyan magit-hash))
-               '(magit-signature-expired-key        (cyan magit-hash))
-               '(magit-signature-good               (blue magit-hash))
-               '(magit-signature-revoked            (magenta magit-hash))
-               '(magit-signature-untrusted          (green magit-hash)))
-
-(eval-after-load 'magit
-  '(progn
-     (default-mode-face 'fixed-pitch
-       '(magit-log-mode ; uses columns, but not enough
-         magit-popup-mode
-         magit-refs-mode))))
-
 (package-faces 'message
                '(message-header-to         message-header-other)
                '(message-header-cc         message-header-other)
@@ -244,10 +189,10 @@ followed by a list of the faces that it should inherit from."
 
 (eval-after-load 'org
   '(progn
-     (defeface org-agenda '((default :inherit org-default))
+     (defeface org-agenda '((default (:inherit org-default)))
        ""
        :group 'org-faces)
-     (defeface org-agenda-calendar '((default :inherit org-agenda))
+     (defeface org-agenda-calendar '((default (:inherit org-agenda)))
        ""
        :group 'org-faces)))
 
@@ -264,7 +209,7 @@ followed by a list of the faces that it should inherit from."
                                               fixed-pitch
                                               secondary-selection))
                '(org-checkbox                org-default)
-               '(org-code                    (org-default font-lock))
+               '(org-code                    (font-lock org-default))
                '(org-column-title            (text-heading org-default))
                '(org-default                 text)
                '(org-document-title          text-title)
@@ -346,54 +291,6 @@ followed by a list of the faces that it should inherit from."
                '(term-color-white   ansi-color-white)
                '(term-underline     ansi-color-underline))
 
-(package-faces 'transient
-               ;; colors first
-               '(transient-teal              green)   ; Approximately cmyk(f007)
-               '(transient-blue              cyan)    ; Approximately cmyk(ff00)
-               '(transient-purple            blue)    ; Approximately cmyk(0f07)
-               '(transient-pink              magenta) ; Approximately cmyk(0302)
-               '(transient-amaranth          red)     ; Approximately cmyk(0c91)
-               '(transient-red               yellow)  ; Approximately cmyk(0ff0)
-               ;; '(transient-active-infix      ())
-               ;; '(transient-argument          ())
-               ;; '(transient-disabled-suffix   ())
-               ;; '(transient-enabled-suffix    ())
-               ;; '(transient-heading           ())
-               ;; '(transient-higher-level      ())
-               ;; '(transient-inactive-argument) ; Already correct
-               ;; '(transient-inactive-value) ; Already correct
-               ;; '(transient-inapt-suffix      ())
-               ;; See ‘transient-align-variable-pitch’
-               '(transient-key             (font-lock-builtin-face fixed-pitch))
-               ;; These two are documented to inherit from ‘transient-key’,
-               ;; but they don’t actually.
-               '(transient-mismatched-key    (warning transient-key))
-               '(transient-nonstandard-key   (warning transient-key))
-               '(transient-separator         mode-line)
-               ;; '(transient-unreachable) ; Already correct
-               '(transient-unreachable-key
-                 (transient-unreachable transient-key))
-               ;; '(transient-value             ())
-               )
-
-(eval-after-load 'whitespace
-  '(defeface whitespace-default '((default :inherit warning))
-     ""
-     :group 'whitespace))
-
-(package-faces 'whitespace
-               '(whitespace-space            whitespace-default)
-               '(whitespace-hspace           whitespace-default)
-               '(whitespace-tab              whitespace-default)
-               '(whitespace-newline          whitespace-default)
-               '(whitespace-trailing         whitespace-default)
-               '(whitespace-line             whitespace-default)
-               '(whitespace-space-before-tab whitespace-default)
-               '(whitespace-indentation      whitespace-default)
-               '(whitespace-empty            whitespace-default)
-               '(whitespace-space            whitespace-default)
-               '(whitespace-space-after-tab  whitespace-default))
-
 (package-faces 'widget
                '(widget-button         button)
                '(widget-mouse-face     (widget-button button-mouseover))
@@ -419,7 +316,7 @@ followed by a list of the faces that it should inherit from."
                '(darcsum-change-line-face diff-changed))
 
 (eval-after-load 'emacs-wiki-colors
-  '(defeface emacs-wiki-header '((default :inherit text-heading))
+  '(defeface emacs-wiki-header '((default (:inherit text-heading)))
      ""
      :group 'emacs-wiki-highlight)) ;; FIXME: check if this group is right
 
@@ -437,43 +334,43 @@ followed by a list of the faces that it should inherit from."
 (eval-after-load 'ensime
   '(progn
      (defeface ensime-sem-high-var
-       '((default :inherit scala-font-lock:var-face))
+       '((default (:inherit scala-font-lock:var-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-val '((default :inherit font-lock-constant-face))
+     (defeface ensime-sem-high-val '((default (:inherit font-lock-constant-face)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-var-field
-       '((default :inherit ensime-sem-high-var))
+       '((default (:inherit ensime-sem-high-var)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-val-field
-       '((default :inherit ensime-sem-high-val))
+       '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-function-call
-       '((default :inherit font-lock-function-name-face))
+       '((default (:inherit font-lock-function-name-face)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-operator
-       '((default :inherit font-lock-keyword-face))
+       '((default (:inherit font-lock-keyword-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-param '((default :inherit ensime-sem-high-val))
+     (defeface ensime-sem-high-param '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-class '((default :inherit font-lock-type-face))
+     (defeface ensime-sem-high-class '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-trait '((default :inherit font-lock-type-face))
+     (defeface ensime-sem-high-trait '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-object
-       '((default :inherit font-lock-module-face))
+       '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
      (defeface ensime-sem-high-package
-       '((default :inherit font-lock-module-face))
+       '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
      ;; (setq ensime-sem-high-faces
@@ -543,7 +440,7 @@ followed by a list of the faces that it should inherit from."
 
 (package-faces 'highlight-doxygen
                '(highlight-doxygen-code-block font-lock)
-               '(highlight-doxygen-comment    highlight))
+               '(highlight-doxygen-comment    font-lock-doc-face))
 
 (package-faces 'hydra
                ;; TODO: These faces shouldn’t be named by color
@@ -621,6 +518,62 @@ followed by a list of the faces that it should inherit from."
                   sem-hi-scope-global
                   font-lock-variable-name-face)))
 
+(package-faces 'magit
+               '(magit-diff-added         (magit-diff-file-contents diff-added))
+               '(magit-diff-added-highlight        (magit-diff-added highlight))
+               '(magit-diff-base        (magit-diff-file-contents diff-changed))
+               '(magit-diff-base-highlight          (magit-diff-base highlight))
+               '(magit-diff-conflict-heading        smerge-markers)
+               '(magit-diff-context     (magit-diff-file-contents diff-context))
+               '(magit-diff-context-highlight    (magit-diff-context highlight))
+               '(magit-diff-diffstat-added          diff-indicator-added)
+               '(magit-diff-diffstat-removed        diff-indicator-removed)
+               ;; NB: Ensure ‘magit-diff-file-contents’ is ‘fixed-pitch’ because
+               ;;     having columns align is generally useful in a diff,
+               ;;     regardless of the type of content.
+               '(magit-diff-file-contents           fixed-pitch)
+               '(magit-diff-file-heading            diff-file-header)
+               '(magit-diff-hunk-heading            diff-hunk-header)
+               '(magit-diff-hunk-heading-highlight  magit-section-highlight)
+               '(magit-diff-hunk-heading-selection  selection)
+               '(magit-diff-removed     (magit-diff-file-contents diff-removed))
+               '(magit-diff-removed-highlight
+                 (magit-diff-removed magit-section-highlight))
+               '(magit-diff-revision-summary        text-title)
+               '(magit-diff-revision-highlight      magit-section-highlight)
+               ;; NB: This often affects alignment of the ASCII graph
+               '(magit-hash                         pseudo-column)
+               '(magit-key-mode-button-face         button)
+               '(magit-key-mode-header-face         text-heading)
+               '(magit-log-author                   ())
+               ;; NB: This is drawn as ASCII art
+               '(magit-log-graph                    fixed-pitch)
+               '(magit-log-reflog-label-checkout   magit-log-reflog-label-other)
+               '(magit-log-reflog-label-cherry-pick
+                 magit-log-reflog-label-other)
+               '(magit-log-reflog-label-commit     magit-log-reflog-label-other)
+               '(magit-log-reflog-label-reset      magit-log-reflog-label-other)
+               '(magit-log-reflog-label-rebase     magit-log-reflog-label-other)
+               '(magit-log-reflog-label-remote     magit-log-reflog-label-other)
+               '(magit-process-ng                   (error magit-section-title))
+               '(magit-process-ok                (success magit-section-title))
+               '(magit-section-heading              level-1)
+               '(magit-section-highlight            highlight)
+               '(magit-signature-bad                (red magit-hash))
+               '(magit-signature-error              (yellow magit-hash))
+               '(magit-signature-expired            (cyan magit-hash))
+               '(magit-signature-expired-key        (cyan magit-hash))
+               '(magit-signature-good               (blue magit-hash))
+               '(magit-signature-revoked            (magenta magit-hash))
+               '(magit-signature-untrusted          (green magit-hash)))
+
+(eval-after-load 'magit
+  '(progn
+     (default-mode-face 'fixed-pitch
+       '(magit-log-mode ; uses columns, but not enough
+         magit-popup-mode
+         magit-refs-mode))))
+
 (package-faces 'markdown-mode
                '(markdown-bold-face             bold)
                '(markdown-comment-face          font-lock-comment-face)
@@ -689,7 +642,7 @@ followed by a list of the faces that it should inherit from."
 
 (eval-after-load 'scala-mode2
   '(defeface scala-font-lock:keyword-face
-     '((default :inherit font-lock-keyword-face))
+     '((default (:inherit font-lock-keyword-face)))
      "Font Lock mode face used for keywords."
      :group 'scala))
 
@@ -707,19 +660,19 @@ followed by a list of the faces that it should inherit from."
 
 (eval-after-load 'slime
   '(progn
-     (defeface sldb-default '((default :inherit slime-default))
+     (defeface sldb-default '((default (:inherit slime-default)))
        ""
        :group 'slime-debugger)
      (defeface slime-default '() ;; NB: font-lock?
        ""
        :group 'slime)
-     (defeface slime-apropos-default '((default :inherit slime-default))
+     (defeface slime-apropos-default '((default (:inherit slime-default)))
        ""
        :group 'slime)
-     (defeface slime-inspector-default '((default :inherit slime-default))
+     (defeface slime-inspector-default '((default (:inherit slime-default)))
        ""
        :group 'slime-inspector)
-     (defeface slime-topline '((default :inherit slime-default))
+     (defeface slime-topline '((default (:inherit slime-default)))
        ""
        :group 'slime)))
 
@@ -758,6 +711,54 @@ followed by a list of the faces that it should inherit from."
                '(slime-repl-output-face         output)
                '(slime-repl-prompt-face         prompt)
                '(slime-repl-result-face         result))
+
+(package-faces 'transient
+               ;; colors first
+               '(transient-teal              green)   ; Approximately cmyk(f007)
+               '(transient-blue              cyan)    ; Approximately cmyk(ff00)
+               '(transient-purple            blue)    ; Approximately cmyk(0f07)
+               '(transient-pink              magenta) ; Approximately cmyk(0302)
+               '(transient-amaranth          red)     ; Approximately cmyk(0c91)
+               '(transient-red               yellow)  ; Approximately cmyk(0ff0)
+               ;; '(transient-active-infix      ())
+               ;; '(transient-argument          ())
+               ;; '(transient-disabled-suffix   ())
+               ;; '(transient-enabled-suffix    ())
+               ;; '(transient-heading           ())
+               ;; '(transient-higher-level      ())
+               ;; '(transient-inactive-argument) ; Already correct
+               ;; '(transient-inactive-value) ; Already correct
+               ;; '(transient-inapt-suffix      ())
+               ;; See ‘transient-align-variable-pitch’
+               '(transient-key             (font-lock-builtin-face fixed-pitch))
+               ;; These two are documented to inherit from ‘transient-key’,
+               ;; but they don’t actually.
+               '(transient-mismatched-key    (warning transient-key))
+               '(transient-nonstandard-key   (warning transient-key))
+               '(transient-separator         mode-line)
+               ;; '(transient-unreachable) ; Already correct
+               '(transient-unreachable-key
+                 (transient-unreachable transient-key))
+               ;; '(transient-value             ())
+               )
+
+(eval-after-load 'whitespace
+  '(defeface whitespace-default '((default (:inherit warning)))
+     ""
+     :group 'whitespace))
+
+(package-faces 'whitespace
+               '(whitespace-space            whitespace-default)
+               '(whitespace-hspace           whitespace-default)
+               '(whitespace-tab              whitespace-default)
+               '(whitespace-newline          whitespace-default)
+               '(whitespace-trailing         whitespace-default)
+               '(whitespace-line             whitespace-default)
+               '(whitespace-space-before-tab whitespace-default)
+               '(whitespace-indentation      whitespace-default)
+               '(whitespace-empty            whitespace-default)
+               '(whitespace-space            whitespace-default)
+               '(whitespace-space-after-tab  whitespace-default))
 
 (package-faces 'write-good
                '(writegood-duplicates-face    warning)
