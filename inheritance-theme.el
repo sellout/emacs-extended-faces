@@ -127,10 +127,10 @@
           (diff-changed           ())
           (diff-context           ())
           (diff-error             error)
-          (diff-file-header       (diff-header level-2))
+          (diff-file-header       (level-2 diff-header))
           (diff-function          font-lock-function-name-face)
           (diff-header            text-heading)
-          (diff-hunk-header       (diff-header level-3))
+          (diff-hunk-header       (level-3 diff-header))
           (diff-index             diff-header)
           (diff-indicator-added   diff-added)
           (diff-indicator-changed diff-changed)
@@ -542,12 +542,14 @@
 
           ;; magit
           (magit-diff-added         (magit-diff-file-contents diff-added))
-          (magit-diff-added-highlight        (magit-diff-added highlight))
+          (magit-diff-added-highlight
+           (magit-diff-added magit-section-highlight))
           (magit-diff-base        (magit-diff-file-contents diff-changed))
-          (magit-diff-base-highlight          (magit-diff-base highlight))
+          (magit-diff-base-highlight  (magit-diff-base magit-section-highlight))
           (magit-diff-conflict-heading        smerge-markers)
           (magit-diff-context     (magit-diff-file-contents diff-context))
-          (magit-diff-context-highlight    (magit-diff-context highlight))
+          (magit-diff-context-highlight
+           (magit-diff-context magit-section-highlight))
           (magit-diff-diffstat-added          diff-indicator-added)
           (magit-diff-diffstat-removed        diff-indicator-removed)
           ;; NB: Ensure ‘magit-diff-file-contents’ is ‘fixed-pitch’ because
@@ -556,6 +558,8 @@
           (magit-diff-file-contents           fixed-pitch)
           (magit-diff-file-heading            diff-file-header)
           (magit-diff-hunk-heading            diff-hunk-header)
+          ;; NB: This layers on ‘magit-diff-hunk-heading’, so don’t also inherit
+          ;;     that.
           (magit-diff-hunk-heading-highlight  magit-section-highlight)
           (magit-diff-hunk-heading-selection  selection)
           (magit-diff-removed     (magit-diff-file-contents diff-removed))
