@@ -358,6 +358,16 @@
           (term-color-white   ansi-color-white)
           (term-underline     ansi-color-underline)
 
+          ;; vc
+          (log-edit-header         (level-1))
+          (log-edit-summary        (text-title))
+          (log-edit-unknown-header (warning log-edit-header))
+          (vc-dir-directory        (fs-directory))
+          (vc-dir-file             (fs-file))
+          (vc-dir-header           (level-1))
+          (vc-dir-header-value     (vc-dir-header))
+          (vc-dir-status-warning   (warning))
+
           ;; widget
           (widget-button            (button))
           (widget-mouse-face        (widget-button button-mouseover))
@@ -413,6 +423,14 @@
           ;; flyspell
           (flyspell-duplicate warning)
           (flyspell-incorrect error)
+
+          ;; git-commit
+          (git-commit-comment-file         (vc-dir-file))
+          (git-commit-known-pseudo-header  (log-edit-header))
+          (git-commit-nonempty-second-line (warning))
+          (git-commit-overlong-summary     (warning git-commit-summary))
+          (git-commit-pseudo-header        (log-edit-unknown-header))
+          (git-commit-summary              (log-edit-summary))
 
           ;; guide-key
           ;; (guide-key/prefix-command-face    )
