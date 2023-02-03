@@ -27,10 +27,6 @@
 
 ;;; Code:
 
-(defun set-face-inheritance (name spec)
-  "Set up the inheritance SPEC for the face NAME."
-  (face-spec-set name `((default (:inherit ,spec))) 'face-defface-spec))
-
 (defmacro defeface (face spec doc &rest args)
   "Define a FACE with the given SPEC, DOC, and other ARGS.
 Mostly a synonym for ‘defface’, but when this face is injected into a different
@@ -43,52 +39,9 @@ group, it indicates in the comment that it was defined in this package."
         (concat doc " (Injected by extended-faces.)"))
      ,@args))
 
-;;; THE MOST PRIMITIVE FACES
-
-;;; default            The default face, whose attributes are all specified.
-
-;;; bold               These have the attributes indicated by their names (e.g.,
-;;; italic             bold has a bold :weight attribute), with all other
-;;; underline          attributes unspecified (and so given by default).
-
-;;; fixed-pitch        These should have their ‘family’ explicitly set by the
-;;; fixed-pitch-serif  user.
-;;; variable-pitch
-
-(set-face-inheritance 'bold-italic '(italic bold))
-
-;;; shadow          For “dimmed out” text.
-
-;;; link            For clickable text buttons that send the user to a different
-;;;                 buffer or “location”.
-
-(set-face-inheritance 'link-visited 'link)
-
-;;; highlight       For stretches of text that should temporarily stand out.
-
-;;; match           For text matching a search command.
-
 (defeface message ()
   "Extended face that covers all messages – errors, warnings, and successes."
   :group 'extended-faces)
-(set-face-inheritance 'error   'message)
-(set-face-inheritance 'warning 'message)
-(set-face-inheritance 'success 'message)
-
-(set-face-inheritance 'help-argument-name ())
-
-;;; UI
-
-(set-face-inheritance 'minibuffer-prompt 'prompt)
-
-(set-face-inheritance 'completions-annotations      '())
-(set-face-inheritance 'completions-first-difference '())
-
-;;; mode-line
-
-(set-face-inheritance 'mode-line-inactive  'mode-line)
-(set-face-inheritance 'mode-line-emphasis  'text-emphasis)
-(set-face-inheritance 'mode-line-highlight 'highlight)
 
 (defeface delimiter '((default (:inherit (shadow))))
   "Delimiters between text."
@@ -166,31 +119,6 @@ interactive."
   '((default (:inherit (font-lock-function-name-face))))
   ""
   :group 'font-lock)
-
-(set-face-inheritance 'font-lock-builtin-face 'font-lock-function-name-face)
-(set-face-inheritance 'font-lock-comment-delimiter-face
-                      '(delimiter font-lock-comment-face))
-(set-face-inheritance 'font-lock-comment-face 'font-lock-doc-face)
-(set-face-inheritance 'font-lock-constant-face 'font-lock-value-face)
-;; doc
-(set-face-inheritance 'font-lock-function-name-face 'font-lock-identifier-face)
-(set-face-inheritance 'font-lock-keyword-face 'font-lock)
-;; negation-char
-(set-face-inheritance 'font-lock-preprocessor-face 'font-lock)
-(set-face-inheritance 'font-lock-regexp-grouping-backslash 'font-lock)
-(set-face-inheritance 'font-lock-regexp-grouping-construct 'font-lock)
-(set-face-inheritance 'font-lock-string-face 'font-lock-literal-face)
-(set-face-inheritance 'font-lock-type-face 'font-lock-value-face)
-(set-face-inheritance 'font-lock-variable-name-face 'font-lock-identifier-face)
-(set-face-inheritance 'font-lock-warning '(warning font-lock))
-
-(set-face-inheritance 'show-paren-match    'success)
-(set-face-inheritance 'show-paren-mismatch 'warning)
-
-;;; OTHER FACES INCLUDED WITH EMACS
-
-(set-face-inheritance 'window-divider-first-pixel 'window-divider)
-(set-face-inheritance 'window-divider-last-pixel  'window-divider)
 
 ;;; NEW FACES
 
@@ -357,21 +285,6 @@ etc."
 Approximately cmyk(0000). Should be used rarely, but useful for term colors,
 etc."
   :group 'extended-faces)
-
-;; TODO: This probably also need inverse-video set, but I’m not certain. The
-;;       default settings set both foreground and background to the same color,
-;;       so it might be more of a pain.
-(set-face-inheritance 'ansi-color-cyan 'cyan)
-(set-face-inheritance 'ansi-color-blue 'blue)
-(set-face-inheritance 'ansi-color-magenta 'magenta)
-(set-face-inheritance 'ansi-color-red 'red)
-(set-face-inheritance 'ansi-color-yellow 'yellow)
-(set-face-inheritance 'ansi-color-green 'green)
-(set-face-inheritance 'ansi-color-black 'black)
-(set-face-inheritance 'ansi-color-white 'white)
-(set-face-inheritance 'ansi-color-bold 'bold)
-(set-face-inheritance 'ansi-color-italic 'italic)
-(set-face-inheritance 'ansi-color-underline 'underline)
 
 ;;; filesystem
 
