@@ -44,8 +44,6 @@
           (warning message)
           (success message)
 
-          (help-argument-name ())
-
           ;; UI
 
           (minibuffer-prompt (prompt))
@@ -221,6 +219,11 @@
           (gnus-summary-low-undownloaded
            (urgency-low gnus-summary-normal-undownloaded))
           (gnus-summary-low-unread   (urgency-low gnus-summary-normal-unread))
+
+          ;; help
+          (help-argument-name (font-lock-identifier-face))
+          (help-for-help-header  (text-heading))
+          (tutorial-warning-face (warning))
 
           ;; info
           (info-title-1      (level-1 text-heading))
@@ -434,8 +437,9 @@
 
           ;; guide-key
           ;; (guide-key/prefix-command-face    )
-          ;; (guide-key/highlight-command-face )
-          ;; (guide-key/key-face               )
+          (guide-key/highlight-command-face
+           (highlight guide-key/prefix-command-face))
+          (guide-key/key-face               (help-key-face))
 
           ;; haskell-mode
           (haskell-error-face    font-lock-warning-face)
@@ -443,22 +447,23 @@
           (haskell-warning-face  font-lock-warning-face)
 
           ;; helm
-          (helm-bookmark-directory    helm-ff-directory)
-          (helm-bookmark-file         helm-ff-file)
-          (helm-etags+-highlight-face highlight)
-          (helm-ff-directory          fs-directory)
-          (helm-ff-executable         fs-executable)
-          (helm-ff-file               fs-file)
-          (helm-ff-invalid-symlink    fs-broken-symlink)
-          (helm-ff-symlink            fs-symlink)
+          (helm-bookmark-directory    (helm-ff-directory))
+          (helm-bookmark-file         (helm-ff-file))
+          (helm-etags+-highlight-face (highlight))
+          (helm-ff-directory          (fs-directory))
+          (helm-ff-executable         (fs-executable))
+          (helm-ff-file               (fs-file))
+          (helm-ff-invalid-symlink    (fs-broken-symlink helm-ff-symlink))
+          (helm-ff-symlink            (fs-symlink))
           ;; (helm-header) ; Already correct
-          (helm-match                 match)
-          (helm-gentoo-match          helm-match)
-          (helm-grep-match            helm-match)
-          (helm-selection             region)
-          (helm-selection-line        secondary-selection)
-          (helm-source-header         helm-header)
-          (helm-w3m-bookmarks         helm-bookmark-w3m)
+          (helm-M-x-key               (help-key-binding))
+          (helm-match                 (match))
+          (helm-gentoo-match          (helm-match))
+          (helm-grep-match            (helm-match))
+          (helm-selection             (region))
+          (helm-selection-line        (secondary-selection))
+          (helm-source-header         (helm-header))
+          (helm-w3m-bookmarks         (helm-bookmark-w3m))
 
           ;; highlight-doxygen
           (highlight-doxygen-code-block font-lock)
@@ -718,26 +723,30 @@
           (transient-pink              magenta) ; Approximately cmyk(0302)
           (transient-amaranth          red)     ; Approximately cmyk(0c91)
           (transient-red               yellow)  ; Approximately cmyk(0ff0)
-          ;; (transient-active-infix      ())
-          ;; (transient-argument          ())
-          ;; (transient-disabled-suffix   ())
-          ;; (transient-enabled-suffix    ())
-          ;; (transient-heading           ())
+          ;; (transient-active-infix      ()) ; already correct
+          (transient-argument          (highlight))
+          (transient-disabled-suffix   (shadow))
+          (transient-enabled-suffix    (success))
+          (transient-heading           (level-1))
           ;; (transient-higher-level      ())
           ;; (transient-inactive-argument) ; Already correct
           ;; (transient-inactive-value) ; Already correct
           ;; (transient-inapt-suffix      ())
           ;; See ‘transient-align-variable-pitch’
-          (transient-key             (font-lock-builtin-face fixed-pitch))
+          (transient-key               (fixed-pitch help-key-binding))
           ;; These two are documented to inherit from ‘transient-key’,
           ;; but they don’t actually.
           (transient-mismatched-key    (warning transient-key))
           (transient-nonstandard-key   (warning transient-key))
-          (transient-separator         mode-line)
+          (transient-separator         (mode-line))
           ;; (transient-unreachable) ; Already correct
-          (transient-unreachable-key
-           (transient-unreachable transient-key))
+          (transient-unreachable-key   (transient-unreachable transient-key))
           ;; (transient-value             ())
+
+          ;; which-key
+          (which-key-highlighted-command-face
+           (highlight which-key-command-description-face))
+          (which-key-key-face                 (help-key-binding))
 
           ;; whitespace
           (whitespace-space            whitespace-default)
