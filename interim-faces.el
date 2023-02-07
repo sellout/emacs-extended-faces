@@ -118,10 +118,17 @@
 
 (default-mode-face 'pseudo-column '(helm-major-mode))
 
+(defeface magit-diff-file-contents
+  '((default (:inherit fixed-pitch)))
+  "Used for the contents of the file being compared.
+This inherits ‘fixed-pitch’ because columnar alignment in comparisons is
+generally useful."
+  :group 'magit-faces)
+
 (eval-after-load 'magit
   '(progn
      (default-mode-face 'fixed-pitch
-       '(magit-log-mode ; uses columns, but not enough
+       '(magit-log-mode                 ; uses columns, but not enough
          magit-popup-mode
          magit-refs-mode))))
 
@@ -149,10 +156,22 @@
        ""
        :group 'slime)))
 
+(eval-after-load 'which-key
+  '(defeface which-key-description-face '()
+     "Used for the descriptions of key bindings."
+     :group 'which-key))
+
 (eval-after-load 'whitespace
   '(defeface whitespace-default '((default (:inherit warning)))
      ""
      :group 'whitespace))
+
+;; Add us to ‘custom-theme-load-path’ so that ‘inheritance’ is available as a
+;; theme.
+;;;###autoload
+(when load-file-name
+  (add-to-list 'custom-theme-load-path
+               (file-name-as-directory (file-name-directory load-file-name))))
 
 (provide 'interim-faces)
 ;;; interim-faces.el ends here

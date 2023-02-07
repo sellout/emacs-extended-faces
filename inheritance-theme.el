@@ -114,8 +114,13 @@
           (custom-variable-button (custom-button))
 
           ;; compilation
-          (compilation-info    (success))
-          (compilation-warning (warning))
+          (compilation-column-number  ())
+          (compilation-info           (success))
+          (compilation-line-number    ())
+          (compilation-mode-line-exit (compilation-info))
+          (compilation-mode-line-fail (compilation-error))
+          ;; (compilation-mode-line-run  (compilation-warning)) ; already correct
+          (compilation-warning        (warning))
 
           ;; diary-lib
           (diary-button button)
@@ -140,9 +145,12 @@
           (diff-removed           ())
 
           ;; dired
-          (dired-directory  fs-directory)
-          (dired-perm-write (warning))
-          (dired-symlink    fs-symlink)
+          (dired-broken-symlink (fs-broken-symlink dired-symlink))
+          (dired-directory      (fs-directory))
+          (dired-perm-write     (warning))
+          (dired-set-id         (warning))
+          (dired-special        ())
+          (dired-symlink        (fs-symlink))
 
           ;; ediff
           (ediff-current-diff-A        (diff-removed highlight))
@@ -166,34 +174,35 @@
           ;; eshell
           ;; (eshell-ls-archive (,@fg-magenta))
           ;; (eshell-ls-backup (,@fg-yellow))
-          ;; (eshell-ls-clutter (,@fg-orange))
-          (eshell-ls-directory  fs-directory)
-          (eshell-ls-executable fs-executable)
-          (eshell-ls-missing    fs-broken-symlink)
+          (eshell-ls-clutter    (dired-ignored))
+          (eshell-ls-directory  (fs-directory))
+          (eshell-ls-executable (fs-executable))
+          (eshell-ls-missing    (fs-broken-symlink))
           ;; (eshell-ls-product (,@fg-yellow))
           ;; (eshell-ls-readonly (,@fg-base1))
-          ;; (eshell-ls-special (,@fg-violet))
-          (eshell-ls-symlink    fs-symlink)
+          (eshell-ls-special    (dired-special))
+          (eshell-ls-symlink    (fs-symlink))
           ;; (eshell-ls-unreadable (,@fg-base00))
-          (eshell-prompt        prompt)
+          (eshell-prompt        (prompt))
 
           ;; font-lock
-          (font-lock-builtin-face font-lock-function-name-face)
-          (font-lock-comment-delimiter-face (delimiter font-lock-comment-face))
-          (font-lock-comment-face font-lock-doc-face)
-          (font-lock-constant-face font-lock-value-face)
-          ;; doc
-          (font-lock-doc-string-face font-lock-doc-face) ; XEmacs only
-          (font-lock-function-name-face font-lock-identifier-face)
-          (font-lock-keyword-face font-lock)
-          ;; negation-char
-          (font-lock-preprocessor-face font-lock)
-          (font-lock-regexp-grouping-backslash font-lock)
-          (font-lock-regexp-grouping-construct font-lock)
-          (font-lock-string-face font-lock-literal-face)
-          (font-lock-type-face font-lock-value-face)
-          (font-lock-variable-name-face font-lock-identifier-face)
-          (font-lock-warning (warning font-lock))
+          (elisp-shorthand-font-lock-face    (highlight font-lock-keyword-face))
+          (font-lock-builtin-face              (font-lock-function-name-face))
+          (font-lock-comment-delimiter-face  (delimiter font-lock-comment-face))
+          (font-lock-comment-face              (font-lock-doc-face))
+          (font-lock-constant-face             (font-lock-value-face))
+          (font-lock-doc-face                  ())
+          (font-lock-doc-string-face           (font-lock-doc-face)) ; XEmacs only
+          (font-lock-function-name-face        (font-lock-identifier-face))
+          (font-lock-keyword-face              ())
+          (font-lock-negation-char-face        (font-lock-operator-face))
+          (font-lock-preprocessor-face         ())
+          (font-lock-regexp-grouping-backslash ())
+          (font-lock-regexp-grouping-construct ())
+          (font-lock-string-face               (font-lock-literal-face))
+          (font-lock-type-face                 (font-lock-value-face))
+          (font-lock-variable-name-face        (font-lock-identifier-face))
+          (font-lock-warning                   (warning))
 
           ;; gnus
           (gnus-cite-1               level-1)
@@ -389,6 +398,12 @@
           (alert-low      urgency-low)
           (alert-trivial  urgency-trivial)
 
+          ;; auto-dim-other-buffers
+          (auto-dim-other-buffers-face      (fringe))
+          ;; TODO: This needs to have ‘:background’ set to match ‘:foreground’,
+          ;;       similar to the ‘ansi-color’ faces.
+          (auto-dim-other-buffers-hide-face (auto-dim-other-buffers-face))
+
           ;; darcsum
           (darcsum-header-face      diff-header)
           (darcsum-marked-face      diff-refine-changed)
@@ -447,13 +462,25 @@
           (haskell-warning-face  font-lock-warning-face)
 
           ;; helm
-          (helm-bookmark-directory    (helm-ff-directory))
-          (helm-bookmark-file         (helm-ff-file))
-          (helm-etags+-highlight-face (highlight))
-          (helm-ff-directory          (fs-directory))
-          (helm-ff-executable         (fs-executable))
-          (helm-ff-file               (fs-file))
+          (helm-bookmark-directory    (helm-buffer-directory))
+          (helm-bookmark-file         (helm-buffer-file))
+          (helm-buffer-archive        (helm-buffer-file))
+          (helm-buffer-directory      (fs-directory))
+          (helm-buffer-file           (fs-file))
+          (helm-buffer-process        (helm-non-file-buffer))
           (helm-ff-invalid-symlink    (fs-broken-symlink helm-ff-symlink))
+          (helm-ff-symlink            (fs-symlink))
+          (helm-etags+-highlight-face (highlight))
+          (helm-ff-backup-file        (shadow helm-ff-file))
+          (helm-ff-directory          (helm-buffer-directory))
+          (helm-ff-dotted-directory   (helm-ff-directory))
+          (helm-ff-executable         (fs-executable helm-ff-file))
+          (helm-ff-file               (helm-buffer-file))
+          (helm-ff-file-extension     (helm-ff-file))
+          (helm-ff-invalid-symlink    (fs-broken-symlink helm-ff-symlink))
+          (helm-ff-nofile             (helm-non-file-buffer))
+          (helm-ff-pipe               (helm-ff-file))
+          (helm-ff-socket             (helm-ff-file))
           (helm-ff-symlink            (fs-symlink))
           ;; (helm-header) ; Already correct
           (helm-M-x-key               (help-key-binding))
@@ -521,6 +548,29 @@
           (js2-jsdoc-type-face               font-lock-type-face)
           (js2-jsdoc-value-face              text-definition-explanation)
 
+          ;; lsp-headerline
+          (lsp-headerline-breadcrumb-project-prefix-face (header-line))
+          (lsp-headerline-breadcrumb-unknown-project-prefix-face
+           (lsp-headerline-breadcrumb-project-prefix-face))
+          (lsp-headerline-breadcrumb-path-face           (header-line))
+          (lsp-headerline-breadcrumb-path-error-face
+           (error lsp-headerline-breadcrumb-path-face))
+          (lsp-headerline-breadcrumb-path-hint-face
+           (lsp-headerline-breadcrumb-path-face))
+          (lsp-headerline-breadcrumb-path-info-face
+           (lsp-headerline-breadcrumb-path-face))
+          (lsp-headerline-breadcrumb-path-warning-face
+           (warning lsp-headerline-breadcrumb-path-face))
+          (lsp-headerline-breadcrumb-symbols-face        (header-line))
+          (lsp-headerline-breadcrumb-symbols-error-face
+           (error lsp-headerline-breadcrumb-symbols-face))
+          (lsp-headerline-breadcrumb-symbols-hint-face
+           (lsp-headerline-breadcrumb-symbols-face))
+          (lsp-headerline-breadcrumb-symbols-info-face
+           (lsp-headerline-breadcrumb-symbols-face))
+          (lsp-headerline-breadcrumb-symbols-warning-face
+           (warning lsp-headerline-breadcrumb-symbols-face))
+
           ;; lua2-mode
           (lua2-error error)
           (lua2-bind-variable
@@ -546,6 +596,10 @@
             font-lock-variable-name-face))
 
           ;; magit
+          (magit-blame-highlight    (highlight))
+          (magit-branch-current     (highlight magit-branch-local))
+          (magit-branch-remote-head (highlight magit-branch-remote))
+          (magit-branch-upstream    (magit-branch-remote))
           (magit-diff-added         (magit-diff-file-contents diff-added))
           (magit-diff-added-highlight
            (magit-diff-added magit-section-highlight))
@@ -557,10 +611,6 @@
            (magit-diff-context magit-section-highlight))
           (magit-diff-diffstat-added          diff-indicator-added)
           (magit-diff-diffstat-removed        diff-indicator-removed)
-          ;; NB: Ensure ‘magit-diff-file-contents’ is ‘fixed-pitch’ because
-          ;;     having columns align is generally useful in a diff,
-          ;;     regardless of the type of content.
-          (magit-diff-file-contents           fixed-pitch)
           (magit-diff-file-heading            diff-file-header)
           (magit-diff-hunk-heading            diff-hunk-header)
           ;; NB: This layers on ‘magit-diff-hunk-heading’, so don’t also inherit
@@ -574,6 +624,9 @@
           (magit-diff-revision-highlight      magit-section-highlight)
           ;; NB: This often affects alignment of the ASCII graph
           (magit-hash                         pseudo-column)
+          (magit-header-line                  (header-line))
+          (magit-header-line-key              (magit-header-line))
+          (magit-header-line-log-select       (magit-header-line))
           (magit-key-mode-button-face         button)
           (magit-key-mode-header-face         text-heading)
           (magit-log-author                   ())
@@ -586,8 +639,8 @@
           (magit-log-reflog-label-reset       magit-log-reflog-label-other)
           (magit-log-reflog-label-rebase      magit-log-reflog-label-other)
           (magit-log-reflog-label-remote      magit-log-reflog-label-other)
-          (magit-process-ng                   (error magit-section-title))
-          (magit-process-ok                   (success magit-section-title))
+          (magit-process-ng                   (error magit-section-heading))
+          (magit-process-ok                   (success magit-section-heading))
           (magit-section-heading              level-1)
           (magit-section-highlight            highlight) ; add `:extend t`
           (magit-signature-bad                (red magit-hash))
@@ -749,9 +802,15 @@
           ;; (transient-value             ())
 
           ;; which-key
+          (which-key-command-description-face   (which-key-description-face))
+          (which-key-group-description-face     (which-key-description-face))
+          (which-key-local-map-description-face (which-key-description-face))
           (which-key-highlighted-command-face
            (highlight which-key-command-description-face))
-          (which-key-key-face                 (help-key-binding))
+          (which-key-key-face                   (help-key-binding))
+          (which-key-note-face                  (font-lock-doc-face))
+          (which-key-separator-face             (delimiter))
+          (which-key-specal-key-face            (which-key-key-face))
 
           ;; whitespace
           (whitespace-space            whitespace-default)
@@ -770,11 +829,6 @@
           (writegood-duplicates-face    (warning))
           (writegood-passive-voice-face (warning))
           (writegood-weasels-face       (warning)))))
-
-;;;###autoload
-(when load-file-name
-  (add-to-list 'custom-theme-load-path
-               (file-name-as-directory (file-name-directory load-file-name))))
 
 (provide-theme 'inheritance)
 ;;; inheritance-theme.el ends here
