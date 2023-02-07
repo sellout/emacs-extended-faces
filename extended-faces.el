@@ -99,7 +99,7 @@ interactive."
 ;;       formatting styles?
 (default-mode-face 'font-lock '(prog-mode))
 
-(defeface font-lock-value-face '((default (:inherit (font-lock))))
+(defeface font-lock-value-face ()
   "For any value-level construct"
   :group 'font-lock)
 
@@ -117,7 +117,7 @@ interactive."
 
 (defeface font-lock-operator-face
   '((default (:inherit (font-lock-function-name-face))))
-  ""
+  "For symbolic operators."
   :group 'font-lock)
 
 ;;; NEW FACES
@@ -207,7 +207,7 @@ will match n."
   "Lowest urgency."
   :group 'extended-faces)
 
-(defeface input '((default (:inherit (font-lock))))
+(defeface input ()
   "For input entered by the user."
   :group 'extended-faces)
 
