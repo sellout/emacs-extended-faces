@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+;;; inheritance-theme.el --- A theme with only ‘:inherit’ relationships  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -7,13 +7,40 @@
 (require 'interim-faces)
 
 (deftheme inheritance
-  "A graph of faces. Created 2023-02-02.")
+  "A DAG of faces. Created 2023-02-02.")
 
 (apply #'custom-theme-set-faces
        'inheritance
        (mapcar
         (lambda (spec)
-          (list (car spec) `((default (:inherit ,(cadr spec))))))
+          (list (car spec)
+                `((default ,(append (caddr spec) `(:inherit ,(cadr spec)))))))
+        ;; Each element of this list should have the form
+        ;;   (FACE-NAME (INHERITED-FACE…) [(OTHER-SPEC-COMPONENT…)])
+        ;; OTHER-SPEC-COMPONENTs should be rare – the intent of this theme is
+        ;; inheritance. But since this also (intentionally) tramples all of the
+        ;; “default” faces, we sometimes need to restore some attributes.
+        ;;
+        ;; Never mention
+        ;; • family
+        ;; • foundry
+        ;; • colors (:foregound, ::distant-foreground, background, :color)
+        ;; • stipple
+        ;; • font
+        ;;
+        ;; Ok to mention
+        ;; • extend
+        ;; • inverse-video
+        ;;
+        ;; Restricted
+        ;; • width
+        ;; • height (only ever relative)
+        ;; • weight
+        ;; • slant
+        ;; • underline
+        ;; • overline
+        ;; • strike-through
+        ;; • box
         '(;; built-in
 
           ;; basic faces
@@ -641,8 +668,8 @@
           (magit-log-reflog-label-remote      magit-log-reflog-label-other)
           (magit-process-ng                   (error magit-section-heading))
           (magit-process-ok                   (success magit-section-heading))
-          (magit-section-heading              level-1)
-          (magit-section-highlight            highlight) ; add `:extend t`
+          (magit-section-heading              (level-1))
+          (magit-section-highlight            (highlight) (:extend t))
           (magit-signature-bad                (red magit-hash))
           (magit-signature-error              (yellow magit-hash))
           (magit-signature-expired            (cyan magit-hash))
