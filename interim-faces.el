@@ -38,64 +38,64 @@
  +-----------------+-----------+-------------------+--------------------------+"
 
 (eval-after-load 'ediff
-  '(default-mode-face 'fixed-pitch '(ediff-mode)))
+  '(ef-default-mode-face 'fixed-pitch '(ediff-mode)))
 
 (eval-after-load 'org
   '(progn
-     (defeface org-agenda '((default (:inherit org-default)))
+     (ef-defface org-agenda '((default (:inherit org-default)))
        ""
        :group 'org-faces)
-     (defeface org-agenda-calendar '((default (:inherit org-agenda)))
+     (ef-defface org-agenda-calendar '((default (:inherit org-agenda)))
        ""
        :group 'org-faces)))
 
 ;;; 3rd-party
 
 (eval-after-load 'emacs-wiki-colors
-  '(defeface emacs-wiki-header '((default (:inherit text-heading)))
+  '(ef-defface emacs-wiki-header '((default (:inherit text-heading)))
      ""
      :group 'emacs-wiki-highlight)) ;; FIXME: check if this group is right
 
 ;;; Ensime is a little crazier, as it has a weird alist for semantic faces.
 (eval-after-load 'ensime
   '(progn
-     (defeface ensime-sem-high-var
+     (ef-defface ensime-sem-high-var
        '((default (:inherit scala-font-lock:var-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-val '((default (:inherit font-lock-constant-face)))
+     (ef-defface ensime-sem-high-val '((default (:inherit font-lock-constant-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-var-field
+     (ef-defface ensime-sem-high-var-field
        '((default (:inherit ensime-sem-high-var)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-val-field
+     (ef-defface ensime-sem-high-val-field
        '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-function-call
+     (ef-defface ensime-sem-high-function-call
        '((default (:inherit font-lock-function-name-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-operator
+     (ef-defface ensime-sem-high-operator
        '((default (:inherit font-lock-keyword-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-param '((default (:inherit ensime-sem-high-val)))
+     (ef-defface ensime-sem-high-param '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-class '((default (:inherit font-lock-type-face)))
+     (ef-defface ensime-sem-high-class '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-trait '((default (:inherit font-lock-type-face)))
+     (ef-defface ensime-sem-high-trait '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-object
+     (ef-defface ensime-sem-high-object
        '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
-     (defeface ensime-sem-high-package
+     (ef-defface ensime-sem-high-package
        '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
@@ -114,11 +114,12 @@
      ))
 
 ;; FIXME doesn’t derive from prog-mode for some reason
-(default-mode-face 'font-lock '(haskell-cabal-mode))
+(ef-default-mode-face 'font-lock '(haskell-cabal-mode))
 
-(default-mode-face 'pseudo-column '(helm-major-mode))
+;; TODO: I must have added this for a reason, but not sure what..
+;; (ef-default-mode-face 'pseudo-column '(helm-major-mode))
 
-(defeface magit-diff-file-contents
+(ef-defface magit-diff-file-contents
   '((default (:inherit fixed-pitch)))
   "Used for the contents of the file being compared.
 This inherits ‘fixed-pitch’ because columnar alignment in comparisons is
@@ -127,42 +128,42 @@ generally useful."
 
 (eval-after-load 'magit
   '(progn
-     (default-mode-face 'fixed-pitch
+     (ef-default-mode-face 'fixed-pitch
        '(magit-log-mode                 ; uses columns, but not enough
          magit-popup-mode
          magit-refs-mode))))
 
 (eval-after-load 'scala-mode2
-  '(defeface scala-font-lock:keyword-face
+  '(ef-defface scala-font-lock:keyword-face
      '((default (:inherit font-lock-keyword-face)))
      "Font Lock mode face used for keywords."
      :group 'scala))
 
 (eval-after-load 'slime
   '(progn
-     (defeface sldb-default '((default (:inherit slime-default)))
+     (ef-defface sldb-default '((default (:inherit slime-default)))
        ""
        :group 'slime-debugger)
-     (defeface slime-default '() ;; NB: font-lock?
+     (ef-defface slime-default '() ;; NB: font-lock?
        ""
        :group 'slime)
-     (defeface slime-apropos-default '((default (:inherit slime-default)))
+     (ef-defface slime-apropos-default '((default (:inherit slime-default)))
        ""
        :group 'slime)
-     (defeface slime-inspector-default '((default (:inherit slime-default)))
+     (ef-defface slime-inspector-default '((default (:inherit slime-default)))
        ""
        :group 'slime-inspector)
-     (defeface slime-topline '((default (:inherit slime-default)))
+     (ef-defface slime-topline '((default (:inherit slime-default)))
        ""
        :group 'slime)))
 
 (eval-after-load 'which-key
-  '(defeface which-key-description-face '()
+  '(ef-defface which-key-description-face '()
      "Used for the descriptions of key bindings."
      :group 'which-key))
 
 (eval-after-load 'whitespace
-  '(defeface whitespace-default '((default (:inherit warning)))
+  '(ef-defface whitespace-default '((default (:inherit warning)))
      ""
      :group 'whitespace))
 
@@ -174,4 +175,9 @@ generally useful."
                (file-name-as-directory (file-name-directory load-file-name))))
 
 (provide 'interim-faces)
+
+;; Local Variables:
+;; read-symbol-shorthands: (("ef-" . "extended-faces-"))
+;; End:
+
 ;;; interim-faces.el ends here
