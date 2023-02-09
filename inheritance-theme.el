@@ -54,16 +54,19 @@
           ;; fixed-pitch-serif  user.
           ;; variable-pitch
 
-          (bold-italic (italic bold))
+          (bold-italic (bold italic))
 
           ;; shadow          For “dimmed out” text.
+          (shadow ())
 
           ;; link            For clickable text buttons that send the user to a different
           ;;                 buffer or “location”.
+          (link ())
 
           (link-visited link)
 
           ;; highlight       For stretches of text that should temporarily stand out.
+          (highlight ())
 
           ;; match           For text matching a search command.
 
@@ -146,7 +149,7 @@
           (compilation-line-number    ())
           (compilation-mode-line-exit (compilation-info))
           (compilation-mode-line-fail (compilation-error))
-          ;; (compilation-mode-line-run  (compilation-warning)) ; already correct
+          (compilation-mode-line-run  ())
           (compilation-warning        (warning))
 
           ;; diary-lib
@@ -214,6 +217,9 @@
 
           ;; font-lock
           (elisp-shorthand-font-lock-face    (highlight font-lock-keyword-face))
+          ;; TODO: This doesn’t seem to be used necessarily for built-in
+          ;;       functions, but has some other purpose. So I’m not sure it
+          ;;       should inherit ‘font-lock-function-name-face’.
           (font-lock-builtin-face              (font-lock-function-name-face))
           (font-lock-comment-delimiter-face  (delimiter font-lock-comment-face))
           (font-lock-comment-face              (font-lock-doc-face))
@@ -257,7 +263,8 @@
           (gnus-summary-low-unread   (urgency-low gnus-summary-normal-unread))
 
           ;; help
-          (help-argument-name (font-lock-identifier-face))
+          (help-argument-name    (font-lock-identifier-face))
+          (help-key-binding      ())
           (help-for-help-header  (text-heading))
           (tutorial-warning-face (warning))
 
@@ -282,12 +289,15 @@
           (message-header-xheader    message-header-other)
 
           ;; minimap
-          (minimap-font-face font-lock) ; also set :height 30
-          (minimap-current-line-face highlight)
-          (minimap-active-region-background region)
-          (minimap-semantic-function-face font-lock-function-name-face)
-          (minimap-semantic-variable-face font-lock-variable-name-face)
-          (minimap-semantic-type-face font-lock-type-face)
+          (minimap-font-face                (font-lock) (:height 0.25))
+          (minimap-current-line-face        (highlight))
+          (minimap-active-region-background (region))
+          (minimap-semantic-function-face   (font-lock-function-name-face))
+          (minimap-semantic-variable-face   (font-lock-variable-name-face))
+          (minimap-semantic-type-face       (font-lock-type-face))
+
+          ;; next-error
+          (next-error (highlight))
 
           ;; nxml-mode
           (nxml-delimiter delimiter)
@@ -305,7 +315,7 @@
           (org-agenda-done             (org-done org-agenda))
           (org-agenda-restriction-lock org-agenda)
           (org-block                   (fixed-pitch org-default))
-          (org-block-background   (org-default fixed-pitch secondary-selection))
+          (org-block-background   (fixed-pitch secondary-selection org-default))
           (org-checkbox                org-default)
           (org-code                    (font-lock org-verbatim))
           (org-column-title            (text-heading org-default))
@@ -363,6 +373,7 @@
           ;; sh-script
           (sh-heredoc     font-lock-string-face)
           (sh-quoted-exec font-lock-string-face)
+
           ;; smerge-mode
           (smerge-base            diff-changed)
           (smerge-lower           diff-added)
@@ -426,10 +437,18 @@
           (alert-trivial  urgency-trivial)
 
           ;; auto-dim-other-buffers
-          (auto-dim-other-buffers-face      (fringe))
+          ;; TODO: This should be like ‘fringe’, but shouldn’t affect the
+          ;;       foreground.
+          (auto-dim-other-buffers-face      ())
           ;; TODO: This needs to have ‘:background’ set to match ‘:foreground’,
           ;;       similar to the ‘ansi-color’ faces.
           (auto-dim-other-buffers-hide-face (auto-dim-other-buffers-face))
+
+          ;; bm
+          (bm-face                   ())
+          (bm-fringe-face            (bm-face fringe))
+          (bm-fringe-persistent-face (bm-persistent-face fringe))
+          (bm-persistent-face        (bm-face))
 
           ;; darcsum
           (darcsum-header-face      diff-header)
@@ -469,6 +488,9 @@
           (flyspell-duplicate warning)
           (flyspell-incorrect error)
 
+          ;; font-latex
+          (font-latex-warning-face (warning))
+
           ;; git-commit
           (git-commit-comment-file         (vc-dir-file))
           (git-commit-known-pseudo-header  (log-edit-header))
@@ -481,43 +503,45 @@
           ;; (guide-key/prefix-command-face    )
           (guide-key/highlight-command-face
            (highlight guide-key/prefix-command-face))
-          (guide-key/key-face               (help-key-face))
+          (guide-key/key-face               (help-key-binding))
 
           ;; haskell-mode
-          (haskell-error-face    font-lock-warning-face)
-          (haskell-operator-face font-lock-operator-face)
-          (haskell-warning-face  font-lock-warning-face)
+          (haskell-error-face    (font-lock-warning-face))
+          (haskell-keyword-face  (font-lock-keyword-face))
+          (haskell-operator-face (font-lock-operator-face))
+          (haskell-warning-face  (font-lock-warning-face))
 
           ;; helm
-          (helm-bookmark-directory    (helm-buffer-directory))
-          (helm-bookmark-file         (helm-buffer-file))
-          (helm-buffer-archive        (helm-buffer-file))
-          (helm-buffer-directory      (fs-directory))
-          (helm-buffer-file           (fs-file))
-          (helm-buffer-process        (helm-non-file-buffer))
-          (helm-ff-invalid-symlink    (fs-broken-symlink helm-ff-symlink))
-          (helm-ff-symlink            (fs-symlink))
-          (helm-etags+-highlight-face (highlight))
-          (helm-ff-backup-file        (shadow helm-ff-file))
-          (helm-ff-directory          (helm-buffer-directory))
-          (helm-ff-dotted-directory   (helm-ff-directory))
-          (helm-ff-executable         (fs-executable helm-ff-file))
-          (helm-ff-file               (helm-buffer-file))
-          (helm-ff-file-extension     (helm-ff-file))
-          (helm-ff-invalid-symlink    (fs-broken-symlink helm-ff-symlink))
-          (helm-ff-nofile             (helm-non-file-buffer))
-          (helm-ff-pipe               (helm-ff-file))
-          (helm-ff-socket             (helm-ff-file))
-          (helm-ff-symlink            (fs-symlink))
+          (helm-bookmark-directory          (helm-buffer-directory))
+          (helm-bookmark-file               (helm-buffer-file))
+          (helm-buffer-archive              (helm-buffer-file))
+          (helm-buffer-directory            (fs-directory))
+          (helm-buffer-file                 (fs-file))
+          (helm-buffer-process              (helm-non-file-buffer))
+          (helm-ff-invalid-symlink          (fs-broken-symlink helm-ff-symlink))
+          (helm-ff-symlink                  (fs-symlink))
+          (helm-etags+-highlight-face       (highlight))
+          (helm-ff-backup-file              (shadow helm-ff-file))
+          (helm-ff-directory                (helm-buffer-directory))
+          (helm-ff-dotted-directory         (helm-ff-directory))
+          (helm-ff-dotted-symlink-directory (helm-ff-symlink helm-ff-dotted-directory))
+          (helm-ff-executable               (fs-executable helm-ff-file))
+          (helm-ff-file                     (helm-buffer-file))
+          (helm-ff-file-extension           (helm-ff-file))
+          (helm-ff-invalid-symlink          (fs-broken-symlink helm-ff-symlink))
+          (helm-ff-nofile                   (helm-non-file-buffer))
+          (helm-ff-pipe                     (helm-ff-file))
+          (helm-ff-socket                   (helm-ff-file))
+          (helm-ff-symlink                  (fs-symlink))
           ;; (helm-header) ; Already correct
-          (helm-M-x-key               (help-key-binding))
-          (helm-match                 (match))
-          (helm-gentoo-match          (helm-match))
-          (helm-grep-match            (helm-match))
-          (helm-selection             (region))
-          (helm-selection-line        (secondary-selection))
-          (helm-source-header         (helm-header))
-          (helm-w3m-bookmarks         (helm-bookmark-w3m))
+          (helm-M-x-key                     (help-key-binding))
+          (helm-match                       (match))
+          (helm-gentoo-match                (helm-match))
+          (helm-grep-match                  (helm-match))
+          (helm-selection                   (region))
+          (helm-selection-line              (secondary-selection))
+          (helm-source-header               (helm-header))
+          (helm-w3m-bookmarks               (helm-bookmark-w3m))
 
           ;; highlight-doxygen
           (highlight-doxygen-code-block font-lock)
@@ -856,6 +880,10 @@
           (writegood-duplicates-face    (warning))
           (writegood-passive-voice-face (warning))
           (writegood-weasels-face       (warning)))))
+
+(custom-theme-set-variables
+ 'inheritance
+ '(compilation-message-face 'message))
 
 (provide-theme 'inheritance)
 ;;; inheritance-theme.el ends here
