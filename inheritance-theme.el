@@ -43,7 +43,7 @@
         ;; • box
         '(;; built-in
 
-          ;; basic faces
+          ;; basic-faces
           ;; default            The default face, whose attributes are all specified.
 
           ;; bold               These have the attributes indicated by their names (e.g.,
@@ -54,67 +54,81 @@
           ;; fixed-pitch-serif  user.
           ;; variable-pitch
 
-          (bold-italic (bold italic))
-
-          ;; shadow          For “dimmed out” text.
-          (shadow ())
-
-          ;; link            For clickable text buttons that send the user to a different
-          ;;                 buffer or “location”.
-          (link ())
-
-          (link-visited link)
-
-          ;; highlight       For stretches of text that should temporarily stand out.
-          (highlight ())
-
+          (bold-italic            (bold italic))
+          (error                  (message))
+          (escape-glyph           ())
+          (glyphless-char         ())
+          (header-line            (mode-line))
+          (header-line-highlight  (highlight header-line))
+          (highlight              ())
+          (homoglyph              (warning))
+          (link                   ())
+          (link-visited           (link))
           ;; match           For text matching a search command.
+          (minibuffer-prompt      (prompt))
+          (nobreak-hyphen         ())
+          (nobreak-space          ())
+          (shadow                 ())
+          (success                (message))
+          (tab-bar                ())
+          (tab-line               ())
+          (tool-bar               ())
+          (vertical-border        (mode-line-inactive)) ; same as default, but not limited to ‘tty’
+          (warning                (message))
 
-          (error   message)
-          (warning message)
-          (success message)
-
-          ;; UI
-
-          (minibuffer-prompt (prompt))
-
-          (completions-annotations      ())
-          (completions-first-difference ())
-
-          ;; mode-line
-
-          (mode-line-inactive  mode-line)
-          (mode-line-emphasis  text-emphasis)
-          (mode-line-highlight highlight)
+          ;; cursor
+          (cursor ())
+          ;; display-fill-column-indicator
+          (fill-column-indicator (warning))
+          ;; frames
+          ;; (border              ()) ; already correct
+          (child-frame-border  (internal-border))
+          (fringe              ())
+          ;; (internal-border     ()) ; already correct
+          (scroll-bar          ())
+          ;; menu
+          (menu ())
+          ;; mode-line-faces
+          (mode-line            ())
+          (mode-line-buffer-id  ()) ; layered on both mode-line and mode-line-inactive
+          (mode-line-emphasis   text-emphasis)
+          (mode-line-inactive   mode-line)
+          (mode-line-highlight  (highlight mode-line))
+          ;; mouse
+          ;; (mouse ()) ; already correct
+          ;; window-divider
+          (window-divider             (mode-line-inactive))
+          (window-divider-first-pixel (window-divider))
+          (window-divider-last-pixel  (window-divider))
 
           (show-paren-match    success)
           (show-paren-mismatch warning)
 
-          (window-divider-first-pixel window-divider)
-          (window-divider-last-pixel  window-divider)
+          (completions-annotations      ())
+          (completions-first-difference ())
 
           ;; ansi-color
           ;; TODO: This probably also need inverse-video set, but I’m not certain. The
           ;;       default settings set both foreground and background to the same color,
           ;;       so it might be more of a pain.
-          (ansi-color-cyan cyan)
-          (ansi-color-blue blue)
-          (ansi-color-magenta magenta)
-          (ansi-color-red red)
-          (ansi-color-yellow yellow)
-          (ansi-color-green green)
-          (ansi-color-black black)
-          (ansi-color-white white)
-          (ansi-color-bold bold)
-          (ansi-color-italic italic)
-          (ansi-color-underline underline)
+          (ansi-color-cyan      (cyan))
+          (ansi-color-blue      (blue))
+          (ansi-color-magenta   (magenta))
+          (ansi-color-red       (red))
+          (ansi-color-yellow    (yellow))
+          (ansi-color-green     (green))
+          (ansi-color-black     (black))
+          (ansi-color-white     (white))
+          (ansi-color-bold      (bold))
+          (ansi-color-italic    (italic))
+          (ansi-color-underline (underline))
 
           ;; apropos
-          (apropos-keybinding         ())
+          (apropos-keybinding         (help-key-binding))
           (apropos-misc-button        ())
           (apropos-property           ())
           (apropos-symbol             ())
-          (apropos-user-option-button ())
+          (apropos-user-option-button (button))
 
           ;; calendar
           (calendar-month-header   (text-heading))
@@ -621,6 +635,11 @@
            (lsp-headerline-breadcrumb-symbols-face))
           (lsp-headerline-breadcrumb-symbols-warning-face
            (warning lsp-headerline-breadcrumb-symbols-face))
+
+          ;; lsp-mode
+          (lsp-face-highlight-read  (highlight)) ; NB: to drop underline
+          ;; (lsp-face-highlight-textual (highlight)) ; already correct
+          (lsp-face-highlight-write (highlight)) ; NB: to drop bold
 
           ;; lua2-mode
           (lua2-error error)

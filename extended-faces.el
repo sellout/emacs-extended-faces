@@ -31,7 +31,7 @@
   "Define a FACE with the given SPEC, DOC, and other ARGS.
 Mostly a synonym for ‘defface’, but when this face is injected into a different
 group, it indicates in the comment that it was defined in this package."
-  (declare (doc-string 3))
+  (declare (doc-string 3) (indent 2))
   `(defface ,face
      ,spec
      ,(if (eq (plist-get args :group) 'extended-faces)
