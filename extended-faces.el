@@ -63,6 +63,14 @@ interactive."
   "Text-based tables within a buffer."
   :group 'extended-faces)
 
+
+(ef-defface diff-file-contents
+  '((default (:inherit fixed-pitch)))
+  "Used for the contents of the file being compared.
+This inherits ‘fixed-pitch’ because columnar alignment in comparisons is
+generally useful."
+  :group 'diff-mode)
+
 ;;; FONT LOCK
 
 (ef-defface font-lock '((default (:inherit (fixed-pitch))))

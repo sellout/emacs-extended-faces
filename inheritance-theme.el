@@ -156,9 +156,9 @@
           (diary-button button)
 
           ;; diff-mode
-          (diff-added             ())
-          (diff-changed           ())
-          (diff-context           ())
+          (diff-added             (diff-file-contents))
+          (diff-changed           (diff-file-contents))
+          (diff-context           (diff-file-contents))
           (diff-error             error)
           (diff-file-header       (level-2 diff-header))
           (diff-function          font-lock-function-name-face)
@@ -172,7 +172,7 @@
           (diff-refine-added      diff-added)
           (diff-refine-changed    diff-changed)
           (diff-refine-removed    diff-removed)
-          (diff-removed           ())
+          (diff-removed           (diff-file-contents))
 
           ;; dired
           (dired-broken-symlink (fs-broken-symlink dired-symlink))
@@ -647,17 +647,17 @@
             font-lock-variable-name-face))
 
           ;; magit
-          (magit-blame-highlight    (highlight))
-          (magit-branch-current     (highlight magit-branch-local))
-          (magit-branch-remote-head (highlight magit-branch-remote))
-          (magit-branch-upstream    (magit-branch-remote))
-          (magit-diff-added         (magit-diff-file-contents diff-added))
+          (magit-blame-highlight              (highlight))
+          (magit-branch-current               (highlight magit-branch-local))
+          (magit-branch-remote-head           (highlight magit-branch-remote))
+          (magit-branch-upstream              (magit-branch-remote))
+          (magit-diff-added                   (diff-added))
           (magit-diff-added-highlight
            (magit-diff-added magit-section-highlight))
-          (magit-diff-base        (magit-diff-file-contents diff-changed))
-          (magit-diff-base-highlight  (magit-diff-base magit-section-highlight))
+          (magit-diff-base                    (diff-changed))
+          (magit-diff-base-highlight (magit-diff-base magit-section-highlight))
           (magit-diff-conflict-heading        smerge-markers)
-          (magit-diff-context     (magit-diff-file-contents diff-context))
+          (magit-diff-context                 (diff-context))
           (magit-diff-context-highlight
            (magit-diff-context magit-section-highlight))
           (magit-diff-diffstat-added          diff-indicator-added)
@@ -668,7 +668,7 @@
           ;;     that.
           (magit-diff-hunk-heading-highlight  magit-section-highlight)
           (magit-diff-hunk-heading-selection  selection)
-          (magit-diff-removed     (magit-diff-file-contents diff-removed))
+          (magit-diff-removed                 (diff-removed))
           (magit-diff-removed-highlight
            (magit-diff-removed magit-section-highlight))
           (magit-diff-revision-summary        text-title)

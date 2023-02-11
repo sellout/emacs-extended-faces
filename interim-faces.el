@@ -119,13 +119,6 @@
 ;; TODO: I must have added this for a reason, but not sure what..
 ;; (ef-default-mode-face 'pseudo-column '(helm-major-mode))
 
-(ef-defface magit-diff-file-contents
-  '((default (:inherit fixed-pitch)))
-  "Used for the contents of the file being compared.
-This inherits ‘fixed-pitch’ because columnar alignment in comparisons is
-generally useful."
-  :group 'magit-faces)
-
 (eval-after-load 'magit
   '(progn
      (ef-default-mode-face 'fixed-pitch
