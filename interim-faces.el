@@ -122,8 +122,7 @@
 (eval-after-load 'magit
   '(progn
      (ef-default-mode-face 'fixed-pitch
-       '(magit-log-mode                 ; uses columns, but not enough
-         magit-popup-mode
+       '(magit-popup-mode
          magit-refs-mode))))
 
 (eval-after-load 'scala-mode2
