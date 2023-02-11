@@ -230,7 +230,7 @@
           (eshell-prompt        (prompt))
 
           ;; font-lock
-          (elisp-shorthand-font-lock-face    (highlight font-lock-keyword-face))
+          (elisp-shorthand-font-lock-face    (shadow font-lock-identifier-face))
           ;; TODO: This doesn’t seem to be used necessarily for built-in
           ;;       functions, but has some other purpose. So I’m not sure it
           ;;       should inherit ‘font-lock-function-name-face’.
