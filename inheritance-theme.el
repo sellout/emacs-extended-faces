@@ -4,7 +4,27 @@
 
 ;;; Code:
 
-(require 'interim-faces)
+(defun inheritance-root-faces ()
+  "Faces in the ‘inheritance’ theme that are roots of the graph (i.e., they
+don’t explicitly inherit from another face). These are the faces you are most
+likely to want to customize in a new theme."
+  "Create a buffer containing the settings for the ‘root’ theme.
+The ‘root’ theme contains the faces that have empty ‘:inherit’ attributes in the
+‘inheritance’ theme."
+  (let ((settings (get 'inheritance 'theme-settings)) ; '(prop symbol theme value)
+        (faces))
+    (dolist (s settings faces)
+      (when (eq (car s) 'theme-face)
+        (let ((symbol (nth 1 s))
+              (value (nth 3 s)))
+          (when (and (symbol-file symbol 'defface)
+                     (null (plist-get (cadar value) :inherit)))
+            (push symbol faces)))))))
+
+(defun inheritance-create-theme-from-roots ()
+  "Create a new theme from the “root” faces of the ‘inheritance theme.’"
+  (let ((custom-theme--listed-faces (inheritance-root-faces)))
+    (customize-create-theme)))
 
 (deftheme inheritance
   "A DAG of faces. Created 2023-02-02.")

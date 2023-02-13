@@ -426,10 +426,9 @@ using name hashes."
   (add-to-list 'custom-theme-load-path
                (file-name-as-directory (file-name-directory load-file-name))))
 
-(provide 'extended-faces)
-
 ;; Local Variables:
 ;; read-symbol-shorthands: (("ef-" . "extended-faces-"))
 ;; End:
 
+(provide 'extended-faces)
 ;;; extended-faces.el ends here
