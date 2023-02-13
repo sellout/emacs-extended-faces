@@ -75,6 +75,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; variable-pitch
 
           (bold-italic            (bold italic))
+          (default                ())
           (error                  (message))
           (escape-glyph           ())
           (glyphless-char         ())
@@ -88,11 +89,14 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (minibuffer-prompt      (prompt))
           (nobreak-hyphen         ())
           (nobreak-space          ())
+          (region                 () (:extend t))
+          (secondary-selection    () (:extend t))
           (shadow                 ())
           (success                (message))
           (tab-bar                ())
           (tab-line               ())
           (tool-bar               ())
+          (trailing-whitespace    ())
           (vertical-border        (mode-line-inactive)) ; same as default, but not limited to ‘tty’
           (warning                (message))
 
@@ -100,6 +104,11 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (cursor ())
           ;; display-fill-column-indicator
           (fill-column-indicator (warning))
+          ;; display-line-numbers
+          (line-number ())
+          ;; (line-number-current-line (line-number)) ; already correct
+          (line-number-major-tick (line-number))
+          (line-number-minor-tick (line-number))
           ;; frames
           ;; (border              ()) ; already correct
           (child-frame-border  (internal-border))
@@ -180,7 +189,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; compilation
           (compilation-column-number  ())
           (compilation-info           (success))
-          (compilation-line-number    ())
+          (compilation-line-number    (line-number))
           (compilation-mode-line-exit (compilation-info))
           (compilation-mode-line-fail (compilation-error))
           (compilation-mode-line-run  ())
@@ -331,7 +340,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (minimap-semantic-type-face       (font-lock-type-face))
 
           ;; next-error
-          (next-error (highlight))
+          (next-error (highlight) (:extend t))
 
           ;; nxml-mode
           (nxml-delimiter delimiter)
@@ -454,6 +463,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
 
           ;; widget
           (widget-button            (button))
+          (widget-field             () (:extend t))
           (widget-mouse-face        (widget-button button-mouseover))
           (widget-button-pressed    (widget-button button-pressed))
           (widget-single-line-field (widget-field))
@@ -552,8 +562,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-buffer-directory            (fs-directory))
           (helm-buffer-file                 (fs-file))
           (helm-buffer-process              (helm-non-file-buffer))
-          (helm-ff-invalid-symlink          (fs-broken-symlink helm-ff-symlink))
-          (helm-ff-symlink                  (fs-symlink))
+          (helm-command-active-mode         ())
           (helm-etags+-highlight-face       (highlight))
           (helm-ff-backup-file              (shadow helm-ff-file))
           (helm-ff-directory                (helm-buffer-directory))
@@ -907,7 +916,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (whitespace-hspace           whitespace-default)
           (whitespace-tab              whitespace-default)
           (whitespace-newline          whitespace-default)
-          (whitespace-trailing         whitespace-default)
+          (whitespace-trailing         (trailing-whitespace whitespace-default))
           (whitespace-line             whitespace-default)
           (whitespace-space-before-tab whitespace-default)
           (whitespace-indentation      whitespace-default)
