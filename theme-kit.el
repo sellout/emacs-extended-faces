@@ -89,9 +89,17 @@ characteristic."
                         (_ 'dark)))))
     (tk-update-background-mode new-mode)))
 
-(provide 'theme-kit)
-;;; theme-kit.el ends here
+(defvar tk-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "b") 'tk-toggle-background-mode)
+    (define-key map (kbd "r") 'tk-reenable-themes)
+    map)
+  "Theme-related key bindings.
+Use ‘global-set-key’ to define a prefix key for this (suggestion: “C-c t”).")
 
 ;; Local Variables:
 ;; read-symbol-shorthands: (("tk-" . "theme-kit-"))
 ;; End:
+
+(provide 'theme-kit)
+;;; theme-kit.el ends here
