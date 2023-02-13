@@ -126,7 +126,10 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; mouse
           ;; (mouse ()) ; already correct
           ;; window-divider
-          (window-divider             (mode-line-inactive))
+          ;; NB: You might expect this to inherit from ‘mode-line’, but it uses
+          ;;     the _foreground_ color, so ‘default’ is generally a better
+          ;;     option.
+          (window-divider             ())
           (window-divider-first-pixel (window-divider))
           (window-divider-last-pixel  (window-divider))
 
@@ -174,17 +177,16 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (comint-highlight-prompt (prompt))
 
           ;; custom
-          (custom-button          (button))
-          (custom-button-pressed-unraised
-           (custom-button-unraised custom-button-pressed))
-          (custom-button-mouse    (custom-button button-mouseover))
-          (custom-button-pressed  (custom-button button-pressed))
-          (custom-button-unraised (custom-button))
-          (custom-comment         (font-lock-comment-face))
-          (custom-documentation   (font-lock-doc-face))
-          (custom-invalid         (warning))
-          (custom-link            (link))
-          (custom-variable-button (custom-button))
+          (custom-button                  (button))
+          (custom-button-pressed-unraised (link-visited custom-button-unraised))
+          (custom-button-mouse            (button-mouseover custom-button))
+          (custom-button-pressed          (button-pressed custom-button))
+          (custom-button-unraised         (link))
+          (custom-comment                 (font-lock-comment-face))
+          (custom-documentation           (font-lock-doc-face))
+          (custom-invalid                 (warning))
+          (custom-link                    (link))
+          (custom-variable-button         (custom-button))
 
           ;; compilation
           (compilation-column-number  ())
@@ -292,6 +294,24 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (gnus-cite-9               level-9)
           (gnus-cite-10              level-10)
           (gnus-cite-11              level-11)
+          (gnus-emphasis-bold            (bold))
+          (gnus-emphasis-italic          (italic))
+          (gnus-emphasis-underline       (underline))
+          (gnus-emphasis-underline-bold
+           (gnus-emphasis-underline gnus-emphasis-bold))
+          (gnus-emphasis-underline-italic
+           (gnus-emphasis-underline gnus-emphasis-italic))
+          (gnus-emphasis-bold-italic
+           (gnus-emphasis-bold gnus-emphasis-italic bold-italic))
+          (gnus-emphasis-underline-bold-italic
+           (gnus-emphasis-underline gnus-emphasis-bold-italic))
+          (gnus-emphasis-strikethru      (strike-through))
+          (gnus-emphasis-highlight-words (highlight))
+          (gnus-header-content       (text-definition-explanation))
+          (gnus-header-from          (text-author gnus-header-content))
+          (gnus-header-name          (text-definition-term))
+          (gnus-header-newsgroups    (gnus-header-content))
+          (gnus-header-subject       (text-title))
           (gnus-summary-high-ancient (urgency-high gnus-summary-normal-ancient))
           (gnus-summary-high-read    (urgency-high gnus-summary-normal-read))
           (gnus-summary-high-ticked  (urgency-high gnus-summary-normal-ticked))
@@ -363,6 +383,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (org-code                    (font-lock org-verbatim))
           (org-column-title            (text-heading org-default))
           (org-default                 (text))
+          (org-document-info           (text-definition-explanation))
+          (org-document-info-keyword   (text-definition-term))
           (org-document-title          (text-title))
           (org-headline-done           org-done)
           (org-level-1                 (outline-1 org-default))
@@ -427,10 +449,10 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (smerge-upper           diff-removed)
 
           ;; speedbar
-          (speedbar-button-face    button)
-          (speedbar-directory-face fs-directory)
-          (speedbar-file-face      fs-file)
-          (speedbar-highlight-face highlight)
+          (speedbar-button-face    (button))
+          (speedbar-directory-face (fs-directory))
+          (speedbar-file-face      (fs-file))
+          (speedbar-highlight-face (button-mouseover speedbar-button-face))
 
           ;; speedbar
           (speedbar-button-face    button)
@@ -534,6 +556,9 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
 
           ;; font-latex
           (font-latex-warning-face (warning))
+
+          ;; forge
+          (forge-post-author (text-author))
 
           ;; git-commit
           (git-commit-comment-file         (vc-dir-file))
@@ -728,7 +753,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (magit-header-line-log-select       (magit-header-line))
           (magit-key-mode-button-face         button)
           (magit-key-mode-header-face         text-heading)
-          (magit-log-author                   ())
+          (magit-log-author                   (text-author))
           ;; NB: This is drawn as ASCII art
           (magit-log-graph                    fixed-pitch)
           (magit-log-reflog-label-checkout    magit-log-reflog-label-other)

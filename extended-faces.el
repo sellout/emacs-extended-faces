@@ -322,6 +322,10 @@ This is often combined with the ‘level’ faces, and should usually follow the
 level in the inheritance list (e.g., '(level-2 text-heading))."
   :group 'extended-faces)
 
+(ef-defface text-author '((default (:inherit (text))))
+  "For the author of some content."
+  :group 'extended-faces)
+
 (ef-defface text-definition-term '((default (:inherit (text))))
   "For the term half of a definition in a definition list."
   :group 'extended-faces)
@@ -350,12 +354,16 @@ modes."
   "The face to use for text that should be treated literally."
   :group 'extended-faces)
 
-(ef-defface button-mouseover '((default (:inherit (button))))
-  "Button with the mouse hovering over it."
+(ef-defface button-mouseover '((default ()))
+  "Button with the mouse hovering over it.
+This is combined with the ‘button’ face when used, so it should not ‘:inherit’
+here."
   :group 'extended-faces)
 
-(ef-defface button-pressed '((default (:inherit (button))))
-  "Button when pressed."
+(ef-defface button-pressed '((default ()))
+  "Button when pressed.
+This is combined with the ‘button’ face when used, so it should not ‘:inherit’
+here."
   :group 'extended-faces)
 
 ;;; standardizing semantic highlighting
