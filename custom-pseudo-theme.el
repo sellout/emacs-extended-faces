@@ -19,7 +19,7 @@
 
 ;;; Code:
 
-(defun cst--set (set-fn pseudo-theme &rest args)
+(defun cpt--set (set-fn pseudo-theme &rest args)
   "This is a utility for managing custom values “outside of” a theme."
   (unless (memq pseudo-theme custom-known-themes)
     (custom-declare-theme pseudo-theme
@@ -29,13 +29,13 @@
     (enable-theme pseudo-theme)
     (setq custom-enabled-themes (remq pseudo-theme custom-enabled-themes))))
 
-(defun cst-set-faces (pseudo-theme &rest args)
+(defun cpt-set-faces (pseudo-theme &rest args)
   "This is a utility for managing custom faces “outside of” a theme.
 They variables are still treated as THEMED, but a PSEUDO-THEME doesn’t
 appear in ‘custom-enabled-themes’. See ‘custom-theme-set-faces’ for the
 structure of ARGS."
   (apply
-   #'cst--set
+   #'cpt--set
    #'custom-theme-set-faces
    pseudo-theme
    (let ((comment-addendum (format "(Customized by %s.)" pseudo-theme)))
@@ -56,13 +56,13 @@ structure of ARGS."
       args))))
 
 ;; Adapted from jwiegley/use-package#881 and jwiegley/use-package#899.
-(defun cst-set-variables (pseudo-theme &rest args)
+(defun cpt-set-variables (pseudo-theme &rest args)
   "This is a utility for managing custom values “outside of” a theme.
 They variables are still treated as THEMED, but a PSEUDO-THEME doesn’t
 appear in ‘custom-enabled-themes’. See ‘custom-theme-set-variables’ for the
 structure of ARGS."
   (apply
-   #'cst--set
+   #'cpt--set
    #'custom-theme-set-variables
    pseudo-theme
    (let ((comment-addendum (format "(Customized by %s.)" pseudo-theme)))
@@ -84,7 +84,7 @@ structure of ARGS."
                   comment-addendum))))
       args))))
 
-(defun cst-set-local-variables (pseudo-theme &rest args)
+(defun cpt-set-local-variables (pseudo-theme &rest args)
   "Set the variables for PSEUDO-THEME _only_ in the local context.
 Over a remote connection, they will have their previous values. This also
 allows us to set global values first, then use this to override the local
@@ -99,21 +99,22 @@ See ‘custom-theme-set-variables’ for the structure of ARGS.
                  (let ((profile (intern (concat (symbol-name ',pseudo-theme)
                                                 "-"
                                                 (symbol-name ',package)))))
-                   (connection-local-set-profile-variables
-                    profile
-                    (mapcar (lambda (arg)
-                              (let ((sym (car arg)))
-                                (cons sym (symbol-value sym))))
-                            ',args))
-                   (connection-local-set-profiles '() profile))
+                   (unless (memq profile (connection-local-get-profiles ()))
+                     (connection-local-set-profile-variables
+                      profile
+                      (mapcar (lambda (arg)
+                                (let ((sym (car arg)))
+                                  (cons sym (symbol-value sym))))
+                              ',args))
+                     (connection-local-set-profiles () profile)))
                  ;; NB: This can’t be done outside ‘eval-after-load’ because we
                  ;;     need to set up the connection-local variables from the
                  ;;     standard values before we change their values.
-                 (apply #'cst-set-variables ',pseudo-theme ',args)))))
+                 (apply #'cpt-set-variables ',pseudo-theme ',args)))))
         args))
 
 ;; Local Variables:
-;; read-symbol-shorthands: (("cst-" . "custom-pseudo-theme-"))
+;; read-symbol-shorthands: (("cpt-" . "custom-pseudo-theme-"))
 ;; End:
 
 (provide 'custom-pseudo-theme)
