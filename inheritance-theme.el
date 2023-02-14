@@ -611,6 +611,16 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-source-header               (helm-header))
           (helm-w3m-bookmarks               (helm-bookmark-w3m))
 
+          ;; helm-ls-git
+          (helm-ls-git-added-copied-face        (vc-locally-added-state))
+          (helm-ls-git-added-modified-face      (vc-dir-status-edited))
+          (helm-ls-git-conflict-face            (vc-conflict-state))
+          (helm-ls-git-deleted-and-staged-face  (vc-removed-state))
+          (helm-ls-git-deleted-not-staged-face  (vc-removed-state))
+          (helm-ls-git-modified-and-staged-face (vc-dir-status-edited))
+          (helm-ls-git-modified-not-staged-face (vc-dir-status-edited))
+          (helm-ls-git-renamed-modified-face    (vc-dir-status-edited))
+
           ;; highlight-doxygen
           (highlight-doxygen-code-block font-lock)
           (highlight-doxygen-comment    font-lock-doc-face)
@@ -790,12 +800,13 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (markdown-inline-code-face      (font-lock))
           (markdown-italic-face           (italic))
           (markdown-language-keyword-face (font-lock-keyword-face))
-          (markdown-link-face             (shadow))
-          (markdown-link-title-face       (link))
+          (markdown-link-face             (link))
+          (markdown-link-title-face       ())
           (markdown-metadata-key-face     (text-definition-term))
           (markdown-metadata-value-face   (text-definition-explanation))
           (markdown-pre-face              (text-verbatim))
-          (markdown-url-face              (link))
+          (markdown-url-face              (shadow))
+          ; (markdown-plain-url-face        (markdown-link-face)) ; already correct
 
           ;; paradox
           (paradox-comment-face   (font-lock-comment-face))

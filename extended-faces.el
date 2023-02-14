@@ -99,7 +99,8 @@ generally useful."
 (ef-default-mode-face 'pseudo-column
   '(dired-mode
     ibuffer-mode
-    tabulated-list-mode))
+    tabulated-list-mode
+    vc-annotate-mode))
 
 ;; Alignment is still important in most programming languages.
 ;;

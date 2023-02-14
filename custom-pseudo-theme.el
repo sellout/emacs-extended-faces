@@ -106,6 +106,9 @@ See ‘custom-theme-set-variables’ for the structure of ARGS.
                                 (cons sym (symbol-value sym))))
                             ',args))
                    (connection-local-set-profiles '() profile))
+                 ;; NB: This can’t be done outside ‘eval-after-load’ because we
+                 ;;     need to set up the connection-local variables from the
+                 ;;     standard values before we change their values.
                  (apply #'cst-set-variables ',pseudo-theme ',args)))))
         args))
 
