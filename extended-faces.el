@@ -25,6 +25,35 @@
 ;; This provides many new generic faces for Emacs, in order for themes and
 ;; packages to be able to present more consistently.
 
+;; Faces in Emacs form a rooted connected edge-weighted directed graph. The
+;; faces are the vertices and ‘:inherit’ specifies the edges‚ The weighting is
+;; determined by the order of the ‘:inherit’ list. The ‘default’ face is the
+;; root that all faces eventually ‘inherit’ from. It is not a multigraph, as
+;; putting the same face in an inheritance list multiple times can not have an
+;; effect different from only maintaining the first (highest-weighted) instance.
+
+;; However, the “standard” graph is extremely flat. The graph can be altered by
+;; theme authors and users. This package attempts to alter the standard graph to
+;; make it much more useful. It does this in a few ways:
+
+;; 1. creating new “interim” faces that often inherit other faces and are
+;;    intended to be inherited by “concrete” faces provided by package authors;
+;; 2. providing ‘inheritance-theme’ to be the _last_ element of
+;;   ‘custom-enabled-themes’, which replaces standard face definitions with ones
+;;    that almost exclusively use ‘:inherit’ and eschew other attributes; and
+;; 3. customizing the ‘default’ face for specific modes and buffers.
+
+;; TODO: Determine if cycles are reasonable. The criterion must be that if a
+;;       cycle exists, all attributes must be specified before compleing the
+;;       full cycle, starting from each “concrete” face in the cycle, where
+;;       “concrete” means that the face is applied directly to some text, and
+;;       the face is not only intended to be used for inheritance.
+
+;; NB: not sure about the terminology, but I believe “connected rooted …
+;;     directed …” implies that there is a path _from_ the root to each vertex,
+;;     but in our case there is a path _to_ the root from each vertex, so I said
+;;    “rooted connected”.
+
 ;;; Code:
 
 (defmacro ef-defface (face spec doc &rest args)
@@ -36,11 +65,20 @@ group, it indicates in the comment that it was defined in this package."
      ,spec
      ,(if (eq (plist-get args :group) 'extended-faces)
           doc
-        (concat doc " (Injected by extended-faces.)"))
+        (concat doc "\n(Injected by the customization group ‘extended-faces’.)"))
      ,@args))
+
+(defgroup extended-faces ()
+  "Extra faces to fill in the semantic gaps in the face graph."
+  :group 'faces)
 
 (ef-defface message ()
   "Extended face that covers all messages – errors, warnings, and successes."
+  :group 'extended-faces)
+
+(ef-defface mode-line-state '((default ()))
+  "Some modes display dynamic information next to their lighters.
+This face indicates how to decorate that state."
   :group 'extended-faces)
 
 (ef-defface delimiter '((default (:inherit (shadow))))
@@ -50,22 +88,34 @@ group, it indicates in the comment that it was defined in this package."
 (ef-defface pseudo-column '((default (:inherit (fixed-pitch))))
   "An indicator that ‘fixed-pitch’ is being used to emulate a columnar layout.
 This is distinct from using ‘fixed-pitch’ in, say, ‘compilation-mode’ where
-there may occassionally be tables or other output that requires ‘fixed-pitch’
+there may occasionally be tables or other output that requires ‘fixed-pitch’
 alignment.
 
 There are situations in Emacs where you can better approximate actual columns.
 E.g., Info node ‘(elisp)Display Margins’ will allow you to have up to three
 columns, as long as the middle column is the only one that needs to be
-interactive."
+interactive. There is also Info node ‘(elisp)Tabulated List mode’, which seems
+to do a good job with variable-pitch faces, so some modes that need this face
+should probably extend that mode instead.."
   :group 'extended-faces)
 
 (ef-defface table '((default (:inherit (pseudo-column))))
   "Text-based tables within a buffer."
   :group 'extended-faces)
 
+(ef-defface even '((default ()))
+  "Sometimes two faces are alternated, to make it easier to keep track of
+multiple sections, etc. In that case, this face should be used on the even
+instances."
+  :group 'extended-faces)
 
-(ef-defface diff-file-contents
-  '((default (:inherit fixed-pitch)))
+(ef-defface odd '((default ()))
+  "Sometimes two faces are alternated, to make it easier to keep track of
+multiple sections, etc. In that case, this face should be used on the odd
+instances."
+  :group 'extended-faces)
+
+(ef-defface diff-file-contents '((default (:inherit fixed-pitch)))
   "Used for the contents of the file being compared.
 This inherits ‘fixed-pitch’ because columnar alignment in comparisons is
 generally useful."
@@ -77,6 +127,12 @@ generally useful."
   "For any programming face"
   :group 'font-lock)
 
+(defun ef-set-mode-face (face)
+  "Create a lambda to for a mode hook to set the ‘default’ FACE for that mode.
+This simply gives a more apparent entry in the hook, rather than some
+‘compiled-function’."
+  `(lambda () (buffer-face-set ',face)))
+
 ;; TODO: Add something similar for buffers with specific names (e.g.,
 ;;      ‘which-key-buffer-name’).
 (defun ef-default-mode-face (face modes)
@@ -85,7 +141,7 @@ generally useful."
             ;; FIXME: How to do this without trampling on customizable
             ;;        variables?
             (add-hook (intern (concat (symbol-name mode) "-hook"))
-                      (lambda () (buffer-face-set face))))
+                      (ef-set-mode-face face)))
           modes))
 
 ;;; NB: It would be nice if comint had an output-specific face – I would

@@ -116,14 +116,16 @@
 ;; FIXME doesn’t derive from prog-mode for some reason
 (ef-default-mode-face 'font-lock '(haskell-cabal-mode))
 
-;; TODO: I must have added this for a reason, but not sure what..
-;; (ef-default-mode-face 'pseudo-column '(helm-major-mode))
+(add-hook 'helm-top-after-init-hook
+          (lambda ()
+            (with-current-buffer "*helm top*"
+              (buffer-face-set 'pseudo-column))))
 
 (eval-after-load 'magit
   '(progn
      (ef-default-mode-face 'fixed-pitch
-       '(magit-popup-mode
-         magit-refs-mode))))
+                           '(magit-popup-mode
+                             magit-refs-mode))))
 
 (eval-after-load 'scala-mode2
   '(ef-defface scala-font-lock:keyword-face

@@ -79,7 +79,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (error                  (message))
           (escape-glyph           ())
           (glyphless-char         ())
-          (header-line            (mode-line))
+          (header-line            (mode-line-inactive))
           (header-line-highlight  (highlight header-line))
           (highlight              ())
           (homoglyph              (warning))
@@ -231,20 +231,19 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (ediff-current-diff-A        (diff-removed highlight))
           (ediff-current-diff-Ancestor (diff-changed highlight))
           (ediff-current-diff-B        (diff-added highlight))
-          (ediff-current-diff-C      (diff-changed-unspecified highlight))
-          (ediff-even-diff-A           (diff-removed secondary-selection))
-          (ediff-even-diff-Ancestor    (diff-changed secondary-selection))
-          (ediff-even-diff-B           (diff-added secondary-selection))
-          (ediff-even-diff-C
-           (diff-changed-unspecified secondary-selection))
-          (ediff-fine-diff-A           diff-refine-removed)
-          (ediff-fine-diff-Ancestor    diff-refine-changed)
-          (ediff-fine-diff-B           diff-refine-added)
-          (ediff-fine-diff-C           diff-changed-unspecified)
-          (ediff-odd-diff-A            (diff-removed shadow))
-          (ediff-odd-diff-Ancestor     (diff-changed shadow))
-          (ediff-odd-diff-B            (diff-added shadow))
-          (ediff-odd-diff-C            (diff-changed-unspecified shadow))
+          (ediff-current-diff-C        (diff-changed-unspecified highlight))
+          (ediff-even-diff-A           (diff-removed even))
+          (ediff-even-diff-Ancestor    (diff-changed even))
+          (ediff-even-diff-B           (diff-added even))
+          (ediff-even-diff-C           (diff-changed-unspecified even))
+          (ediff-fine-diff-A           (diff-refine-removed))
+          (ediff-fine-diff-Ancestor    (diff-refine-changed))
+          (ediff-fine-diff-B           (diff-refine-added))
+          (ediff-fine-diff-C           (diff-changed-unspecified))
+          (ediff-odd-diff-A            (diff-removed odd))
+          (ediff-odd-diff-Ancestor     (diff-changed odd))
+          (ediff-odd-diff-B            (diff-added odd))
+          (ediff-odd-diff-C            (diff-changed-unspecified odd))
 
           ;; eshell
           ;; (eshell-ls-archive (,@fg-magenta))
@@ -340,9 +339,11 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (info-xref-visited (link-visited info-xref))
 
           ;; isearch
-          (isearch      (match))
-          (isearch-fail (error))
-          (lazy-highlight (highlight))
+          (isearch         (match))
+          (isearch-fail    (error))
+          (isearch-group-1 (odd isearch))
+          (isearch-group-2 (even isearch))
+          (lazy-highlight  (highlight))
 
           ;; message
           (message-header-to         message-header-other)
@@ -494,6 +495,13 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;;              here, and in most cases, things shouldn’t inherit
           ;;              across packages below here.
 
+          ;; ace-window
+          (aw-background-face               (shadow) (:extend t))
+          (aw-key-face                      (help-key-binding))
+          (aw-leading-char-face             (help-key-binding))
+          (aw-minibuffer-leading-char-face  (aw-leading-char-face))
+          (aw-mode-line-face                (aw-leading-char-face mode-line))
+
           ;; alert
           (alert-urgent   urgency-urgent)
           (alert-high     urgency-high)
@@ -540,6 +548,11 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (ensime-implicit-highlight      font-lock-warning-face)
           (ensime-marker-face             hl-line)
           (ensime-pending-breakpoint-face breakpoint-disabled)
+
+          ;; envrc
+          ;; (envrc-mode-line-error-face (error)) ; already correct
+          (envrc-mode-line-none-face  (shadow)) ; no .envrc shouldn’t be a warning
+          ;; (envrc-mode-line-on-face    (success)) ; already correct
 
           ;; flycheck
           (flycheck-error   error)
@@ -612,6 +625,9 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-separator                   (delimiter) (:extend t))
           (helm-source-header               (helm-header))
           (helm-w3m-bookmarks               (helm-bookmark-w3m))
+
+          ;; helm-locate
+          (helm-locate-finish (success))
 
           ;; helm-ls-git
           (helm-ls-git-added-copied-face        (vc-locally-added-state))
@@ -758,6 +774,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
            (magit-diff-removed magit-section-highlight))
           (magit-diff-revision-summary        text-title)
           (magit-diff-revision-highlight      magit-section-highlight)
+          (magit-dimmed                       (shadow))
           ;; NB: This often affects alignment of the ASCII graph
           (magit-hash                         pseudo-column)
           (magit-header-line                  (header-line))
@@ -969,7 +986,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
 
 (custom-theme-set-variables
  'inheritance
- '(compilation-message-face 'message))
+ '(compilation-message-face 'message)
+ '(locate-header-face '(level-1 text-heading)))
 
 (provide-theme 'inheritance)
 ;;; inheritance-theme.el ends here
