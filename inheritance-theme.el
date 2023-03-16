@@ -534,7 +534,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (darcsum-change-line-face diff-changed)
 
           ;; emacs-wiki-colors
-          (emacs-wiki-bad-link-face (error link))
+          (emacs-wiki-bad-link-face (warning emacs-wiki-link-face))
           (emacs-wiki-header-1      (level-1 emacs-wiki-header))
           (emacs-wiki-header-2      (level-2 emacs-wiki-header))
           (emacs-wiki-header-3      (level-3 emacs-wiki-header))
@@ -826,6 +826,19 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (markdown-pre-face              (text-verbatim))
           (markdown-url-face              (shadow))
           ; (markdown-plain-url-face        (markdown-link-face)) ; already correct
+
+          ;; muse
+          (muse-bad-link   (warning muse-link))
+          (muse-emphasis-1 (italic))
+          (muse-emphasis-2 (bold))
+          (muse-emphasis-3 (bold-italic))
+          (muse-header-1   (level-1 text-header))
+          (muse-header-2   (level-2 text-header))
+          (muse-header-3   (level-3 text-header))
+          (muse-header-4   (level-4 text-header))
+          (muse-header-5   (level-5 text-header))
+          (muse-link       (link))
+          (muse-verbatim   (text-verbatim))
 
           ;; paradox
           (paradox-comment-face   (font-lock-comment-face))
