@@ -133,27 +133,29 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (window-divider-first-pixel (window-divider))
           (window-divider-last-pixel  (window-divider))
 
-          (show-paren-match    success)
-          (show-paren-mismatch warning)
-
-          (completions-annotations      ())
-          (completions-first-difference ())
-
           ;; ansi-color
           ;; TODO: This probably also need inverse-video set, but I’m not certain. The
           ;;       default settings set both foreground and background to the same color,
           ;;       so it might be more of a pain.
-          (ansi-color-cyan      (cyan))
-          (ansi-color-blue      (blue))
-          (ansi-color-magenta   (magenta))
-          (ansi-color-red       (red))
-          (ansi-color-yellow    (yellow))
-          (ansi-color-green     (green))
-          (ansi-color-black     (black))
-          (ansi-color-white     (white))
-          (ansi-color-bold      (bold))
-          (ansi-color-italic    (italic))
-          (ansi-color-underline (underline))
+          (ansi-color-cyan           (cyan))
+          (ansi-color-blue           (blue))
+          (ansi-color-magenta        (magenta))
+          (ansi-color-red            (red))
+          (ansi-color-yellow         (yellow))
+          (ansi-color-green          (green))
+          (ansi-color-black          (black))
+          (ansi-color-white          (white))
+          (ansi-color-bright-cyan    (bold cyan))
+          (ansi-color-bright-blue    (bold blue))
+          (ansi-color-bright-magenta (bold magenta))
+          (ansi-color-bright-red     (bold red))
+          (ansi-color-bright-yellow  (bold yellow))
+          (ansi-color-bright-green   (bold green))
+          (ansi-color-bright-black   (bold black))
+          (ansi-color-bright-white   (bold white))
+          (ansi-color-bold           (bold))
+          (ansi-color-italic         (italic))
+          (ansi-color-underline      (underline))
 
           ;; apropos
           (apropos-keybinding         (help-key-binding))
@@ -330,6 +332,11 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (help-for-help-header  (text-heading))
           (tutorial-warning-face (warning))
 
+          ;; icomplete
+          (icomplete-first-match    (match))
+          (icomplete-section        (completions-group-title))
+          ;; (icomplete-selected-match (highlight)) ; already correct
+
           ;; info
           (info-title-1      (level-1 text-heading))
           (info-title-2      (level-2 text-heading))
@@ -351,6 +358,16 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (message-header-subject    message-header-other)
           (message-header-newsgroups message-header-other)
           (message-header-xheader    message-header-other)
+
+          ;; minibuffer
+          ;; (completions-annotations      ())
+          (completions-common-part      (blue)) ; FIXME: aligning original
+          ;; (completions-first-difference ())
+          (completions-group-separator  (delimiter)
+                                        (:extend t :strike-through t))
+          (completions-group-title      (level-1 text-heading))
+          ;; (file-name-shadow             (shadow)) ; already correct
+          (minibuffer-depth-indicator   (highlight minibuffer-prompt))
 
           ;; minimap
           (minimap-font-face                (font-lock) (:height 0.25))
@@ -417,21 +434,26 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (outline-7 level-7)
           (outline-8 level-8)
 
+          ;; paren-showing-faces
+          (show-paren-match    (match))
+          ;; (show-paren-match-expression (show-paren-match)) ; already correct
+          (show-paren-mismatch (error))
+
           ;; rcirc
-          (rcirc-bright-nick               highlight)
-          (rcirc-dim-nick                  shadow)
-          (rcirc-keyword                   highlight)
-          ;; (rcirc-my-nick (,@fg-blue))
-          (rcirc-nick-in-message           match)
-          (rcirc-nick-in-message-full-line highlight)
-          ;; (rcirc-other-nick (,@fg-green))
-          (rcirc-prompt                    prompt)
-          (rcirc-server                    alert-normal)
-          (rcirc-server-prefix             rcirc-server)
-          ;; (rcirc-timestamp (,@fg-base01))
-          (rcirc-track-keyword             alert-normal)
-          (rcirc-track-nick                alert-moderate)
-          (rcirc-url                       link)
+          (rcirc-bright-nick               (highlight rcirc-other-nick))
+          (rcirc-dim-nick                  (shadow rcirc-other-nick))
+          (rcirc-keyword                   (highlight))
+          (rcirc-my-nick                   (blue)) ; FIXME: aligning original
+          (rcirc-nick-in-message           (match rcirc-my-nick))
+          (rcirc-nick-in-message-full-line (highlight))
+          (rcirc-other-nick                (yellow)) ; FIXME: aligning original
+          (rcirc-prompt                    (prompt))
+          (rcirc-server                    (alert-normal))
+          (rcirc-server-prefix             (rcirc-server))
+          ;; (rcirc-timestamp                 ()) ; already correct
+          (rcirc-track-keyword             (alert-normal))
+          (rcirc-track-nick                (alert-moderate))
+          (rcirc-url                       (link))
 
           ;; replace
           (match (highlight))
@@ -441,43 +463,48 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (sh-quoted-exec font-lock-string-face)
 
           ;; smerge-mode
-          (smerge-base            diff-changed)
-          (smerge-lower           diff-added)
-          ;; (smerge-markers         )
-          (smerge-refined-added   diff-refine-added)
-          (smerge-refined-changed diff-refine-changed)
-          (smerge-refined-removed diff-refine-removed)
-          (smerge-upper           diff-removed)
+          (smerge-base            (diff-changed))
+          (smerge-lower           (diff-added))
+          (smerge-markers         (diff-hunk-header))
+          (smerge-refined-added   (diff-refine-added))
+          (smerge-refined-changed (diff-refine-changed))
+          (smerge-refined-removed (diff-refine-removed))
+          (smerge-upper           (diff-removed))
 
           ;; speedbar
           (speedbar-button-face    (button))
           (speedbar-directory-face (fs-directory))
           (speedbar-file-face      (fs-file))
           (speedbar-highlight-face (button-mouseover speedbar-button-face))
-
-          ;; speedbar
-          (speedbar-button-face    button)
-          (speedbar-directory-face fs-directory)
-          (speedbar-file-face      fs-file)
-          (speedbar-highlight-face highlight)
+          (speedbar-selected-face  (highlight))
+          (speedbar-separator-face (level-1 text-heading))
+          (speedbar-tag-face       (blue)) ; FIXME: aligning original
 
           ;; term
-          (term               fixed-pitch)
-          (term-bold          ansi-color-bold)
-          (term-color-black   ansi-color-black)
-          (term-color-red     ansi-color-red)
-          (term-color-green   ansi-color-green)
-          (term-color-yellow  ansi-color-yellow)
-          (term-color-blue    ansi-color-blue)
-          (term-color-magenta ansi-color-magenta)
-          (term-color-cyan    ansi-color-cyan)
-          (term-color-white   ansi-color-white)
-          (term-underline     ansi-color-underline)
+          (term                      (fixed-pitch))
+          ;; (term-color-cyan           (ansi-color-cyan)) ; already correct
+          ;; (term-color-blue           (ansi-color-blue)) ; already correct
+          ;; (term-color-magenta        (ansi-color-magenta)) ; already correct
+          ;; (term-color-red            (ansi-color-red)) ; already correct
+          ;; (term-color-yellow         (ansi-color-yellow)) ; already correct
+          ;; (term-color-green          (ansi-color-green)) ; already correct
+          ;; (term-color-black          (ansi-color-black)) ; already correct
+          ;; (term-color-white          (ansi-color-white)) ; already correct
+          ;; (term-color-bright-cyan    (ansi-color-bright-cyan)) ; already correct
+          ;; (term-color-bright-blue    (ansi-color-bright-blue)) ; already correct
+          ;; (term-color-bright-magenta (ansi-color-bright-magenta)) ; already correct
+          ;; (term-color-bright-red     (ansi-color-bright-red)) ; already correct
+          ;; (term-color-bright-yellow  (ansi-color-bright-yellow)) ; already correct
+          ;; (term-color-bright-green   (ansi-color-bright-green)) ; already correct
+          ;; (term-color-bright-black   (ansi-color-bright-black)) ; already correct
+          ;; (term-color-bright-white   (ansi-color-bright-white)) ; already correct
+          ;; (term-bold                 (ansi-color-bold)) ; already correct
+          ;; (term-underline            (ansi-color-underline)) ; already correct
 
           ;; vc
-          (log-edit-header         (level-1))
+          (log-edit-header         (level-2))
           (log-edit-summary        (text-title))
-          (log-edit-unknown-header (warning log-edit-header))
+          (log-edit-unknown-header (log-edit-header))
           (vc-dir-directory        (fs-directory))
           (vc-dir-file             (fs-file))
           (vc-dir-header           (level-1))
@@ -615,6 +642,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-ff-socket                   (helm-ff-file))
           (helm-ff-symlink                  (fs-symlink))
           ;; (helm-header) ; Already correct
+          ;; (helm-header-line-left-margin     ())
           (helm-lisp-show-completion        (highlight))
           (helm-M-x-key                     (help-key-binding))
           (helm-match                       (match))
@@ -622,8 +650,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-grep-match                  (helm-match))
           (helm-selection                   (region))
           (helm-selection-line              (secondary-selection))
-          (helm-separator                   (delimiter) (:extend t))
-          (helm-source-header               (helm-header))
+          (helm-separator                   (completions-group-separator))
+          (helm-source-header               (completions-group-title))
           (helm-w3m-bookmarks               (helm-bookmark-w3m))
 
           ;; helm-locate
