@@ -153,7 +153,8 @@ This simply gives a more apparent entry in the hook, rather than some
     eshell-mode))
 
 (ef-default-mode-face 'pseudo-column
-  '(dired-mode
+  '(calendar-mode
+    dired-mode
     ibuffer-mode
     vc-annotate-mode))
 

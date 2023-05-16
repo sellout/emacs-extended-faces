@@ -131,7 +131,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; ** display-fill-column-indicator
           (fill-column-indicator (warning))
           ;; ** display-line-numbers
-          (line-number ())
+          (line-number            (pseudo-column fringe))
           ;; (line-number-current-line (line-number)) ; already correct
           (line-number-major-tick (line-number))
           (line-number-minor-tick (line-number))
@@ -185,16 +185,17 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
 
           ;; ** apropos
           (apropos-keybinding         (help-key-binding))
-          (apropos-misc-button        ())
-          (apropos-property           ())
-          (apropos-symbol             ())
+          ;; (apropos-misc-button        ())
+          ;; (apropos-property           ())
+          ;; (apropos-symbol             ())
           (apropos-user-option-button (button))
 
           ;; ** calendar-faces
-          (calendar-month-header   (text-heading))
-          (calendar-today          (secondary-selection))
-          (calendar-weekday-header (text-heading))
-          (calendar-weekend-header (text-heading))
+          (calendar-month-header   (bold)) ; FIXME: opinionated
+          (calendar-today          (match))
+          (calendar-weekday-header () (:underline t)) ; FIXME: opinionated
+          (calendar-weekend-header () (:underline t)) ; FIXME: opinionated
+          (diary                   (red)) ; FIXME aligning original
           (holiday                 (highlight))
 
           ;; ** css-mode
@@ -377,6 +378,30 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (isearch-group-1 (odd isearch))
           (isearch-group-2 (even isearch))
           (lazy-highlight  (highlight))
+
+          ;; ** linum
+          ;; NB: This inheritance can’t go the other way, as this face is
+          ;;     lazily-loaded.
+          (linum (line-number)
+                 ;; NB: The display margins inherit the face of the adjacent
+                 ;;     text in the text area
+                 ;;     (https://www.gnu.org/software/emacs/manual/html_node/elisp/Display-Margins.html),
+                 ;;     so this does more than is desirable in order to prevent
+                 ;;     leakage (especially of attributes that can affect glyph
+                 ;;     width). Unfortunately, this doesn’t mix well with the
+                 ;;     inherited faces. We really just want to set the ones
+                 ;;     that aren’t set via inheritance.
+                 ( :box nil
+                   :extend nil
+                   :height (lambda (_) (face-attribute 'default :height))
+                   :inverse-video nil
+                   :overline nil
+                   :slant normal
+                   :stipple nil
+                   :strike-through nil
+                   :underline nil
+                   :weight normal
+                   :width normal))
 
           ;; ** message
           (message-header-to         message-header-other)
@@ -679,6 +704,10 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-separator                   (completions-group-separator))
           (helm-source-header               (completions-group-title))
           (helm-w3m-bookmarks               (helm-bookmark-w3m))
+
+          ;;; ** helm-eshell
+          (helm-eshell-prompts-buffer-name (green)) ; FIXME aligning original
+          (helm-eshell-prompts-promptidx   (cyan)) ; FIXME aligning original
 
           ;; ** helm-locate
           (helm-locate-finish (success))
