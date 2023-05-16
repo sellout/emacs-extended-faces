@@ -60,43 +60,47 @@
 (eval-after-load 'ensime
   '(progn
      (ef-defface ensime-sem-high-var
-       '((default (:inherit scala-font-lock:var-face)))
+         '((default (:inherit scala-font-lock:var-face)))
        ""
        :group 'ensime-ui)
-     (ef-defface ensime-sem-high-val '((default (:inherit font-lock-constant-face)))
+     (ef-defface ensime-sem-high-val
+         '((default (:inherit font-lock-constant-face)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-var-field
-       '((default (:inherit ensime-sem-high-var)))
+         '((default (:inherit ensime-sem-high-var)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-val-field
-       '((default (:inherit ensime-sem-high-val)))
+         '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-function-call
-       '((default (:inherit font-lock-function-name-face)))
+         '((default (:inherit font-lock-function-name-face)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-operator
-       '((default (:inherit font-lock-keyword-face)))
+         '((default (:inherit font-lock-keyword-face)))
        ""
        :group 'ensime-ui)
-     (ef-defface ensime-sem-high-param '((default (:inherit ensime-sem-high-val)))
+     (ef-defface ensime-sem-high-param
+         '((default (:inherit ensime-sem-high-val)))
        ""
        :group 'ensime-ui)
-     (ef-defface ensime-sem-high-class '((default (:inherit font-lock-type-face)))
+     (ef-defface ensime-sem-high-class
+         '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
-     (ef-defface ensime-sem-high-trait '((default (:inherit font-lock-type-face)))
+     (ef-defface ensime-sem-high-trait
+         '((default (:inherit font-lock-type-face)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-object
-       '((default (:inherit font-lock-module-face)))
+         '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
      (ef-defface ensime-sem-high-package
-       '((default (:inherit font-lock-module-face)))
+         '((default (:inherit font-lock-module-face)))
        ""
        :group 'ensime-ui)
      ;; (setq ensime-sem-high-faces
@@ -124,12 +128,12 @@
 (eval-after-load 'magit
   '(progn
      (ef-default-mode-face 'fixed-pitch
-                           '(magit-popup-mode
-                             magit-refs-mode))))
+       '(magit-popup-mode
+         magit-refs-mode))))
 
 (eval-after-load 'scala-mode2
   '(ef-defface scala-font-lock:keyword-face
-     '((default (:inherit font-lock-keyword-face)))
+       '((default (:inherit font-lock-keyword-face)))
      "Font Lock mode face used for keywords."
      :group 'scala))
 

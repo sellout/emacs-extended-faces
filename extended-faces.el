@@ -65,7 +65,8 @@ group, it indicates in the comment that it was defined in this package."
      ,spec
      ,(if (eq (plist-get args :group) 'extended-faces)
           doc
-        (concat doc "\n(Injected by the customization group ‘extended-faces’.)"))
+        (concat doc
+                "\n(Injected by the customization group ‘extended-faces’.)"))
      ,@args))
 
 (defgroup extended-faces ()
@@ -137,6 +138,7 @@ This simply gives a more apparent entry in the hook, rather than some
 ;;      ‘which-key-buffer-name’).
 (defun ef-default-mode-face (face modes)
   "Set the FACE to treat as ‘default’ for the provided MODES."
+  (declare (indent 1))
   (mapcar (lambda (mode)
             ;; FIXME: How to do this without trampling on customizable
             ;;        variables?
@@ -168,11 +170,13 @@ This simply gives a more apparent entry in the hook, rather than some
   "For any value-level construct"
   :group 'font-lock)
 
-(ef-defface font-lock-identifier-face '((default (:inherit (font-lock-value-face))))
+(ef-defface font-lock-identifier-face
+    '((default (:inherit (font-lock-value-face))))
   "For any value-level construct"
   :group 'font-lock)
 
-(ef-defface font-lock-literal-face '((default (:inherit (font-lock-value-face))))
+(ef-defface font-lock-literal-face
+    '((default (:inherit (font-lock-value-face))))
   "For any value-level construct"
   :group 'font-lock)
 

@@ -20,7 +20,10 @@
 ;;; Code:
 
 (defun cpt--set (set-fn pseudo-theme &rest args)
-  "This is a utility for managing custom values “outside of” a theme."
+  "This is a utility for managing custom values “outside of” a theme.
+SET-FN is the underlying Custom function used to set these values. E.g.,
+‘custom-theme-set-faces’. PSEUDO-THEME is the name of the theme that these
+values are associated with. ARGS is the alist of variables and values."
   (unless (memq pseudo-theme custom-known-themes)
     (custom-declare-theme pseudo-theme
                           (custom-make-theme-feature pseudo-theme)))

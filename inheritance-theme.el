@@ -31,6 +31,8 @@
 
 ;;; Code:
 
+(require 'cus-theme)
+
 (defun inheritance-root-faces ()
   "Faces in the ‘inheritance’ theme that are roots of the graph.
 I.e., they don’t explicitly inherit from another face. These are the faces you
@@ -91,14 +93,14 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
         '(;; * built-in
 
           ;; ** basic-faces
-          ;; default            The default face, whose attributes are all specified.
+          ;; default – The default face, whose attributes are all specified.
 
-          ;; bold               These have the attributes indicated by their names (e.g.,
-          ;; italic             bold has a bold :weight attribute), with all other
-          ;; underline          attributes unspecified (and so given by default).
+          ;; bold      – These have the attributes indicated by their names
+          ;; italic    –  (e.g., bold has `:weight bold`), with all other
+          ;; underline –  attributes unspecified (and so given by default).
 
-          ;; fixed-pitch        These should have their ‘family’ explicitly set by the
-          ;; fixed-pitch-serif  user.
+          ;; fixed-pitch       – These should have their ‘family’ explicitly set
+          ;; fixed-pitch-serif – by the user.
           ;; variable-pitch
 
           (bold-italic            (bold italic))
@@ -123,7 +125,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (tab-line               ())
           (tool-bar               ())
           (trailing-whitespace    ())
-          (vertical-border        (mode-line-inactive)) ; same as default, but not limited to ‘tty’
+          ;; same as standard, but not limited to ‘tty’
+          (vertical-border        (mode-line-inactive))
           (warning                (message))
 
           ;; ** cursor
@@ -145,7 +148,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (menu ())
           ;; ** mode-line-faces
           (mode-line            ())
-          (mode-line-buffer-id  ()) ; layered on both mode-line and mode-line-inactive
+          ;; layered on both mode-line and mode-line-inactive
+          (mode-line-buffer-id  ())
           (mode-line-emphasis   text-emphasis)
           (mode-line-inactive   mode-line)
           (mode-line-highlight  (highlight mode-line))
@@ -160,9 +164,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (window-divider-last-pixel  (window-divider))
 
           ;; ** ansi-color
-          ;; TODO: This probably also need inverse-video set, but I’m not certain. The
-          ;;       default settings set both foreground and background to the same color,
-          ;;       so it might be more of a pain.
+          ;; TODO: These also need their background color set to the same as the
+          ;;       foreground.
           (ansi-color-cyan           (cyan))
           (ansi-color-blue           (blue))
           (ansi-color-magenta        (magenta))
@@ -298,7 +301,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (font-lock-comment-face              (font-lock-doc-face))
           (font-lock-constant-face             (font-lock-value-face))
           (font-lock-doc-face                  ())
-          (font-lock-doc-string-face           (font-lock-doc-face)) ; XEmacs only
+          ;; XEmacs only
+          (font-lock-doc-string-face           (font-lock-doc-face))
           (font-lock-function-name-face        (font-lock-identifier-face))
           (font-lock-keyword-face              ())
           (font-lock-negation-char-face        (font-lock-operator-face))
@@ -541,16 +545,25 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; (term-color-green          (ansi-color-green)) ; already correct
           ;; (term-color-black          (ansi-color-black)) ; already correct
           ;; (term-color-white          (ansi-color-white)) ; already correct
-          ;; (term-color-bright-cyan    (ansi-color-bright-cyan)) ; already correct
-          ;; (term-color-bright-blue    (ansi-color-bright-blue)) ; already correct
-          ;; (term-color-bright-magenta (ansi-color-bright-magenta)) ; already correct
-          ;; (term-color-bright-red     (ansi-color-bright-red)) ; already correct
-          ;; (term-color-bright-yellow  (ansi-color-bright-yellow)) ; already correct
-          ;; (term-color-bright-green   (ansi-color-bright-green)) ; already correct
-          ;; (term-color-bright-black   (ansi-color-bright-black)) ; already correct
-          ;; (term-color-bright-white   (ansi-color-bright-white)) ; already correct
+          ;; already correct
+          ;; (term-color-bright-cyan    (ansi-color-bright-cyan))
+          ;; already correct
+          ;; (term-color-bright-blue    (ansi-color-bright-blue))
+          ;; already correct
+          ;; (term-color-bright-magenta (ansi-color-bright-magenta))
+          ;; already correct
+          ;; (term-color-bright-red     (ansi-color-bright-red))
+          ;; already correct
+          ;; (term-color-bright-yellow  (ansi-color-bright-yellow))
+          ;; already correct
+          ;; (term-color-bright-green   (ansi-color-bright-green))
+          ;; already correct
+          ;; (term-color-bright-black   (ansi-color-bright-black))
+          ;; already correct
+          ;; (term-color-bright-white   (ansi-color-bright-white))
           ;; (term-bold                 (ansi-color-bold)) ; already correct
-          ;; (term-underline            (ansi-color-underline)) ; already correct
+          ;; already correct
+          ;; (term-underline            (ansi-color-underline))
 
           ;; ** vc
           (log-edit-header         (level-2))
@@ -569,9 +582,9 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (widget-button-pressed    (widget-button button-pressed))
           (widget-single-line-field (widget-field))
 
-          ;; * third-party – nothing above here should inherit from anything below
-          ;;                here, and in most cases, things shouldn’t inherit
-          ;;                across packages below here.
+          ;; * third-party – nothing above here should inherit from anything
+          ;;                below here, and in most cases, things shouldn’t
+          ;;                inherit across packages below here.
 
           ;; ** ace-window
           (aw-background-face               (shadow) (:extend t))
@@ -629,7 +642,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
 
           ;; ** envrc
           ;; (envrc-mode-line-error-face (error)) ; already correct
-          (envrc-mode-line-none-face  (shadow)) ; no .envrc shouldn’t be a warning
+          ;; no .envrc shouldn’t be a warning
+          (envrc-mode-line-none-face  (shadow))
           ;; (envrc-mode-line-on-face    (success)) ; already correct
 
           ;; ** flycheck
@@ -683,7 +697,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-ff-backup-file              (shadow helm-ff-file))
           (helm-ff-directory                (helm-buffer-directory))
           (helm-ff-dotted-directory         (helm-ff-directory))
-          (helm-ff-dotted-symlink-directory (helm-ff-symlink helm-ff-dotted-directory))
+          (helm-ff-dotted-symlink-directory
+           (helm-ff-symlink helm-ff-dotted-directory))
           (helm-ff-executable               (fs-executable helm-ff-file))
           (helm-ff-file                     (helm-buffer-file))
           (helm-ff-file-extension           (helm-ff-file))
@@ -908,7 +923,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (markdown-metadata-value-face   (text-definition-explanation))
           (markdown-pre-face              (text-verbatim))
           (markdown-url-face              (shadow))
-          ; (markdown-plain-url-face        (markdown-link-face)) ; already correct
+          ;; (markdown-plain-url-face (markdown-link-face)) ; already correct
 
           ;; ** muse
           (muse-bad-link   (warning muse-link))

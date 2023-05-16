@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'cus-theme)
+
 ;; TODO: This should not involve the Customize interface at all, instead this
 ;;       function should produce a buffer containing the contents of the desired
 ;;       theme.
@@ -36,8 +38,8 @@ forms for faces included with Emacs."
   (tk-generate-theme (face-list)))
 
 (defun tk-advise-skip-recalc-variables (&rest variables)
-  "Produce a function that is meant to be added to ‘:around’ advice on
-‘custom-theme-recalc-variable’, which prevents recalculating certain variables.
+  "Produce a function that prevents recalculating the given VARIABLES.
+It is meant to be added to ‘:around’ advice on ‘custom-theme-recalc-variable’.
 This is useful when you have a ‘defcustom’ whose ‘:set’ calls ‘enable-theme’,
 which would otherwise try to recalc the variable, causing an infinite loop."
   (lambda (orig-fn variable)
@@ -95,7 +97,7 @@ characteristic."
     (define-key map (kbd "r") 'tk-reenable-themes)
     map)
   "Theme-related key bindings.
-Use ‘global-set-key’ to define a prefix key for this (suggestion: “C-c t”).")
+Use ‘global-set-key’ to define a prefix key for this (suggestion: “C–c t”).")
 
 ;; Local Variables:
 ;; read-symbol-shorthands: (("tk-" . "theme-kit-"))

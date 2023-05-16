@@ -15,7 +15,7 @@
 (custom-theme-set-faces
  'standard
  '(default
-   ((t nil)))
+    ((t nil)))
  '(bold
    ((t (:weight bold))))
  '(italic
