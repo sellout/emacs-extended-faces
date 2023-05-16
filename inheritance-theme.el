@@ -2,18 +2,45 @@
 
 ;;; Commentary:
 
+;; Notes on file contents
+
+;; • most things are ordered alphabetically, but colors are ordered by CMYK
+;; • sections are alphabetical by Custom group name with built-ins first and
+;;   3rd-party second
+
+;; Some standard comments:
+
+;; “*” and “**”
+;; section heading
+
+;; “FIXME: aligning original”
+;; We define the face, but only to make the original face fit in better with
+;; various themes. E.g., if something has a face with a bunch of :foreground
+;; variants, like "Cyan1" "Cyan" "Cyan" "Purple "LightGray", we define the face
+;; instead to inherit the ‘cyan’ face which will adjust with each theme’s notion
+;; of that face.
+
+;; “FIXME: opinionated”
+;; This setting does more than it should, probably an indicator of a missing
+;; “interim” face.
+
+;; “already correct”
+;; The standard definition matches what we would define here, so we don’t define
+;; it. The entry still exists to make it clear that we have checked the standard
+;; face and not just missed it.
+
 ;;; Code:
 
 (defun inheritance-root-faces ()
-  "Faces in the ‘inheritance’ theme that are roots of the graph (i.e., they
-don’t explicitly inherit from another face). These are the faces you are most
-likely to want to customize in a new theme."
+  "Faces in the ‘inheritance’ theme that are roots of the graph.
+I.e., they don’t explicitly inherit from another face. These are the faces you
+are most likely to want to customize in a new theme."
   "Create a buffer containing the settings for the ‘root’ theme.
 The ‘root’ theme contains the faces that have empty ‘:inherit’ attributes in the
 ‘inheritance’ theme."
-  (let ((settings (get 'inheritance 'theme-settings)) ; '(prop symbol theme value)
+  (let ((settings (get 'inheritance 'theme-settings))
         (faces))
-    (dolist (s settings faces)
+    (dolist (s settings faces)          ; '(prop symbol theme value)
       (when (eq (car s) 'theme-face)
         (let ((symbol (nth 1 s))
               (value (nth 3 s)))
@@ -22,7 +49,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
             (push symbol faces)))))))
 
 (defun inheritance-create-theme-from-roots ()
-  "Create a new theme from the “root” faces of the ‘inheritance theme.’"
+  "Create a new theme from the “root” faces of the ‘inheritance’ theme."
   (let ((custom-theme--listed-faces (inheritance-root-faces)))
     (customize-create-theme)))
 
@@ -61,9 +88,9 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
         ;; • overline
         ;; • strike-through
         ;; • box
-        '(;; built-in
+        '(;; * built-in
 
-          ;; basic-faces
+          ;; ** basic-faces
           ;; default            The default face, whose attributes are all specified.
 
           ;; bold               These have the attributes indicated by their names (e.g.,
@@ -85,7 +112,6 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (homoglyph              (warning))
           (link                   ())
           (link-visited           (link))
-          ;; match           For text matching a search command.
           (minibuffer-prompt      (prompt))
           (nobreak-hyphen         ())
           (nobreak-space          ())
@@ -100,32 +126,32 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (vertical-border        (mode-line-inactive)) ; same as default, but not limited to ‘tty’
           (warning                (message))
 
-          ;; cursor
+          ;; ** cursor
           (cursor ())
-          ;; display-fill-column-indicator
+          ;; ** display-fill-column-indicator
           (fill-column-indicator (warning))
-          ;; display-line-numbers
+          ;; ** display-line-numbers
           (line-number ())
           ;; (line-number-current-line (line-number)) ; already correct
           (line-number-major-tick (line-number))
           (line-number-minor-tick (line-number))
-          ;; frames
+          ;; ** frames
           ;; (border              ()) ; already correct
           (child-frame-border  (internal-border))
           (fringe              ())
           ;; (internal-border     ()) ; already correct
           (scroll-bar          ())
-          ;; menu
+          ;; ** menu
           (menu ())
-          ;; mode-line-faces
+          ;; ** mode-line-faces
           (mode-line            ())
           (mode-line-buffer-id  ()) ; layered on both mode-line and mode-line-inactive
           (mode-line-emphasis   text-emphasis)
           (mode-line-inactive   mode-line)
           (mode-line-highlight  (highlight mode-line))
-          ;; mouse
+          ;; ** mouse
           ;; (mouse ()) ; already correct
-          ;; window-divider
+          ;; ** window-divider
           ;; NB: You might expect this to inherit from ‘mode-line’, but it uses
           ;;     the _foreground_ color, so ‘default’ is generally a better
           ;;     option.
@@ -133,7 +159,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (window-divider-first-pixel (window-divider))
           (window-divider-last-pixel  (window-divider))
 
-          ;; ansi-color
+          ;; ** ansi-color
           ;; TODO: This probably also need inverse-video set, but I’m not certain. The
           ;;       default settings set both foreground and background to the same color,
           ;;       so it might be more of a pain.
@@ -157,28 +183,28 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (ansi-color-italic         (italic))
           (ansi-color-underline      (underline))
 
-          ;; apropos
+          ;; ** apropos
           (apropos-keybinding         (help-key-binding))
           (apropos-misc-button        ())
           (apropos-property           ())
           (apropos-symbol             ())
           (apropos-user-option-button (button))
 
-          ;; calendar
+          ;; ** calendar-faces
           (calendar-month-header   (text-heading))
           (calendar-today          (secondary-selection))
           (calendar-weekday-header (text-heading))
           (calendar-weekend-header (text-heading))
           (holiday                 (highlight))
 
-          ;; css-mode
+          ;; ** css-mode
           (css-proprietary-property (css-property))
 
-          ;; comint
+          ;; ** comint
           (comint-highlight-input  (input))
           (comint-highlight-prompt (prompt))
 
-          ;; custom
+          ;; ** custom
           (custom-button                  (button))
           (custom-button-pressed-unraised (link-visited custom-button-unraised))
           (custom-button-mouse            (button-mouseover custom-button))
@@ -190,7 +216,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (custom-link                    (link))
           (custom-variable-button         (custom-button))
 
-          ;; compilation
+          ;; ** compilation
           (compilation-column-number  ())
           (compilation-info           (success))
           (compilation-line-number    (line-number))
@@ -199,10 +225,10 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (compilation-mode-line-run  ())
           (compilation-warning        (warning))
 
-          ;; diary-lib
+          ;; ** diary-lib
           (diary-button button)
 
-          ;; diff-mode
+          ;; ** diff-mode
           (diff-added             (diff-file-contents))
           (diff-changed           (diff-file-contents))
           (diff-context           (diff-file-contents))
@@ -221,7 +247,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (diff-refine-removed    diff-removed)
           (diff-removed           (diff-file-contents))
 
-          ;; dired
+          ;; ** dired
           (dired-broken-symlink (fs-broken-symlink dired-symlink))
           (dired-directory      (fs-directory))
           (dired-perm-write     (warning))
@@ -229,7 +255,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (dired-special        ())
           (dired-symlink        (fs-symlink))
 
-          ;; ediff
+          ;; ** ediff
           (ediff-current-diff-A        (diff-removed highlight))
           (ediff-current-diff-Ancestor (diff-changed highlight))
           (ediff-current-diff-B        (diff-added highlight))
@@ -247,7 +273,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (ediff-odd-diff-B            (diff-added odd))
           (ediff-odd-diff-C            (diff-changed-unspecified odd))
 
-          ;; eshell
+          ;; ** eshell
           ;; (eshell-ls-archive (,@fg-magenta))
           ;; (eshell-ls-backup (,@fg-yellow))
           (eshell-ls-clutter    (dired-ignored))
@@ -261,7 +287,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; (eshell-ls-unreadable (,@fg-base00))
           (eshell-prompt        (prompt))
 
-          ;; font-lock
+          ;; ** font-lock
           (elisp-shorthand-font-lock-face    (shadow font-lock-identifier-face))
           ;; TODO: This doesn’t seem to be used necessarily for built-in
           ;;       functions, but has some other purpose. So I’m not sure it
@@ -283,7 +309,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (font-lock-variable-name-face        (font-lock-identifier-face))
           (font-lock-warning                   (warning))
 
-          ;; gnus
+          ;; ** gnus
           (gnus-cite-1               level-1)
           (gnus-cite-2               level-2)
           (gnus-cite-3               level-3)
@@ -326,18 +352,18 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
            (urgency-low gnus-summary-normal-undownloaded))
           (gnus-summary-low-unread   (urgency-low gnus-summary-normal-unread))
 
-          ;; help
+          ;; ** help
           (help-argument-name    (font-lock-identifier-face))
           (help-key-binding      ())
           (help-for-help-header  (text-heading))
           (tutorial-warning-face (warning))
 
-          ;; icomplete
+          ;; ** icomplete
           (icomplete-first-match    (match))
           (icomplete-section        (completions-group-title))
           ;; (icomplete-selected-match (highlight)) ; already correct
 
-          ;; info
+          ;; ** info
           (info-title-1      (level-1 text-heading))
           (info-title-2      (level-2 text-heading))
           (info-title-3      (level-3 text-heading))
@@ -345,21 +371,21 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (info-xref         (link))
           (info-xref-visited (link-visited info-xref))
 
-          ;; isearch
+          ;; ** isearch
           (isearch         (match))
           (isearch-fail    (error))
           (isearch-group-1 (odd isearch))
           (isearch-group-2 (even isearch))
           (lazy-highlight  (highlight))
 
-          ;; message
+          ;; ** message
           (message-header-to         message-header-other)
           (message-header-cc         message-header-other)
           (message-header-subject    message-header-other)
           (message-header-newsgroups message-header-other)
           (message-header-xheader    message-header-other)
 
-          ;; minibuffer
+          ;; ** minibuffer
           ;; (completions-annotations      ())
           (completions-common-part      (blue)) ; FIXME: aligning original
           ;; (completions-first-difference ())
@@ -369,7 +395,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; (file-name-shadow             (shadow)) ; already correct
           (minibuffer-depth-indicator   (highlight minibuffer-prompt))
 
-          ;; minimap
+          ;; ** minimap
           (minimap-font-face                (font-lock) (:height 0.25))
           (minimap-current-line-face        (highlight))
           (minimap-active-region-background (region))
@@ -377,17 +403,17 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (minimap-semantic-variable-face   (font-lock-variable-name-face))
           (minimap-semantic-type-face       (font-lock-type-face))
 
-          ;; next-error
+          ;; ** next-error
           (next-error (highlight) (:extend t))
 
-          ;; nxml-mode
+          ;; ** nxml-mode
           (nxml-delimiter delimiter)
           (nxml-text      text)
 
-          ;; nxml-outln
+          ;; ** nxml-outln
           (nxml-heading text-heading)
 
-          ;; org
+          ;; ** org
           (org-agenda-calendar-event   org-agenda-calendar)
           (org-agenda-calendar-sexp    org-agenda-calendar)
           (org-agenda-current-time     (org-time-grid org-agenda))
@@ -424,7 +450,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (org-verbatim                (text-verbatim org-default))
           (org-warning                 (warning org-default))
 
-          ;; outline
+          ;; ** outline
           (outline-1 level-1)
           (outline-2 level-2)
           (outline-3 level-3)
@@ -434,12 +460,12 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (outline-7 level-7)
           (outline-8 level-8)
 
-          ;; paren-showing-faces
+          ;; ** paren-showing-faces
           (show-paren-match    (match))
           ;; (show-paren-match-expression (show-paren-match)) ; already correct
           (show-paren-mismatch (error))
 
-          ;; rcirc
+          ;; ** rcirc
           (rcirc-bright-nick               (highlight rcirc-other-nick))
           (rcirc-dim-nick                  (shadow rcirc-other-nick))
           (rcirc-keyword                   (highlight))
@@ -455,14 +481,14 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (rcirc-track-nick                (alert-moderate))
           (rcirc-url                       (link))
 
-          ;; replace
+          ;; ** replace
           (match (highlight))
 
-          ;; sh-script
+          ;; ** sh-script
           (sh-heredoc     font-lock-string-face)
           (sh-quoted-exec font-lock-string-face)
 
-          ;; smerge-mode
+          ;; ** smerge-mode
           (smerge-base            (diff-changed))
           (smerge-lower           (diff-added))
           (smerge-markers         (diff-hunk-header))
@@ -471,7 +497,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (smerge-refined-removed (diff-refine-removed))
           (smerge-upper           (diff-removed))
 
-          ;; speedbar
+          ;; ** speedbar
           (speedbar-button-face    (button))
           (speedbar-directory-face (fs-directory))
           (speedbar-file-face      (fs-file))
@@ -480,7 +506,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (speedbar-separator-face (level-1 text-heading))
           (speedbar-tag-face       (blue)) ; FIXME: aligning original
 
-          ;; term
+          ;; ** term
           (term                      (fixed-pitch))
           ;; (term-color-cyan           (ansi-color-cyan)) ; already correct
           ;; (term-color-blue           (ansi-color-blue)) ; already correct
@@ -501,7 +527,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;; (term-bold                 (ansi-color-bold)) ; already correct
           ;; (term-underline            (ansi-color-underline)) ; already correct
 
-          ;; vc
+          ;; ** vc
           (log-edit-header         (level-2))
           (log-edit-summary        (text-title))
           (log-edit-unknown-header (log-edit-header))
@@ -511,25 +537,25 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (vc-dir-header-value     (vc-dir-header))
           (vc-dir-status-warning   (warning))
 
-          ;; widget
+          ;; ** widget
           (widget-button            (button))
           (widget-field             () (:extend t))
           (widget-mouse-face        (widget-button button-mouseover))
           (widget-button-pressed    (widget-button button-pressed))
           (widget-single-line-field (widget-field))
 
-          ;; third-party – nothing above here should inherit from anything below
-          ;;              here, and in most cases, things shouldn’t inherit
-          ;;              across packages below here.
+          ;; * third-party – nothing above here should inherit from anything below
+          ;;                here, and in most cases, things shouldn’t inherit
+          ;;                across packages below here.
 
-          ;; ace-window
+          ;; ** ace-window
           (aw-background-face               (shadow) (:extend t))
           (aw-key-face                      (help-key-binding))
           (aw-leading-char-face             (help-key-binding))
           (aw-minibuffer-leading-char-face  (aw-leading-char-face))
           (aw-mode-line-face                (aw-leading-char-face mode-line))
 
-          ;; alert
+          ;; ** alert
           (alert-urgent   urgency-urgent)
           (alert-high     urgency-high)
           (alert-moderate urgency-moderate)
@@ -537,7 +563,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (alert-low      urgency-low)
           (alert-trivial  urgency-trivial)
 
-          ;; auto-dim-other-buffers
+          ;; ** auto-dim-other-buffers
           ;; TODO: This should be like ‘fringe’, but shouldn’t affect the
           ;;       foreground.
           (auto-dim-other-buffers-face      ())
@@ -545,13 +571,13 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;;       similar to the ‘ansi-color’ faces.
           (auto-dim-other-buffers-hide-face (auto-dim-other-buffers-face))
 
-          ;; bm
+          ;; ** bm
           (bm-face                   ())
           (bm-fringe-face            (bm-face fringe))
           (bm-fringe-persistent-face (bm-persistent-face fringe))
           (bm-persistent-face        (bm-face))
 
-          ;; darcsum
+          ;; ** darcsum
           (darcsum-header-face      diff-header)
           (darcsum-marked-face      diff-refine-changed)
           (darcsum-need-action-face warning)
@@ -560,7 +586,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (darcsum-filename-face    fs-file)
           (darcsum-change-line-face diff-changed)
 
-          ;; emacs-wiki-colors
+          ;; ** emacs-wiki-colors
           (emacs-wiki-bad-link-face (warning emacs-wiki-link-face))
           (emacs-wiki-header-1      (level-1 emacs-wiki-header))
           (emacs-wiki-header-2      (level-2 emacs-wiki-header))
@@ -570,37 +596,37 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (emacs-wiki-link-face     (link))
           (emacs-wiki-verbatim-face text-verbatim)
 
-          ;; ensime
+          ;; ** ensime
           (ensime-breakpoint-face         breakpoint-enabled)
           (ensime-implicit-highlight      font-lock-warning-face)
           (ensime-marker-face             hl-line)
           (ensime-pending-breakpoint-face breakpoint-disabled)
 
-          ;; envrc
+          ;; ** envrc
           ;; (envrc-mode-line-error-face (error)) ; already correct
           (envrc-mode-line-none-face  (shadow)) ; no .envrc shouldn’t be a warning
           ;; (envrc-mode-line-on-face    (success)) ; already correct
 
-          ;; flycheck
+          ;; ** flycheck
           (flycheck-error   error)
           (flycheck-info    message)
           (flycheck-warning warning)
 
-          ;; flymake
+          ;; ** flymake
           (flymake-errline  error)
           (flymake-warnline warning)
 
-          ;; flyspell
+          ;; ** flyspell
           (flyspell-duplicate warning)
           (flyspell-incorrect error)
 
-          ;; font-latex
+          ;; ** font-latex
           (font-latex-warning-face (warning))
 
-          ;; forge
+          ;; ** forge
           (forge-post-author (text-author))
 
-          ;; git-commit
+          ;; ** git-commit
           (git-commit-comment-file         (vc-dir-file))
           (git-commit-known-pseudo-header  (log-edit-header))
           (git-commit-nonempty-second-line (warning))
@@ -608,19 +634,19 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (git-commit-pseudo-header        (log-edit-unknown-header))
           (git-commit-summary              (log-edit-summary))
 
-          ;; guide-key
+          ;; ** guide-key
           ;; (guide-key/prefix-command-face    )
           (guide-key/highlight-command-face
            (highlight guide-key/prefix-command-face))
           (guide-key/key-face               (help-key-binding))
 
-          ;; haskell-mode
+          ;; ** haskell-mode
           (haskell-error-face    (font-lock-warning-face))
           (haskell-keyword-face  (font-lock-keyword-face))
           (haskell-operator-face (font-lock-operator-face))
           (haskell-warning-face  (font-lock-warning-face))
 
-          ;; helm
+          ;; ** helm
           (helm-bookmark-directory          (helm-buffer-directory))
           (helm-bookmark-file               (helm-buffer-file))
           (helm-buffer-archive              (helm-buffer-file))
@@ -654,10 +680,10 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-source-header               (completions-group-title))
           (helm-w3m-bookmarks               (helm-bookmark-w3m))
 
-          ;; helm-locate
+          ;; ** helm-locate
           (helm-locate-finish (success))
 
-          ;; helm-ls-git
+          ;; ** helm-ls-git
           (helm-ls-git-added-copied-face        (vc-locally-added-state))
           (helm-ls-git-added-modified-face      (vc-dir-status-edited))
           (helm-ls-git-conflict-face            (vc-conflict-state))
@@ -667,11 +693,11 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (helm-ls-git-modified-not-staged-face (vc-dir-status-edited))
           (helm-ls-git-renamed-modified-face    (vc-dir-status-edited))
 
-          ;; highlight-doxygen
+          ;; ** highlight-doxygen
           (highlight-doxygen-code-block font-lock)
           (highlight-doxygen-comment    font-lock-doc-face)
 
-          ;; hydra
+          ;; ** hydra
           ;; TODO: These faces shouldn’t be named by color
           (hydra-face-teal     green)   ; Approximately cmyk(f007)
           (hydra-face-blue     cyan)    ; Approximately cmyk(ff00)
@@ -679,7 +705,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (hydra-face-amaranth magenta) ; Approximately cmyk(0c91)
           (hydra-face-red      red)     ; Approximately cmyk(0ff0)
 
-          ;; idris-mode
+          ;; ** idris-mode
           (idris-active-term-face       isearch)
           (idris-colon-face             font-lock-builtin-face)
           (idris-definition-face
@@ -715,7 +741,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (idris-unsafe-face            font-lock-warning-face)
           (idris-warning-face           warning)
 
-          ;; js2-mode
+          ;; ** js2-mode
           (js2-external-variable-face        font-lock-warning-face)
           (js2-jsdoc-html-tag-delimiter-face delimiter)
           (js2-jsdoc-html-tag-name-face      font-lock-function-name-face)
@@ -723,7 +749,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (js2-jsdoc-type-face               font-lock-type-face)
           (js2-jsdoc-value-face              text-definition-explanation)
 
-          ;; lsp-headerline
+          ;; ** lsp-headerline
           (lsp-headerline-breadcrumb-project-prefix-face (header-line))
           (lsp-headerline-breadcrumb-unknown-project-prefix-face
            (lsp-headerline-breadcrumb-project-prefix-face))
@@ -746,12 +772,12 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (lsp-headerline-breadcrumb-symbols-warning-face
            (warning lsp-headerline-breadcrumb-symbols-face))
 
-          ;; lsp-mode
+          ;; ** lsp-mode
           (lsp-face-highlight-read  (highlight)) ; NB: to drop underline
           ;; (lsp-face-highlight-textual (highlight)) ; already correct
           (lsp-face-highlight-write (highlight)) ; NB: to drop bold
 
-          ;; lua2-mode
+          ;; ** lua2-mode
           (lua2-error error)
           (lua2-bind-variable
            (sem-hi-binding
@@ -775,7 +801,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
             sem-hi-scope-global
             font-lock-variable-name-face))
 
-          ;; magit
+          ;; ** magit
           (magit-blame-highlight              (highlight))
           (magit-branch-current               (highlight magit-branch-local))
           (magit-branch-remote-head           (highlight magit-branch-remote))
@@ -832,7 +858,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (magit-signature-revoked            (warning))
           (magit-signature-untrusted          (warning))
 
-          ;; markdown-mode
+          ;; ** markdown-mode
           (markdown-bold-face             (bold))
           (markdown-comment-face          (font-lock-comment-face))
           (markdown-header-delimiter-face (delimiter))
@@ -855,32 +881,32 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (markdown-url-face              (shadow))
           ; (markdown-plain-url-face        (markdown-link-face)) ; already correct
 
-          ;; muse
+          ;; ** muse
           (muse-bad-link   (warning muse-link))
           (muse-emphasis-1 (italic))
           (muse-emphasis-2 (bold))
           (muse-emphasis-3 (bold-italic))
-          (muse-header-1   (level-1 text-header))
-          (muse-header-2   (level-2 text-header))
-          (muse-header-3   (level-3 text-header))
-          (muse-header-4   (level-4 text-header))
-          (muse-header-5   (level-5 text-header))
+          (muse-header-1   (level-1 text-heading))
+          (muse-header-2   (level-2 text-heading))
+          (muse-header-3   (level-3 text-heading))
+          (muse-header-4   (level-4 text-heading))
+          (muse-header-5   (level-5 text-heading))
           (muse-link       (link))
           (muse-verbatim   (text-verbatim))
 
-          ;; paradox
+          ;; ** paradox
           (paradox-comment-face   (font-lock-comment-face))
           (paradox-highlight-face (highlight))
 
-          ;; parenface
+          ;; ** parenface
           (parenface-bracket-face (shadow))
           (parenface-curly-face   (shadow))
           (parenface-paren-face   (shadow))
 
-          ;; paren-face
+          ;; ** paren-face
           (parenthesis (shadow))
 
-          ;; popup
+          ;; ** popup
           (popup-face ())
           (popup-isearch-match              (match popup-face))
           (popup-scroll-bar-background-face (scroll-bar popup-face))
@@ -888,18 +914,18 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (popup-summary-face               (popup-face))
           (popup-tip-face                   (popup-face))
 
-          ;; powerline
+          ;; ** powerline
           (powerline-active1  (mode-line))
           (powerline-active2  (powerline-active1))
           (powerline-inactive1 (inactive-mode-line))
           (powerline-inactive2 (powerline-inactive1))
 
-          ;; psvn
+          ;; ** psvn
           (svn-status-directory-face (fs-directory))
           (svn-status-filename-face  (fs-file))
           (svn-status-symlink-face   (fs-symlink))
 
-          ;; rainbow-delimiters
+          ;; ** rainbow-delimiters
           (rainbow-delimiters-depth-1-face (level-1))
           (rainbow-delimiters-depth-2-face (level-2))
           (rainbow-delimiters-depth-3-face (level-3))
@@ -910,7 +936,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (rainbow-delimiters-depth-8-face (level-8))
           (rainbow-delimiters-depth-9-face (level-9))
 
-          ;; rst-mode
+          ;; ** rst-mode
           (rst-level-1 (level-1 text-heading))
           (rst-level-2 (level-2 text-heading))
           (rst-level-3 (level-3 text-heading))
@@ -918,7 +944,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (rst-level-5 (level-5 text-heading))
           (rst-level-6 (level-6 text-heading))
 
-          ;; scala-mode2
+          ;; ** scala-mode2
           (scala-font-lock:abstract-face    (scala-font-lock:keyword-face))
           (scala-font-lock:final-face       (scala-font-lock:keyword-face))
           (scala-font-lock:implicit-face    (scala-font-lock:keyword-face))
@@ -930,7 +956,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (scala-font-lock:var-face         (font-lock-variable-name-face))
           (scala-font-lock:var-keyword-face scala-font-lock:keyword-face)
 
-          ;; slime
+          ;; ** slime
           (sldb-topline-face                    (slime-topline sldb-default))
           (sldb-condition-face                  (sldb-default))
           (sldb-section-face                    (sldb-default))
@@ -958,17 +984,17 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (slime-warning-face                   (warning slime-default))
           (slime-style-warning-face             (slime-warning-face))
 
-          ;; slime-repl
+          ;; ** slime-repl
           (slime-repl-input-face          (input))
           (slime-repl-inputed-output-face (slime-repl-output-face))
           (slime-repl-output-face         (output))
           (slime-repl-prompt-face         (prompt))
           (slime-repl-result-face         (result))
 
-          ;; table
+          ;; ** table
           (table-cell (table))
 
-          ;; transient
+          ;; ** transient
           ;; colors first
           (transient-teal              green)   ; Approximately cmyk(f007)
           (transient-blue              cyan)    ; Approximately cmyk(ff00)
@@ -996,7 +1022,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (transient-unreachable-key   (transient-unreachable transient-key))
           ;; (transient-value             ())
 
-          ;; which-key
+          ;; ** which-key
           (which-key-command-description-face   (which-key-description-face))
           (which-key-group-description-face     (which-key-description-face))
           (which-key-local-map-description-face (which-key-description-face))
@@ -1007,7 +1033,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (which-key-separator-face             (delimiter))
           (which-key-specal-key-face            (which-key-key-face))
 
-          ;; whitespace
+          ;; ** whitespace
           (whitespace-space            whitespace-default)
           (whitespace-hspace           whitespace-default)
           (whitespace-tab              whitespace-default)
@@ -1020,7 +1046,7 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           (whitespace-space            whitespace-default)
           (whitespace-space-after-tab  whitespace-default)
 
-          ;; write-good
+          ;; ** write-good
           (writegood-duplicates-face    (warning))
           (writegood-passive-voice-face (warning))
           (writegood-weasels-face       (warning)))))
