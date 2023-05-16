@@ -88,7 +88,9 @@
             version = readVersion ./${pname}.el;
 
             nativeBuildInputs = [
-              pkgs.emacs
+              (pkgs.emacsWithPackages (epkgs: [
+                epkgs.buttercup
+              ]))
               # Emacs-lisp build tool, https://doublep.github.io/eldev/
               pkgs.emacsPackages.eldev
             ];
@@ -97,6 +99,10 @@
 
             checkPhase = ''
               runHook preCheck
+              ## TODO: Currently needed to make a temp file in
+              ##      `eldev--create-internal-pseudoarchive-descriptor`.
+              export HOME="$PWD/fake-home"
+              mkdir -p "$HOME"
               eldev test
               runHook postCheck
             '';

@@ -19,6 +19,9 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+(require 'files-x)
+
 (defun cpt--set (set-fn pseudo-theme &rest args)
   "This is a utility for managing custom values “outside of” a theme.
 SET-FN is the underlying Custom function used to set these values. E.g.,
@@ -37,6 +40,7 @@ values are associated with. ARGS is the alist of variables and values."
 They variables are still treated as THEMED, but a PSEUDO-THEME doesn’t
 appear in ‘custom-enabled-themes’. See ‘custom-theme-set-faces’ for the
 structure of ARGS."
+  (declare (indent 1))
   (apply
    #'cpt--set
    #'custom-theme-set-faces
@@ -64,6 +68,7 @@ structure of ARGS."
 They variables are still treated as THEMED, but a PSEUDO-THEME doesn’t
 appear in ‘custom-enabled-themes’. See ‘custom-theme-set-variables’ for the
 structure of ARGS."
+  (declare (indent 1))
   (apply
    #'cpt--set
    #'custom-theme-set-variables
@@ -95,6 +100,7 @@ ones, rather than having to set up a connection-local profile explicitly.
 See ‘custom-theme-set-variables’ for the structure of ARGS.
 
 \(fn PSEUDO-THEME (PACKAGE &rest ARGS)...)"
+  (declare (indent 1))
   (mapc (lambda (arg)
           (cl-destructuring-bind (package &rest args) arg
             (eval-after-load package
