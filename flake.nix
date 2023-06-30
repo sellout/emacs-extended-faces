@@ -4,10 +4,10 @@
   nixConfig = {
     ## https://github.com/NixOS/rfcs/blob/master/rfcs/0045-deprecate-url-syntax.md
     extra-experimental-features = ["no-url-literals"];
-    extra-substituters = ["https://cache.garnix.io"];
     extra-trusted-public-keys = [
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
     ];
+    extra-trusted-substituters = ["https://cache.garnix.io"];
     ## Isolate the build.
     registries = false;
     sandbox = true;
@@ -47,7 +47,7 @@
                   # These attributes are simply required by home-manager.
                   home = {
                     homeDirectory = /tmp/${ename}-example;
-                    stateVersion = "22.11";
+                    stateVersion = "23.05";
                     username = "${ename}-example-user";
                   };
                 }
@@ -95,6 +95,15 @@
               pkgs.emacsPackages.eldev
             ];
 
+            postPatch = ''
+              {
+                echo
+                echo "(mapcar"
+                echo " 'eldev-use-local-dependency"
+                echo " '(\"${emacsPath pkgs.emacsPackages.buttercup}\"))"
+              } >> Eldev
+            '';
+
             doCheck = true;
 
             checkPhase = ''
@@ -103,15 +112,15 @@
               ##      `eldev--create-internal-pseudoarchive-descriptor`.
               export HOME="$PWD/fake-home"
               mkdir -p "$HOME"
-              eldev test
+              eldev --external test
               runHook postCheck
             '';
 
             doInstallCheck = true;
 
-            instalCheckPhase = ''
+            installCheckPhase = ''
               runHook preInstallCheck
-              eldev --packaged test
+              eldev --external --packaged test
               runHook postInstallCheck
             '';
           });
@@ -152,6 +161,10 @@
 
             buildPhase = ''
               runHook preBuild
+              ## TODO: Currently needed to make a temp file in
+              ##      `eldev--create-internal-pseudoarchive-descriptor`.
+              export HOME="$PWD/fake-home"
+              mkdir -p "$HOME/.cache/eldev"
               eldev doctor
               runHook postBuild
             '';
@@ -199,7 +212,9 @@
               mkdir -p "$HOME"
               ## Need `--external` here so that we don’t try to download any
               ## package archives (which would break the sandbox).
-              eldev --external lint doc elisp re
+              ## TODO: Reintroduce `elisp` below once gonewest818/elisp-lint#36
+              ##       is fixed.
+              eldev --external lint doc re
               runHook postBuild
             '';
 
@@ -247,9 +262,9 @@
 
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/home-manager/release-22.11";
+      url = "github:nix-community/home-manager/release-23.05";
     };
 
-    nixpkgs.url = "github:NixOS/nixpkgs/release-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
   };
 }
