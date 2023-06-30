@@ -212,9 +212,7 @@
               mkdir -p "$HOME"
               ## Need `--external` here so that we don’t try to download any
               ## package archives (which would break the sandbox).
-              ## TODO: Reintroduce `elisp` below once gonewest818/elisp-lint#36
-              ##       is fixed.
-              eldev --external lint doc re
+              eldev --external lint
               runHook postBuild
             '';
 

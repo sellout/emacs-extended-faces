@@ -185,7 +185,7 @@ This simply gives a more apparent entry in the hook, rather than some
   :group 'font-lock)
 
 (ef-defface font-lock-operator-face
-  '((default (:inherit (font-lock-function-name-face))))
+    '((default (:inherit (font-lock-function-name-face))))
   "For symbolic operators."
   :group 'font-lock)
 
@@ -357,17 +357,20 @@ etc."
 
 ;;; filesystem
 
-(ef-defface fs-directory () "Things that represent a directory."
+(ef-defface fs-directory ()
+  "Things that represent a directory."
   :group 'extended-faces)
 (ef-defface fs-executable '((default (:inherit (file))))
   "Things that represent an executable."
   :group 'extended-faces)
-(ef-defface fs-file () "Things that represent a file."
+(ef-defface fs-file ()
+  "Things that represent a file."
   :group 'extended-faces)
 (ef-defface fs-broken-symlink '((default (:inherit (warning fs-symlink))))
   "Things that represent a broken symlink."
   :group 'extended-faces)
-(ef-defface fs-symlink () "Things that represent a symlink."
+(ef-defface fs-symlink ()
+  "Things that represent a symlink."
   :group 'extended-faces)
 
 ;;; text formatting
@@ -476,7 +479,7 @@ using name hashes."
   :group 'extended-faces)
 
 (ef-defface sem-hi-mutable
-            '((default (:inherit (font-lock-variable-name-face))))
+    '((default (:inherit (font-lock-variable-name-face))))
   "A variable that is mutable (or refers to a mutable value)."
   :group 'extended-faces)
 (ef-defface sem-hi-constant '((default (:inherit (font-lock-constant-face))))
@@ -484,7 +487,7 @@ using name hashes."
   :group 'extended-faces)
 
 (ef-defface sem-hi-binding
-            '((default (:inherit (font-lock-variable-name-face))))
+    '((default (:inherit (font-lock-variable-name-face))))
   "A binding site."
   :group 'extended-faces)
 

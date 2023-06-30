@@ -1,9 +1,23 @@
-;;; -*- lexical-scope: t -*-
+;; -*- mode: emacs-lisp; lexical-binding: t; -*-
 
-;; TODO: Remove this line once we make the more significant
-;;      changes required to allow `package-lint` to pass.
+(require 'eldev)
+
+(setq
+  ;; run all linters by default
+  eldev-lint-default t
+  ;; except ‘package’, because it’s also run within ‘elisp-lint’ (see
+  ;; ‘eldev-linter-elisp’)
+  eldev-lint-default-excluded '(package))
+
 (eval-after-load 'elisp-lint
-  '(setq elisp-lint-ignored-validators '("package-lint")))
+  '(setq
+     ;; TODO: Remove this line once we make the more significant
+     ;;      changes required to allow `package-lint` to pass.
+     elisp-lint-ignored-validators '("package-lint")
+     ;; TODO: Remove this line once gonewest818/elisp-lint#36 is fixed.
+     elisp-lint-indent-specs
+     '( (extended-faces-default-mode-face . 1)
+        (extended-faces-defface . 2))))
 
 (eval-after-load 'package-lint
   '(setq package-lint-main-file "extended-faces.el"))

@@ -388,8 +388,8 @@ The ‘root’ theme contains the faces that have empty ‘:inherit’ attribute
           ;;     lazily-loaded.
           (linum (line-number)
                  ;; NB: The display margins inherit the face of the adjacent
-                 ;;     text in the text area
-                 ;;     (https://www.gnu.org/software/emacs/manual/html_node/elisp/Display-Margins.html),
+                 ;;     text in the text area (see
+                 ;;     https://www.gnu.org/software/emacs/manual/html_node/elisp/Display-Margins.html),
                  ;;     so this does more than is desirable in order to prevent
                  ;;     leakage (especially of attributes that can affect glyph
                  ;;     width). Unfortunately, this doesn’t mix well with the
