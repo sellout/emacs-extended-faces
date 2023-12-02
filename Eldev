@@ -5,19 +5,25 @@
 (setq
   ;; run all linters by default
   eldev-lint-default t
-  ;; except ‘package’, because it’s also run within ‘elisp-lint’ (see
-  ;; ‘eldev-linter-elisp’)
-  eldev-lint-default-excluded '(package))
+  ;; and disable the ‘elisp-lint’ validators that are already covered by
+  ;; ‘eldev-lint’ (see ‘eldev-linter-elisp’).
+  elisp-lint-ignored-validators '("checkdoc" "package-lint"))
+
+;; TODO: Remove this line once we make the more significant changes required to
+;;      allow `package-lint` to pass.
+(add-to-list 'eldev-lint-disabled 'package)
 
 (eval-after-load 'elisp-lint
   '(setq
-     ;; TODO: Remove this line once we make the more significant
-     ;;      changes required to allow `package-lint` to pass.
-     elisp-lint-ignored-validators '("package-lint")
      ;; TODO: Remove this line once gonewest818/elisp-lint#36 is fixed.
      elisp-lint-indent-specs
      '( (extended-faces-default-mode-face . 1)
         (extended-faces-defface . 2))))
 
+;; Allow `read-symbol-shorthands` to work (see purcell/package-lint#238).
 (eval-after-load 'package-lint
-  '(setq package-lint-main-file "extended-faces.el"))
+  '(mapcar (lambda (entry)
+             (add-to-list 'package-lint--allowed-prefix-mappings entry))
+     '( ("custom-pseudo-theme" . ("cpt"))
+        ("extended-faces" . ("ef"))
+        ("theme-kit" . ("tk")))))
