@@ -6,4 +6,6 @@
 !/.cache/vale/Vocab/
 /.cache/vale/Vocab/*
 !/.cache/vale/Vocab/emacs-extended-faces/
+/.local/state/project-manager/
+/.local/state/nix/profiles/
 /.cache/direnv/
