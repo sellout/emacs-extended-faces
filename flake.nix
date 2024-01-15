@@ -78,10 +78,10 @@
           flaky.lib.elisp.package pkgs src pname (epkgs: [epkgs.buttercup]);
       };
 
-      devShells.default = flaky.lib.devShells.default pkgs self [] "";
-
       projectConfigurations =
         flaky.lib.projectConfigurations.default {inherit pkgs self;};
+
+      devShells.default = flaky.lib.devShells.default system self [] "";
 
       checks =
         self.projectConfigurations.${system}.checks
