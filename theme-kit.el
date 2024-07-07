@@ -22,7 +22,6 @@
 ;;       theme.
 (defun tk-generate-theme (faces)
   "Create a buffer containing the current specs for the provided FACES."
-  "Create a buffer containing the settings for the ‘default’ theme."
   (let ((custom-theme--listed-faces faces))
     (customize-create-theme)))
 
@@ -62,12 +61,12 @@ which would otherwise try to recalc the variable, causing an infinite loop."
                (setq themes (delq theme themes)))))
     (enable-theme 'user)
     (when failures
-      (message "Failed to enable theme(s): %s"
-               (mapconcat #'symbol-name failures ", ")))))
+      (warn "Failed to enable theme(s): %s"
+            (mapconcat #'symbol-name failures ", ")))))
 
 (cl-defun tk-update-background-mode
     (appearance &optional (frames (frame-list)))
-  "Set the APPEARANCE of all FRAMES to either 'light or 'dark.
+  "Set the APPEARANCE of all FRAMES to either \\='light or \\='dark.
 This is not specific to Solarized – it will update the appearance of any theme
 that observes the background characteristic."
   (setq frame-background-mode appearance)
@@ -80,7 +79,7 @@ that observes the background characteristic."
   (setq frame-background-mode appearance))
 
 (defun tk-toggle-background-mode (&optional mode)
-  "Toggle between 'light and 'dark background MODE.
+  "Toggle between \\='light and \\='dark background MODE.
 If MODE is nil, it will switch to whichever mode is _not_ currently active. This
 will update the appearance of any theme that observes the background
 characteristic."
