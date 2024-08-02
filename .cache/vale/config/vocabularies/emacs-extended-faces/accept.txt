@@ -1,0 +1,10 @@
+direnv
+garnix
+[Nn]ix
+Pfeil
+ShellCheck
+dired
+docstring
+Eldev
+Fira
+speedbar
