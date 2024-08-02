@@ -10,7 +10,7 @@
     ];
     ## Isolate the build.
     registries = false;
-    sandbox = false;
+    sandbox = "relaxed";
   };
 
   outputs = {
@@ -21,6 +21,8 @@
   }: let
     pname = "extended-faces";
     ename = "emacs-${pname}";
+
+    supportedSystems = flaky.lib.defaultSystems;
   in
     {
       schemas = {
@@ -37,8 +39,7 @@
       };
 
       overlays = {
-        default =
-          flaky.lib.elisp.overlays.default self.overlays.emacs;
+        default = flaky.lib.elisp.overlays.default self.overlays.emacs;
 
         emacs = final: prev: efinal: eprev: {
           "${pname}" = self.packages.${final.system}.${ename};
@@ -48,26 +49,24 @@
       homeConfigurations =
         builtins.listToAttrs
         (builtins.map
-          (flaky.lib.homeConfigurations.example
-            ename
-            self
-            [
-              ({pkgs, ...}: {
-                programs.emacs = {
-                  enable = true;
-                  extraConfig = ''
-                    (require '${pname})
-                  '';
-                  extraPackages = epkgs: [epkgs.${pname}];
-                };
-              })
-            ])
-          flake-utils.lib.defaultSystems);
+          (flaky.lib.homeConfigurations.example self [
+            ({pkgs, ...}: {
+              programs.emacs = {
+                enable = true;
+                extraConfig = "(require '${pname})";
+                extraPackages = epkgs: [epkgs.${pname}];
+              };
+            })
+          ])
+          supportedSystems);
     }
-    // flake-utils.lib.eachDefaultSystem (system: let
+    // flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [flaky.overlays.elisp-dependencies];
+        overlays = [
+          flaky.overlays.dependencies
+          flaky.overlays.elisp-dependencies
+        ];
       };
 
       src = pkgs.lib.cleanSource ./.;
@@ -81,7 +80,9 @@
       projectConfigurations =
         flaky.lib.projectConfigurations.default {inherit pkgs self;};
 
-      devShells.default = flaky.lib.devShells.default system self [] "";
+      devShells =
+        self.projectConfigurations.${system}.devShells
+        // {default = flaky.lib.devShells.default system self [] "";};
 
       checks =
         self.projectConfigurations.${system}.checks
@@ -94,16 +95,10 @@
     });
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
+    ## Flaky should generally be the source of truth for its inputs.
+    flaky.url = "github:sellout/flaky";
 
-    flaky = {
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-      url = "github:sellout/flaky";
-    };
-
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    flake-utils.follows = "flaky/flake-utils";
+    nixpkgs.follows = "flaky/nixpkgs";
   };
 }

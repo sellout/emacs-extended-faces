@@ -37,9 +37,6 @@
   "Faces in the ‘inheritance’ theme that are roots of the graph.
 I.e., they don’t explicitly inherit from another face. These are the faces you
 are most likely to want to customize in a new theme."
-  "Create a buffer containing the settings for the ‘root’ theme.
-The ‘root’ theme contains the faces that have empty ‘:inherit’ attributes in the
-‘inheritance’ theme."
   (let ((settings (get 'inheritance 'theme-settings))
         (faces))
     (dolist (s settings faces)          ; '(prop symbol theme value)

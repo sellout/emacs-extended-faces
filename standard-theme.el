@@ -15,7 +15,7 @@
 (custom-theme-set-faces
  'standard
  '(default
-    ((t nil)))
+   ((t nil)))
  '(bold
    ((t (:weight bold))))
  '(italic
@@ -229,8 +229,8 @@
    ((t nil)))
  '(tool-bar
    ((default
-      ( :foreground "black"
-        :box (:line-width (1 . 1) :color nil :style released-button)))
+     ( :foreground "black"
+       :box (:line-width (1 . 1) :color nil :style released-button)))
     (((type x w32 ns) (class color)) (:background "grey75"))
     (((type x) (class mono)) (:background "grey"))))
  '(tab-bar

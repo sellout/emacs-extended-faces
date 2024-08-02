@@ -2,10 +2,9 @@
   project:
     {
       description: "A hierarchy of Emacs faces to make it easier to define themes.",
-      name: "emacs-extended-faces",
+      name: "extended-faces",
       repo: "sellout/emacs-extended-faces",
       summary: "Inheritance-based faces for Emacs",
-      version: "0.1.0",
     },
   type: { name: "emacs-lisp" },
 }
