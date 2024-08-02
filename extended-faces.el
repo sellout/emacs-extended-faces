@@ -384,7 +384,7 @@ This makes it easy to use a different font for text modes vs programming modes."
 (ef-defface text-heading '((default (:inherit (text))))
   "A heading.
 This is often combined with the ‘level’ faces, and should usually follow the
-level in the inheritance list (e.g., '(level-2 text-heading))."
+level in the inheritance list (e.g., (level-2 text-heading))."
   :group 'extended-faces)
 
 (ef-defface text-author '((default (:inherit (text))))

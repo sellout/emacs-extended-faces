@@ -11,7 +11,7 @@
 (require 'pcase)
 
 (defvar graph-font-system 'quartz
-  "Can be 'quartz, 'pango, 'fontconfig, or nil.")
+  "Can be quartz, pango, fontconfig, or nil.")
 
 (defun name-in-font-system (font-system list)
   "Format the name of the font described by LIST for the provided FONT-SYSTEM."
