@@ -7,10 +7,10 @@
 /.cache/vale/config/*
 !/.cache/vale/config/vocabularies/
 /.cache/vale/config/vocabularies/*
-!/.cache/vale/config/vocabularies/emacs-extended-faces/
+!/.cache/vale/config/vocabularies/extended-faces/
 !/.cache/vale/Vocab/
 /.cache/vale/Vocab/*
-!/.cache/vale/Vocab/emacs-extended-faces/
+!/.cache/vale/Vocab/extended-faces/
 /.local/state/project-manager/
 /.local/state/nix/profiles/
 /.cache/direnv/
