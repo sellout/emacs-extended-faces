@@ -35,7 +35,7 @@ You don’t have to do any of this for it to work, but if you do want to change 
 
 1. customize any of the ~fixed-pitch~, ~fixed-pitch-serif~, and ~variable-pitch~ faces with explicit ~family~ (and perhaps ~foundry~);
 2. customize the ~default~ face with the desired ~height~ and set its ~family~, most likely to the same family as one of the faces in step 1 (don’t ~inherit~); and
-3. customize some “high-level” faces, notably ~font-lock~ (for writing code) and ~text~. Most commonly they should simply ~inherit~ from one of the faces in step 1, but it’s not uncommon to have a programming-specific font (for example, [Fira Code](https://github.com/tonsky/FiraCode) might be used as ~font-lock~​’s ~family~ when [Fira Mono](https://mozilla.github.io/Fira/) is used as ~fixed-pitch~​’s ~family~).
+3. customize some “high-level” faces, notably ~font-lock~ (for writing code) and ~text~. Most commonly they should simply ~inherit~ from one of the faces in step 1, but it’s not uncommon to have a programming-specific font (for example, [[https://github.com/tonsky/FiraCode][Fira Code]] might be used as ~font-lock~​’s ~family~ when [[https://mozilla.github.io/Fira/][Fira Mono]] is used as ~fixed-pitch~​’s ~family~).
 
 If you use a theme built on ~extended-faces~, that should be all you need.
 
