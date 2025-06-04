@@ -52,15 +52,6 @@
         (builtins.map
           (flaky.lib.homeConfigurations.example self [
             ({pkgs, ...}: {
-              ## FIXME: This package is currently not working with emacs30 (the
-              ##        default Emacs in Nixpkgs 24.11). See
-              ##        sellout/emacs-extended-faces#13.
-              nixpkgs.config.permittedInsecurePackages = [
-                "emacs-29.4"
-                "emacs-with-packages-29.4"
-              ];
-              programs.emacs.package = pkgs.emacs29;
-
               programs.emacs = {
                 enable = true;
                 extraConfig = ''
