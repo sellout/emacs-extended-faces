@@ -47,7 +47,7 @@ The primary goal of this package is to make it easy for theme authors to create 
 
 Start by extending the ~interim-faces~ theme. (*TODO*: How? Just copy it? Yuck.)
 
-Go light – don’t customize every face you see, but if you come across one you want to customize, look it up in the graph and follow its ancestors (and the descendants of those ancestors to find the highest-level face(s) that you actually want to apply the customization to.
+Go light – don’t customize every face you see, but if you come across one you want to customize, look it up in the graph and follow its ancestors (and the descendants of those ancestors to find the highest-level faces that you actually want to apply the customization to.
 
 *TODO*: Add some Emacs functions to be able to explore the graph – helm(-like) view to look up through a graph of ancestors, then seeing the descendants of each ancestor (to make it clear what else you’re customizing).
 
