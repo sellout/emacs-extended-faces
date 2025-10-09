@@ -28,7 +28,6 @@
       vocab.${config.project.name}.accept = [
         "dired"
         "docstring"
-        "Eldev"
         "Fira"
         "speedbar"
       ];

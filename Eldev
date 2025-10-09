@@ -27,3 +27,5 @@
      '( ("custom-pseudo-theme" . ("cpt"))
         ("extended-faces" . ("ef"))
         ("theme-kit" . ("tk")))))
+
+(eldev-use-plugin 'autoloads)

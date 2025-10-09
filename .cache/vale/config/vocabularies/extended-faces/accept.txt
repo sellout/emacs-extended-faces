@@ -6,7 +6,6 @@ Pfeil
 ShellCheck
 dired
 docstring
-Eldev
 Fira
 speedbar
 Eldev
