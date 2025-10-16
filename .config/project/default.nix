@@ -42,5 +42,8 @@
     enable = true;
     name = lib.mkForce "sellout/emacs-extended-faces";
   };
-  services.github.enable = true;
+  services.github = {
+    enable = true;
+    settings.repository.name = lib.mkForce "emacs-extended-faces";
+  };
 }
