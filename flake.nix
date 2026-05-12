@@ -103,10 +103,15 @@
 
   inputs = {
     ## Flaky should generally be the source of truth for its inputs.
-    flaky.url = "github:sellout/flaky";
+    flaky = {
+      inputs.systems.follows = "systems";
+      url = "github:sellout/flaky";
+    };
 
     flake-utils.follows = "flaky/flake-utils";
     nixpkgs.follows = "flaky/nixpkgs";
-    systems.follows = "flaky/systems";
+
+    ## Not following Flaky, because we don’t support i686-linux.
+    systems.url = "github:nix-systems/default";
   };
 }
