@@ -45,5 +45,6 @@
   services.github = {
     enable = true;
     settings.repository.name = lib.mkForce "emacs-extended-faces";
+    settings.repository.private = false;
   };
 }
